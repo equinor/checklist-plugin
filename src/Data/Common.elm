@@ -4,7 +4,7 @@ import Element exposing (..)
 import Element.Font as Font
 import Json.Decode as D
 import Json.Encode as E
-import Palette
+import Equinor.Palette as Palette
 import Types exposing (..)
 
 

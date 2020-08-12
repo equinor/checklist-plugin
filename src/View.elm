@@ -13,10 +13,10 @@ import Element.Keyed as Keyed
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
-import Icon
+import Equinor.Icon as Icon
 import Json.Decode as D
 import Messages exposing (Msg(..))
-import Palette
+import Equinor.Palette as Palette
 import Types exposing (..)
 
 
