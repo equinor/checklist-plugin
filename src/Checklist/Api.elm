@@ -1,11 +1,11 @@
-module Api exposing (addCustomItem, checklistDetails, clearCheckItem, clearCustomCheckItem, clientId, deleteCustomItem, nextCustomItemNo, setCheckItemNa, setCheckItemOk, setCustomCheckItemOk, signChecklist, unSignChecklist, unVerifyChecklist, updateComment, updateMetaTableCell, verifyChecklist)
+module Checklist.Api exposing (addCustomItem, checklistDetails, clearCheckItem, clearCustomCheckItem, clientId, deleteCustomItem, nextCustomItemNo, setCheckItemNa, setCheckItemOk, setCustomCheckItemOk, signChecklist, unSignChecklist, unVerifyChecklist, updateComment, updateMetaTableCell, verifyChecklist)
 
-import Data.Checklist as Checklist
+import Checklist as Checklist
 import Http
 import Json.Decode as D
 import Json.Encode as E
-import Messages exposing (..)
-import Types exposing (..)
+import Checklist.Messages exposing (..)
+import Checklist.Types exposing (..)
 import Url.Builder exposing (QueryParameter, int, string)
 
 

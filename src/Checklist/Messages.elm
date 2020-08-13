@@ -1,9 +1,9 @@
-module Messages exposing (ApiResult(..), Msg(..))
+module Checklist.Messages exposing (ApiResult(..), Msg(..))
 
-import Data.Checklist as Checklist exposing (Checklist)
+import Checklist as Checklist exposing (Checklist)
 import Http
 import Json.Decode as D
-import Types exposing (..)
+import Checklist.Types exposing (..)
 
 
 type Msg

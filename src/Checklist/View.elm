@@ -1,7 +1,7 @@
-module View exposing (renderChecklists)
+module Checklist.View exposing (renderChecklists)
 
-import Data.Checklist as Checklist exposing (Checklist)
-import Data.Common as Common exposing (scaledInt)
+import Checklist as Checklist exposing (Checklist)
+
 import Dict
 import Element exposing (..)
 import Element.Background as Background
@@ -15,10 +15,11 @@ import Html.Attributes as HA
 import Html.Events as HE
 import Equinor.Icon as Icon
 import Json.Decode as D
-import Messages exposing (Msg(..))
-import Equinor.Palette as Palette
-import Types exposing (..)
-
+import Checklist.Messages exposing (Msg(..))
+import Equinor.Palette as Palette exposing (scaledInt)
+import Checklist.Types exposing (..)
+import Equinor.Data.Procosys.Status as Status exposing (Status(..))
+import Equinor.Types exposing (..)
 
 renderChecklists : Float -> Maybe Int -> String -> String -> List Checklist -> Element Msg
 renderChecklists size maybeSelected errorMsg customCheckItemField checklists =
@@ -118,7 +119,7 @@ renderChecklistItem size maybeSelected errorMsg customCheckItemField item =
                     , Font.size (scaledInt size -4)
                     ]
                 )
-                (item.status |> Common.statusToString |> text)
+                (item.status |> Status.toString |> text)
 
         itemType =
             el [ alignRight, clip, Font.size <| scaledInt size -2 ] (text item.type_)
@@ -171,13 +172,13 @@ renderChecklistItem size maybeSelected errorMsg customCheckItemField item =
                 NotLoaded ->
                     text "NotLoaded"
 
-                Loading ->
+                Loading _ _ ->
                     text "Loading..."
 
-                DataError ->
+                DataError _ _ ->
                     text "Error getting details"
 
-                Loaded details ->
+                Loaded _ details ->
                     let
                         hasUnsignedNormalItems =
                             List.any (\i -> not i.isHeading && not i.isOk && not i.isNa) details.items
@@ -349,6 +350,7 @@ signButton size name maybeDisabled msg =
                         deactiveAttributes message
 
                     Nothing ->
+                    
                         activeAttributes
                )
         )

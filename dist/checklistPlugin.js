@@ -5421,18 +5421,18 @@ var $mdgriffith$elm_ui$Internal$Model$Fill = function (a) {
 };
 var $mdgriffith$elm_ui$Element$fill = $mdgriffith$elm_ui$Internal$Model$Fill(1);
 var $elm$json$Json$Decode$value = _Json_decodeValue;
-var $author$project$Ports$fromJs = _Platform_incomingPort('fromJs', $elm$json$Json$Decode$value);
-var $author$project$Messages$DecodeError = function (a) {
+var $author$project$Checklist$Ports$fromJs = _Platform_incomingPort('fromJs', $elm$json$Json$Decode$value);
+var $author$project$Checklist$Messages$DecodeError = function (a) {
 	return {$: 'DecodeError', a: a};
 };
 var $elm$json$Json$Decode$decodeValue = _Json_run;
-var $author$project$Messages$GotChecklists = function (a) {
+var $author$project$Checklist$Messages$GotChecklists = function (a) {
 	return {$: 'GotChecklists', a: a};
 };
-var $author$project$Messages$GotToken = function (a) {
+var $author$project$Checklist$Messages$GotToken = function (a) {
 	return {$: 'GotToken', a: a};
 };
-var $author$project$Data$Checklist$Checklist = function (id) {
+var $author$project$Checklist$Checklist = function (id) {
 	return function (group) {
 		return function (type_) {
 			return function (tagNo) {
@@ -5461,30 +5461,30 @@ var $author$project$Data$Checklist$Checklist = function (id) {
 		};
 	};
 };
-var $author$project$Types$NotLoaded = {$: 'NotLoaded'};
-var $author$project$Data$Checklist$CPCL = {$: 'CPCL'};
-var $author$project$Data$Checklist$DCCL = {$: 'DCCL'};
-var $author$project$Data$Checklist$MCCR = {$: 'MCCR'};
-var $author$project$Data$Checklist$Preservation = {$: 'Preservation'};
-var $author$project$Data$Checklist$RunningLogs = {$: 'RunningLogs'};
-var $author$project$Data$Checklist$SignalTag = {$: 'SignalTag'};
+var $author$project$Equinor$Types$NotLoaded = {$: 'NotLoaded'};
+var $author$project$Checklist$CPCL = {$: 'CPCL'};
+var $author$project$Checklist$DCCL = {$: 'DCCL'};
+var $author$project$Checklist$MCCR = {$: 'MCCR'};
+var $author$project$Checklist$Preservation = {$: 'Preservation'};
+var $author$project$Checklist$RunningLogs = {$: 'RunningLogs'};
+var $author$project$Checklist$SignalTag = {$: 'SignalTag'};
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$Data$Checklist$groupDecoder = A2(
+var $author$project$Checklist$groupDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	function (str) {
 		switch (str) {
 			case 'MCCR':
-				return $elm$json$Json$Decode$succeed($author$project$Data$Checklist$MCCR);
+				return $elm$json$Json$Decode$succeed($author$project$Checklist$MCCR);
 			case 'CPCL':
-				return $elm$json$Json$Decode$succeed($author$project$Data$Checklist$CPCL);
+				return $elm$json$Json$Decode$succeed($author$project$Checklist$CPCL);
 			case 'Preservation':
-				return $elm$json$Json$Decode$succeed($author$project$Data$Checklist$Preservation);
+				return $elm$json$Json$Decode$succeed($author$project$Checklist$Preservation);
 			case 'RunningLogs':
-				return $elm$json$Json$Decode$succeed($author$project$Data$Checklist$RunningLogs);
+				return $elm$json$Json$Decode$succeed($author$project$Checklist$RunningLogs);
 			case 'DeCommissioningCheckList':
-				return $elm$json$Json$Decode$succeed($author$project$Data$Checklist$DCCL);
+				return $elm$json$Json$Decode$succeed($author$project$Checklist$DCCL);
 			default:
-				return $elm$json$Json$Decode$succeed($author$project$Data$Checklist$SignalTag);
+				return $elm$json$Json$Decode$succeed($author$project$Checklist$SignalTag);
 		}
 	},
 	$elm$json$Json$Decode$string);
@@ -5549,37 +5549,37 @@ var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
 			A2($elm$json$Json$Decode$field, key, valDecoder),
 			decoder);
 	});
-var $author$project$Types$OS = {$: 'OS'};
-var $author$project$Types$OK = {$: 'OK'};
-var $author$project$Types$PA = {$: 'PA'};
-var $author$project$Types$PB = {$: 'PB'};
-var $author$project$Data$Checklist$statusFromString = function (str) {
+var $author$project$Equinor$Data$Procosys$Status$OS = {$: 'OS'};
+var $author$project$Equinor$Data$Procosys$Status$OK = {$: 'OK'};
+var $author$project$Equinor$Data$Procosys$Status$PA = {$: 'PA'};
+var $author$project$Equinor$Data$Procosys$Status$PB = {$: 'PB'};
+var $author$project$Checklist$statusFromString = function (str) {
 	switch (str) {
 		case 'OK':
-			return $author$project$Types$OK;
+			return $author$project$Equinor$Data$Procosys$Status$OK;
 		case 'PA':
-			return $author$project$Types$PA;
+			return $author$project$Equinor$Data$Procosys$Status$PA;
 		case 'PB':
-			return $author$project$Types$PB;
+			return $author$project$Equinor$Data$Procosys$Status$PB;
 		default:
-			return $author$project$Types$OS;
+			return $author$project$Equinor$Data$Procosys$Status$OS;
 	}
 };
-var $author$project$Data$Checklist$statusDecoder = $elm$json$Json$Decode$oneOf(
+var $author$project$Checklist$statusDecoder = $elm$json$Json$Decode$oneOf(
 	_List_fromArray(
 		[
 			A2(
 			$elm$json$Json$Decode$andThen,
 			function (str) {
 				return $elm$json$Json$Decode$succeed(
-					$author$project$Data$Checklist$statusFromString(str));
+					$author$project$Checklist$statusFromString(str));
 			},
 			$elm$json$Json$Decode$string),
-			$elm$json$Json$Decode$null($author$project$Types$OS)
+			$elm$json$Json$Decode$null($author$project$Equinor$Data$Procosys$Status$OS)
 		]));
-var $author$project$Data$Checklist$decoder = A2(
+var $author$project$Checklist$decoder = A2(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded,
-	$author$project$Types$NotLoaded,
+	$author$project$Equinor$Types$NotLoaded,
 	A4(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 		'subSheet',
@@ -5613,7 +5613,7 @@ var $author$project$Data$Checklist$decoder = A2(
 								A3(
 									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 									'status',
-									$author$project$Data$Checklist$statusDecoder,
+									$author$project$Checklist$statusDecoder,
 									A3(
 										$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 										'responsible',
@@ -5629,52 +5629,52 @@ var $author$project$Data$Checklist$decoder = A2(
 												A3(
 													$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 													'group',
-													$author$project$Data$Checklist$groupDecoder,
+													$author$project$Checklist$groupDecoder,
 													A3(
 														$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 														'id',
 														$elm$json$Json$Decode$int,
-														$elm$json$Json$Decode$succeed($author$project$Data$Checklist$Checklist)))))))))))))));
+														$elm$json$Json$Decode$succeed($author$project$Checklist$Checklist)))))))))))))));
 var $elm$json$Json$Decode$list = _Json_decodeList;
-var $author$project$Types$TokenSuccess = F2(
+var $author$project$Checklist$Types$TokenSuccess = F2(
 	function (refNo, token) {
 		return {refNo: refNo, token: token};
 	});
-var $author$project$Main$tokenDecoder = A3(
+var $author$project$Checklist$Main$tokenDecoder = A3(
 	$elm$json$Json$Decode$map2,
-	$author$project$Types$TokenSuccess,
+	$author$project$Checklist$Types$TokenSuccess,
 	A2($elm$json$Json$Decode$field, 'refNo', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'token', $elm$json$Json$Decode$string));
-var $author$project$Main$decoder = function (topic) {
+var $author$project$Checklist$Main$decoder = function (topic) {
 	switch (topic) {
 		case 'token':
-			return A2($elm$json$Json$Decode$map, $author$project$Messages$GotToken, $author$project$Main$tokenDecoder);
+			return A2($elm$json$Json$Decode$map, $author$project$Checklist$Messages$GotToken, $author$project$Checklist$Main$tokenDecoder);
 		case 'checklists':
 			return A2(
 				$elm$json$Json$Decode$map,
-				$author$project$Messages$GotChecklists,
-				$elm$json$Json$Decode$list($author$project$Data$Checklist$decoder));
+				$author$project$Checklist$Messages$GotChecklists,
+				$elm$json$Json$Decode$list($author$project$Checklist$decoder));
 		default:
 			return $elm$json$Json$Decode$fail('Unknown msg received from Js');
 	}
 };
-var $author$project$Main$jsValueDecoder = A2(
+var $author$project$Checklist$Main$jsValueDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	function (topic) {
 		return A2(
 			$elm$json$Json$Decode$field,
 			'payload',
-			$author$project$Main$decoder(topic));
+			$author$project$Checklist$Main$decoder(topic));
 	},
 	A2($elm$json$Json$Decode$field, 'topic', $elm$json$Json$Decode$string));
-var $author$project$Main$handleJsMsg = function (jsValue) {
-	var _v0 = A2($elm$json$Json$Decode$decodeValue, $author$project$Main$jsValueDecoder, jsValue);
+var $author$project$Checklist$Main$handleJsMsg = function (jsValue) {
+	var _v0 = A2($elm$json$Json$Decode$decodeValue, $author$project$Checklist$Main$jsValueDecoder, jsValue);
 	if (_v0.$ === 'Ok') {
 		var msg = _v0.a;
 		return msg;
 	} else {
 		var err = _v0.a;
-		return $author$project$Messages$DecodeError(err);
+		return $author$project$Checklist$Messages$DecodeError(err);
 	}
 };
 var $mdgriffith$elm_ui$Internal$Model$Height = function (a) {
@@ -5685,7 +5685,7 @@ var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Model$initialModel = function (flags) {
+var $author$project$Checklist$Model$initialModel = function (flags) {
 	return _Utils_Tuple2(
 		{apiToken: '', checklists: $elm$core$Dict$empty, customCheckItemField: '', errorMsg: '', procosysPlantId: flags.procosysPlantId, requests: $elm$core$Dict$empty, selectedChecklist: $elm$core$Maybe$Nothing},
 		$elm$core$Platform$Cmd$none);
@@ -11548,15 +11548,16 @@ var $mdgriffith$elm_ui$Element$rgb255 = F3(
 	function (red, green, blue) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
 	});
-var $author$project$Palette$slateBlue = A3($mdgriffith$elm_ui$Element$rgb255, 36, 55, 70);
-var $author$project$Types$Loaded = function (a) {
-	return {$: 'Loaded', a: a};
-};
-var $author$project$Api$clientId = '47641c40-0135-459b-8ab4-459e68dc8d08/.default';
-var $author$project$Ports$toJs = _Platform_outgoingPort('toJs', $elm$core$Basics$identity);
-var $author$project$Update$createEvent = F2(
+var $author$project$Equinor$Palette$slateBlue = A3($mdgriffith$elm_ui$Element$rgb255, 36, 55, 70);
+var $author$project$Equinor$Types$Loaded = F2(
+	function (a, b) {
+		return {$: 'Loaded', a: a, b: b};
+	});
+var $author$project$Checklist$Api$clientId = '47641c40-0135-459b-8ab4-459e68dc8d08/.default';
+var $author$project$Checklist$Ports$toJs = _Platform_outgoingPort('toJs', $elm$core$Basics$identity);
+var $author$project$Checklist$Update$createEvent = F2(
 	function (topic, payload) {
-		return $author$project$Ports$toJs(
+		return $author$project$Checklist$Ports$toJs(
 			$elm$json$Json$Encode$object(
 				_List_fromArray(
 					[
@@ -11567,7 +11568,7 @@ var $author$project$Update$createEvent = F2(
 					])));
 	});
 var $elm$json$Json$Encode$int = _Json_wrap;
-var $author$project$Update$apiRequest = F2(
+var $author$project$Checklist$Update$apiRequest = F2(
 	function (requests, _v0) {
 		var m = _v0.a;
 		var c = _v0.b;
@@ -11588,25 +11589,25 @@ var $author$project$Update$apiRequest = F2(
 					[
 						c,
 						A2(
-						$author$project$Update$createEvent,
+						$author$project$Checklist$Update$createEvent,
 						'getToken',
 						$elm$json$Json$Encode$object(
 							_List_fromArray(
 								[
 									_Utils_Tuple2(
 									'clientId',
-									$elm$json$Json$Encode$string($author$project$Api$clientId)),
+									$elm$json$Json$Encode$string($author$project$Checklist$Api$clientId)),
 									_Utils_Tuple2(
 									'refNo',
 									$elm$json$Json$Encode$int(nextRef))
 								])))
 					])));
 	});
-var $author$project$Messages$ClearResult = F2(
+var $author$project$Checklist$Messages$ClearResult = F2(
 	function (a, b) {
 		return {$: 'ClearResult', a: a, b: b};
 	});
-var $author$project$Messages$GotApiResult = function (a) {
+var $author$project$Checklist$Messages$GotApiResult = function (a) {
 	return {$: 'GotApiResult', a: a};
 };
 var $elm$url$Url$Builder$QueryParameter = F2(
@@ -11621,7 +11622,7 @@ var $elm$url$Url$Builder$string = F2(
 			$elm$url$Url$percentEncode(key),
 			$elm$url$Url$percentEncode(value));
 	});
-var $author$project$Api$apiVersion = A2($elm$url$Url$Builder$string, 'api-version', '4.1');
+var $author$project$Checklist$Api$apiVersion = A2($elm$url$Url$Builder$string, 'api-version', '4.1');
 var $elm$core$Basics$composeL = F3(
 	function (g, f, x) {
 		return g(
@@ -12269,26 +12270,26 @@ var $elm$url$Url$Builder$crossOrigin = F3(
 	function (prePath, pathSegments, parameters) {
 		return prePath + ('/' + (A2($elm$core$String$join, '/', pathSegments) + $elm$url$Url$Builder$toQuery(parameters)));
 	});
-var $author$project$Api$Development = {$: 'Development'};
-var $author$project$Api$environment = $author$project$Api$Development;
-var $author$project$Api$url = F2(
+var $author$project$Checklist$Api$Development = {$: 'Development'};
+var $author$project$Checklist$Api$environment = $author$project$Checklist$Api$Development;
+var $author$project$Checklist$Api$url = F2(
 	function (paths, queryParams) {
-		var _v0 = $author$project$Api$environment;
+		var _v0 = $author$project$Checklist$Api$environment;
 		if (_v0.$ === 'Development') {
 			return A3(
 				$elm$url$Url$Builder$crossOrigin,
 				'https://procosyswebapiqp.equinor.com',
 				A2($elm$core$List$cons, 'api', paths),
-				A2($elm$core$List$cons, $author$project$Api$apiVersion, queryParams));
+				A2($elm$core$List$cons, $author$project$Checklist$Api$apiVersion, queryParams));
 		} else {
 			return A3(
 				$elm$url$Url$Builder$crossOrigin,
 				'https://procosyswebapi.equinor.com',
 				A2($elm$core$List$cons, 'api', paths),
-				A2($elm$core$List$cons, $author$project$Api$apiVersion, queryParams));
+				A2($elm$core$List$cons, $author$project$Checklist$Api$apiVersion, queryParams));
 		}
 	});
-var $author$project$Api$clearCheckItem = F4(
+var $author$project$Checklist$Api$clearCheckItem = F4(
 	function (checklist, checkItem, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -12306,8 +12307,8 @@ var $author$project$Api$clearCheckItem = F4(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$ClearResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$ClearResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -12316,17 +12317,17 @@ var $author$project$Api$clearCheckItem = F4(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						['CheckList', 'Item', 'Clear']),
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Api$clearCustomCheckItem = F4(
+var $author$project$Checklist$Api$clearCustomCheckItem = F4(
 	function (checklist, checkItem, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -12344,8 +12345,8 @@ var $author$project$Api$clearCustomCheckItem = F4(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$ClearResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$ClearResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -12354,21 +12355,21 @@ var $author$project$Api$clearCustomCheckItem = F4(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						['CheckList', 'CustomItem', 'Clear']),
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Messages$DeleteCustomItemResult = F2(
+var $author$project$Checklist$Messages$DeleteCustomItemResult = F2(
 	function (a, b) {
 		return {$: 'DeleteCustomItemResult', a: a, b: b};
 	});
-var $author$project$Api$deleteCustomItem = F4(
+var $author$project$Checklist$Api$deleteCustomItem = F4(
 	function (checklist, customItem, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -12386,8 +12387,8 @@ var $author$project$Api$deleteCustomItem = F4(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$DeleteCustomItemResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$DeleteCustomItemResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -12396,141 +12397,144 @@ var $author$project$Api$deleteCustomItem = F4(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						['Checklist', 'CustomItem']),
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Types$Loading = {$: 'Loading'};
-var $author$project$Messages$GotChecklistDetails = F2(
+var $author$project$Equinor$Types$Loading = F2(
+	function (a, b) {
+		return {$: 'Loading', a: a, b: b};
+	});
+var $author$project$Checklist$Messages$GotChecklistDetails = F2(
 	function (a, b) {
 		return {$: 'GotChecklistDetails', a: a, b: b};
 	});
-var $author$project$Data$Checklist$Details = F4(
+var $author$project$Checklist$Details = F4(
 	function (loopTags, items, customItems, checklistDetails) {
 		return {checklistDetails: checklistDetails, customItems: customItems, items: items, loopTags: loopTags};
 	});
-var $author$project$Data$Checklist$ChecklistDetails = F8(
+var $author$project$Checklist$ChecklistDetails = F8(
 	function (comment, signedAt, signedByFirstName, signedByLastName, verifiedAt, verifiedByFirstName, verifiedByLastName, status) {
 		return {comment: comment, signedAt: signedAt, signedByFirstName: signedByFirstName, signedByLastName: signedByLastName, status: status, verifiedAt: verifiedAt, verifiedByFirstName: verifiedByFirstName, verifiedByLastName: verifiedByLastName};
 	});
-var $author$project$Data$Common$nullString = $elm$json$Json$Decode$oneOf(
+var $author$project$Checklist$nullString = $elm$json$Json$Decode$oneOf(
 	_List_fromArray(
 		[
 			$elm$json$Json$Decode$string,
 			$elm$json$Json$Decode$null('')
 		]));
-var $author$project$Data$Checklist$checklistDetails = A3(
+var $author$project$Checklist$checklistDetails = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'Status',
-	$author$project$Data$Checklist$statusDecoder,
+	$author$project$Checklist$statusDecoder,
 	A4(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 		'VerifiedByLastName',
-		$author$project$Data$Common$nullString,
+		$author$project$Checklist$nullString,
 		'',
 		A4(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 			'VerifiedByFirstName',
-			$author$project$Data$Common$nullString,
+			$author$project$Checklist$nullString,
 			'',
 			A4(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 				'VerifiedAt',
-				$author$project$Data$Common$nullString,
+				$author$project$Checklist$nullString,
 				'',
 				A3(
 					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 					'SignedByLastName',
-					$author$project$Data$Common$nullString,
+					$author$project$Checklist$nullString,
 					A3(
 						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 						'SignedByFirstName',
-						$author$project$Data$Common$nullString,
+						$author$project$Checklist$nullString,
 						A3(
 							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 							'SignedAt',
-							$author$project$Data$Common$nullString,
+							$author$project$Checklist$nullString,
 							A3(
 								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 								'Comment',
-								$author$project$Data$Common$nullString,
-								$elm$json$Json$Decode$succeed($author$project$Data$Checklist$ChecklistDetails)))))))));
-var $author$project$Data$Checklist$CustomItem = F4(
+								$author$project$Checklist$nullString,
+								$elm$json$Json$Decode$succeed($author$project$Checklist$ChecklistDetails)))))))));
+var $author$project$Checklist$CustomItem = F4(
 	function (id, isOk, itemNo, text) {
 		return {id: id, isOk: isOk, itemNo: itemNo, text: text};
 	});
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $elm$json$Json$Decode$map4 = _Json_map4;
-var $author$project$Data$Checklist$customItemDecoder = A5(
+var $author$project$Checklist$customItemDecoder = A5(
 	$elm$json$Json$Decode$map4,
-	$author$project$Data$Checklist$CustomItem,
+	$author$project$Checklist$CustomItem,
 	A2($elm$json$Json$Decode$field, 'Id', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'IsOk', $elm$json$Json$Decode$bool),
 	A2($elm$json$Json$Decode$field, 'ItemNo', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'Text', $author$project$Data$Common$nullString));
-var $author$project$Data$Checklist$Item = F7(
+	A2($elm$json$Json$Decode$field, 'Text', $author$project$Checklist$nullString));
+var $author$project$Checklist$Item = F7(
 	function (id, isHeading, isNa, isOk, metaTable, sequenceNumber, text) {
 		return {id: id, isHeading: isHeading, isNa: isNa, isOk: isOk, metaTable: metaTable, sequenceNumber: sequenceNumber, text: text};
 	});
-var $author$project$Data$Checklist$MetaTable = F3(
+var $author$project$Checklist$MetaTable = F3(
 	function (columnLabels, info, rows) {
 		return {columnLabels: columnLabels, info: info, rows: rows};
 	});
 var $elm$json$Json$Decode$map7 = _Json_map7;
-var $author$project$Data$Checklist$ColumnLabel = F2(
+var $author$project$Checklist$ColumnLabel = F2(
 	function (id, label) {
 		return {id: id, label: label};
 	});
-var $author$project$Data$Checklist$columnLabelDecoder = A3(
+var $author$project$Checklist$columnLabelDecoder = A3(
 	$elm$json$Json$Decode$map2,
-	$author$project$Data$Checklist$ColumnLabel,
+	$author$project$Checklist$ColumnLabel,
 	A2($elm$json$Json$Decode$field, 'Id', $elm$json$Json$Decode$int),
-	A2($elm$json$Json$Decode$field, 'Label', $author$project$Data$Common$nullString));
+	A2($elm$json$Json$Decode$field, 'Label', $author$project$Checklist$nullString));
 var $elm$json$Json$Decode$map3 = _Json_map3;
-var $author$project$Data$Checklist$Row = F3(
+var $author$project$Checklist$Row = F3(
 	function (cells, id, label) {
 		return {cells: cells, id: id, label: label};
 	});
-var $author$project$Data$Checklist$Cell = F3(
+var $author$project$Checklist$Cell = F3(
 	function (columnId, unit, value) {
 		return {columnId: columnId, unit: unit, value: value};
 	});
-var $author$project$Data$Checklist$cellDecoder = A4(
+var $author$project$Checklist$cellDecoder = A4(
 	$elm$json$Json$Decode$map3,
-	$author$project$Data$Checklist$Cell,
+	$author$project$Checklist$Cell,
 	A2($elm$json$Json$Decode$field, 'ColumnId', $elm$json$Json$Decode$int),
-	A2($elm$json$Json$Decode$field, 'Unit', $author$project$Data$Common$nullString),
-	A2($elm$json$Json$Decode$field, 'Value', $author$project$Data$Common$nullString));
-var $author$project$Data$Checklist$rowDecoder = A4(
+	A2($elm$json$Json$Decode$field, 'Unit', $author$project$Checklist$nullString),
+	A2($elm$json$Json$Decode$field, 'Value', $author$project$Checklist$nullString));
+var $author$project$Checklist$rowDecoder = A4(
 	$elm$json$Json$Decode$map3,
-	$author$project$Data$Checklist$Row,
+	$author$project$Checklist$Row,
 	A2(
 		$elm$json$Json$Decode$field,
 		'Cells',
-		$elm$json$Json$Decode$list($author$project$Data$Checklist$cellDecoder)),
+		$elm$json$Json$Decode$list($author$project$Checklist$cellDecoder)),
 	A2($elm$json$Json$Decode$field, 'Id', $elm$json$Json$Decode$int),
-	A2($elm$json$Json$Decode$field, 'Label', $author$project$Data$Common$nullString));
-var $author$project$Data$Checklist$metaTableDecoder = A4(
+	A2($elm$json$Json$Decode$field, 'Label', $author$project$Checklist$nullString));
+var $author$project$Checklist$metaTableDecoder = A4(
 	$elm$json$Json$Decode$map3,
-	$author$project$Data$Checklist$MetaTable,
+	$author$project$Checklist$MetaTable,
 	A2(
 		$elm$json$Json$Decode$field,
 		'ColumnLabels',
-		$elm$json$Json$Decode$list($author$project$Data$Checklist$columnLabelDecoder)),
-	A2($elm$json$Json$Decode$field, 'Info', $author$project$Data$Common$nullString),
+		$elm$json$Json$Decode$list($author$project$Checklist$columnLabelDecoder)),
+	A2($elm$json$Json$Decode$field, 'Info', $author$project$Checklist$nullString),
 	A2(
 		$elm$json$Json$Decode$field,
 		'Rows',
-		$elm$json$Json$Decode$list($author$project$Data$Checklist$rowDecoder)));
-var $author$project$Data$Checklist$itemDecoder = A8(
+		$elm$json$Json$Decode$list($author$project$Checklist$rowDecoder)));
+var $author$project$Checklist$itemDecoder = A8(
 	$elm$json$Json$Decode$map7,
-	$author$project$Data$Checklist$Item,
+	$author$project$Checklist$Item,
 	A2($elm$json$Json$Decode$field, 'Id', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'IsHeading', $elm$json$Json$Decode$bool),
 	A2($elm$json$Json$Decode$field, 'IsNotApplicable', $elm$json$Json$Decode$bool),
@@ -12541,32 +12545,32 @@ var $author$project$Data$Checklist$itemDecoder = A8(
 		$elm$json$Json$Decode$oneOf(
 			_List_fromArray(
 				[
-					$author$project$Data$Checklist$metaTableDecoder,
+					$author$project$Checklist$metaTableDecoder,
 					$elm$json$Json$Decode$null(
-					A3($author$project$Data$Checklist$MetaTable, _List_Nil, '', _List_Nil))
+					A3($author$project$Checklist$MetaTable, _List_Nil, '', _List_Nil))
 				]))),
 	A2($elm$json$Json$Decode$field, 'SequenceNumber', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'Text', $author$project$Data$Common$nullString));
-var $author$project$Data$Checklist$loopTagDecoder = A2($elm$json$Json$Decode$field, 'TagNo', $elm$json$Json$Decode$string);
-var $author$project$Data$Checklist$detailsApiDecoder = A3(
+	A2($elm$json$Json$Decode$field, 'Text', $author$project$Checklist$nullString));
+var $author$project$Checklist$loopTagDecoder = A2($elm$json$Json$Decode$field, 'TagNo', $elm$json$Json$Decode$string);
+var $author$project$Checklist$detailsApiDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'CheckList',
-	$author$project$Data$Checklist$checklistDetails,
+	$author$project$Checklist$checklistDetails,
 	A4(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 		'CustomCheckItems',
-		$elm$json$Json$Decode$list($author$project$Data$Checklist$customItemDecoder),
+		$elm$json$Json$Decode$list($author$project$Checklist$customItemDecoder),
 		_List_Nil,
 		A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'CheckItems',
-			$elm$json$Json$Decode$list($author$project$Data$Checklist$itemDecoder),
+			$elm$json$Json$Decode$list($author$project$Checklist$itemDecoder),
 			A4(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 				'LoopTags',
-				$elm$json$Json$Decode$list($author$project$Data$Checklist$loopTagDecoder),
+				$elm$json$Json$Decode$list($author$project$Checklist$loopTagDecoder),
 				_List_Nil,
-				$elm$json$Json$Decode$succeed($author$project$Data$Checklist$Details)))));
+				$elm$json$Json$Decode$succeed($author$project$Checklist$Details)))));
 var $elm$http$Http$emptyBody = _Http_emptyBody;
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $elm$http$Http$expectStringResponse = F2(
@@ -12597,7 +12601,7 @@ var $elm$url$Url$Builder$int = F2(
 			$elm$url$Url$percentEncode(key),
 			$elm$core$String$fromInt(value));
 	});
-var $author$project$Api$checklistDetails = F3(
+var $author$project$Checklist$Api$checklistDetails = F3(
 	function (checklist, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -12606,9 +12610,9 @@ var $author$project$Api$checklistDetails = F3(
 					$elm$http$Http$expectJson,
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$GotChecklistDetails(checklist.id)),
-					$author$project$Data$Checklist$detailsApiDecoder),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$GotChecklistDetails(checklist.id)),
+					$author$project$Checklist$detailsApiDecoder),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -12617,7 +12621,7 @@ var $author$project$Api$checklistDetails = F3(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						[
 							'Checklist',
@@ -12637,24 +12641,26 @@ var $author$project$Api$checklistDetails = F3(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
 							A2($elm$url$Url$Builder$int, 'checklistId', checklist.id),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Update$getChecklistDetails = F2(
+var $author$project$Checklist$Update$getChecklistDetails = F2(
 	function (checklist, _v0) {
 		var m = _v0.a;
 		var c = _v0.b;
 		var updater = function (cl) {
 			return _Utils_update(
 				cl,
-				{details: $author$project$Types$Loading});
+				{
+					details: A2($author$project$Equinor$Types$Loading, '', $elm$core$Maybe$Nothing)
+				});
 		};
 		return A2(
-			$author$project$Update$apiRequest,
+			$author$project$Checklist$Update$apiRequest,
 			_List_fromArray(
 				[
-					$author$project$Api$checklistDetails(checklist)
+					$author$project$Checklist$Api$checklistDetails(checklist)
 				]),
 			_Utils_Tuple2(
 				_Utils_update(
@@ -12668,13 +12674,16 @@ var $author$project$Update$getChecklistDetails = F2(
 					}),
 				c));
 	});
-var $author$project$Types$DataError = {$: 'DataError'};
-var $author$project$Messages$AddCustomItemResult = F2(
+var $author$project$Equinor$Types$DataError = F2(
+	function (a, b) {
+		return {$: 'DataError', a: a, b: b};
+	});
+var $author$project$Checklist$Messages$AddCustomItemResult = F2(
 	function (a, b) {
 		return {$: 'AddCustomItemResult', a: a, b: b};
 	});
 var $elm$json$Json$Encode$bool = _Json_wrap;
-var $author$project$Api$addCustomItem = F6(
+var $author$project$Checklist$Api$addCustomItem = F6(
 	function (checklist, nextNo, itemString, isOk, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -12698,8 +12707,8 @@ var $author$project$Api$addCustomItem = F6(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$AddCustomItemResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$AddCustomItemResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -12708,13 +12717,13 @@ var $author$project$Api$addCustomItem = F6(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						['CheckList', 'CustomItem']),
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
@@ -12725,7 +12734,7 @@ var $elm$core$String$replace = F3(
 			after,
 			A2($elm$core$String$split, before, string));
 	});
-var $author$project$Update$handleApiResult = F2(
+var $author$project$Checklist$Update$handleApiResult = F2(
 	function (apiResult, _v0) {
 		var m = _v0.a;
 		var c = _v0.b;
@@ -12740,10 +12749,10 @@ var $author$project$Update$handleApiResult = F2(
 							details: function () {
 								if (result.$ === 'Ok') {
 									var details = result.a;
-									return $author$project$Types$Loaded(details);
+									return A2($author$project$Equinor$Types$Loaded, '', details);
 								} else {
 									var err = result.a;
-									return $author$project$Types$DataError;
+									return A2($author$project$Equinor$Types$DataError, '', $elm$core$Maybe$Nothing);
 								}
 							}(),
 							status: function () {
@@ -12774,10 +12783,10 @@ var $author$project$Update$handleApiResult = F2(
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
-								$author$project$Api$checklistDetails(checklist)
+								$author$project$Checklist$Api$checklistDetails(checklist)
 							]),
 						_Utils_Tuple2(m, c));
 				} else {
@@ -12789,10 +12798,10 @@ var $author$project$Update$handleApiResult = F2(
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
-								$author$project$Api$checklistDetails(checklist)
+								$author$project$Checklist$Api$checklistDetails(checklist)
 							]),
 						_Utils_Tuple2(m, c));
 				} else {
@@ -12804,10 +12813,10 @@ var $author$project$Update$handleApiResult = F2(
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
-								$author$project$Api$checklistDetails(checklist)
+								$author$project$Checklist$Api$checklistDetails(checklist)
 							]),
 						_Utils_Tuple2(m, c));
 				} else {
@@ -12819,10 +12828,10 @@ var $author$project$Update$handleApiResult = F2(
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
-								$author$project$Api$checklistDetails(checklist)
+								$author$project$Checklist$Api$checklistDetails(checklist)
 							]),
 						_Utils_Tuple2(m, c));
 				} else {
@@ -12834,10 +12843,10 @@ var $author$project$Update$handleApiResult = F2(
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
-								$author$project$Api$checklistDetails(checklist)
+								$author$project$Checklist$Api$checklistDetails(checklist)
 							]),
 						_Utils_Tuple2(m, c));
 				} else {
@@ -12849,10 +12858,10 @@ var $author$project$Update$handleApiResult = F2(
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
-								$author$project$Api$checklistDetails(checklist)
+								$author$project$Checklist$Api$checklistDetails(checklist)
 							]),
 						_Utils_Tuple2(m, c));
 				} else {
@@ -12864,10 +12873,10 @@ var $author$project$Update$handleApiResult = F2(
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
-								$author$project$Api$checklistDetails(checklist)
+								$author$project$Checklist$Api$checklistDetails(checklist)
 							]),
 						_Utils_Tuple2(m, c));
 				} else {
@@ -12879,10 +12888,10 @@ var $author$project$Update$handleApiResult = F2(
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
-								$author$project$Api$checklistDetails(checklist)
+								$author$project$Checklist$Api$checklistDetails(checklist)
 							]),
 						_Utils_Tuple2(m, c));
 				} else {
@@ -12894,10 +12903,10 @@ var $author$project$Update$handleApiResult = F2(
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
-								$author$project$Api$checklistDetails(checklist)
+								$author$project$Checklist$Api$checklistDetails(checklist)
 							]),
 						_Utils_Tuple2(m, c));
 				} else {
@@ -12909,11 +12918,11 @@ var $author$project$Update$handleApiResult = F2(
 				if (result.$ === 'Ok') {
 					var nextNo = result.a;
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
 								A4(
-								$author$project$Api$addCustomItem,
+								$author$project$Checklist$Api$addCustomItem,
 								checklist,
 								A3($elm$core$String$replace, '\"', '', nextNo),
 								m.customCheckItemField,
@@ -12929,10 +12938,10 @@ var $author$project$Update$handleApiResult = F2(
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
-								$author$project$Api$checklistDetails(checklist)
+								$author$project$Checklist$Api$checklistDetails(checklist)
 							]),
 						_Utils_Tuple2(m, c));
 				} else {
@@ -12944,10 +12953,10 @@ var $author$project$Update$handleApiResult = F2(
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
 					return A2(
-						$author$project$Update$apiRequest,
+						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
 							[
-								$author$project$Api$checklistDetails(checklist)
+								$author$project$Checklist$Api$checklistDetails(checklist)
 							]),
 						_Utils_Tuple2(m, c));
 				} else {
@@ -12956,7 +12965,7 @@ var $author$project$Update$handleApiResult = F2(
 				}
 		}
 	});
-var $author$project$Messages$GotNextCustomItemNo = F2(
+var $author$project$Checklist$Messages$GotNextCustomItemNo = F2(
 	function (a, b) {
 		return {$: 'GotNextCustomItemNo', a: a, b: b};
 	});
@@ -12966,7 +12975,7 @@ var $elm$http$Http$expectString = function (toMsg) {
 		toMsg,
 		$elm$http$Http$resolve($elm$core$Result$Ok));
 };
-var $author$project$Api$nextCustomItemNo = F3(
+var $author$project$Checklist$Api$nextCustomItemNo = F3(
 	function (checklist, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -12974,8 +12983,8 @@ var $author$project$Api$nextCustomItemNo = F3(
 				expect: $elm$http$Http$expectString(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$GotNextCustomItemNo(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$GotNextCustomItemNo(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -12984,18 +12993,18 @@ var $author$project$Api$nextCustomItemNo = F3(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						['Checklist', 'CustomItem', 'NextItemNo']),
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
 							A2($elm$url$Url$Builder$int, 'checklistId', checklist.id),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Update$selectChecklist = F2(
+var $author$project$Checklist$Update$selectChecklist = F2(
 	function (checklist, _v0) {
 		var m = _v0.a;
 		var c = _v0.b;
@@ -13007,7 +13016,7 @@ var $author$project$Update$selectChecklist = F2(
 				}),
 			c);
 	});
-var $author$project$Update$sendRequestsWaitingForToken = F2(
+var $author$project$Checklist$Update$sendRequestsWaitingForToken = F2(
 	function (tokenSuccess, _v0) {
 		var m = _v0.a;
 		var c = _v0.b;
@@ -13033,11 +13042,11 @@ var $author$project$Update$sendRequestsWaitingForToken = F2(
 				}
 			}());
 	});
-var $author$project$Messages$SetNaResult = F2(
+var $author$project$Checklist$Messages$SetNaResult = F2(
 	function (a, b) {
 		return {$: 'SetNaResult', a: a, b: b};
 	});
-var $author$project$Api$setCheckItemNa = F4(
+var $author$project$Checklist$Api$setCheckItemNa = F4(
 	function (checklist, checkItem, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -13055,8 +13064,8 @@ var $author$project$Api$setCheckItemNa = F4(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$SetNaResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$SetNaResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -13065,21 +13074,21 @@ var $author$project$Api$setCheckItemNa = F4(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						['CheckList', 'Item', 'SetNA']),
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Messages$SetOkResult = F2(
+var $author$project$Checklist$Messages$SetOkResult = F2(
 	function (a, b) {
 		return {$: 'SetOkResult', a: a, b: b};
 	});
-var $author$project$Api$setCheckItemOk = F4(
+var $author$project$Checklist$Api$setCheckItemOk = F4(
 	function (checklist, checkItem, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -13097,8 +13106,8 @@ var $author$project$Api$setCheckItemOk = F4(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$SetOkResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$SetOkResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -13107,17 +13116,17 @@ var $author$project$Api$setCheckItemOk = F4(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						['CheckList', 'Item', 'SetOk']),
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Update$setChecklistsTo = F2(
+var $author$project$Checklist$Update$setChecklistsTo = F2(
 	function (checklists, _v0) {
 		var m = _v0.a;
 		var c = _v0.b;
@@ -13136,7 +13145,7 @@ var $author$project$Update$setChecklistsTo = F2(
 				}),
 			c);
 	});
-var $author$project$Api$setCustomCheckItemOk = F4(
+var $author$project$Checklist$Api$setCustomCheckItemOk = F4(
 	function (checklist, checkItem, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -13154,8 +13163,8 @@ var $author$project$Api$setCustomCheckItemOk = F4(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$SetOkResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$SetOkResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -13164,21 +13173,21 @@ var $author$project$Api$setCustomCheckItemOk = F4(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						['CheckList', 'CustomItem', 'SetOk']),
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Messages$SignChecklistResult = F2(
+var $author$project$Checklist$Messages$SignChecklistResult = F2(
 	function (a, b) {
 		return {$: 'SignChecklistResult', a: a, b: b};
 	});
-var $author$project$Api$signChecklist = F3(
+var $author$project$Checklist$Api$signChecklist = F3(
 	function (checklist, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -13187,8 +13196,8 @@ var $author$project$Api$signChecklist = F3(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$SignChecklistResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$SignChecklistResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -13197,7 +13206,7 @@ var $author$project$Api$signChecklist = F3(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						[
 							'CheckList',
@@ -13217,11 +13226,11 @@ var $author$project$Api$signChecklist = F3(
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Update$unSelectChecklist = function (_v0) {
+var $author$project$Checklist$Update$unSelectChecklist = function (_v0) {
 	var m = _v0.a;
 	var c = _v0.b;
 	return _Utils_Tuple2(
@@ -13230,11 +13239,11 @@ var $author$project$Update$unSelectChecklist = function (_v0) {
 			{selectedChecklist: $elm$core$Maybe$Nothing}),
 		c);
 };
-var $author$project$Messages$UnsignChecklistResult = F2(
+var $author$project$Checklist$Messages$UnsignChecklistResult = F2(
 	function (a, b) {
 		return {$: 'UnsignChecklistResult', a: a, b: b};
 	});
-var $author$project$Api$unSignChecklist = F3(
+var $author$project$Checklist$Api$unSignChecklist = F3(
 	function (checklist, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -13243,8 +13252,8 @@ var $author$project$Api$unSignChecklist = F3(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$UnsignChecklistResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$UnsignChecklistResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -13253,7 +13262,7 @@ var $author$project$Api$unSignChecklist = F3(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						[
 							'CheckList',
@@ -13273,15 +13282,15 @@ var $author$project$Api$unSignChecklist = F3(
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Messages$UnverifyChecklistResult = F2(
+var $author$project$Checklist$Messages$UnverifyChecklistResult = F2(
 	function (a, b) {
 		return {$: 'UnverifyChecklistResult', a: a, b: b};
 	});
-var $author$project$Api$unVerifyChecklist = F3(
+var $author$project$Checklist$Api$unVerifyChecklist = F3(
 	function (checklist, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -13290,8 +13299,8 @@ var $author$project$Api$unVerifyChecklist = F3(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$UnverifyChecklistResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$UnverifyChecklistResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -13300,7 +13309,7 @@ var $author$project$Api$unVerifyChecklist = F3(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						[
 							'CheckList',
@@ -13320,15 +13329,15 @@ var $author$project$Api$unVerifyChecklist = F3(
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Messages$CommentChecklistResult = F2(
+var $author$project$Checklist$Messages$CommentChecklistResult = F2(
 	function (a, b) {
 		return {$: 'CommentChecklistResult', a: a, b: b};
 	});
-var $author$project$Api$updateComment = F4(
+var $author$project$Checklist$Api$updateComment = F4(
 	function (checklist, comment, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -13346,8 +13355,8 @@ var $author$project$Api$updateComment = F4(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$CommentChecklistResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$CommentChecklistResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -13356,7 +13365,7 @@ var $author$project$Api$updateComment = F4(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						[
 							'CheckList',
@@ -13376,15 +13385,15 @@ var $author$project$Api$updateComment = F4(
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Messages$UpdateMetaTableCellResult = F2(
+var $author$project$Checklist$Messages$UpdateMetaTableCellResult = F2(
 	function (a, b) {
 		return {$: 'UpdateMetaTableCellResult', a: a, b: b};
 	});
-var $author$project$Api$updateMetaTableCell = F6(
+var $author$project$Checklist$Api$updateMetaTableCell = F6(
 	function (checklist, checkItem, tableRow, cell, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -13411,8 +13420,8 @@ var $author$project$Api$updateMetaTableCell = F6(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$UpdateMetaTableCellResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$UpdateMetaTableCellResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -13421,21 +13430,21 @@ var $author$project$Api$updateMetaTableCell = F6(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						['CheckList', 'Item', 'MetaTableCell']),
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Messages$VerifyChecklistResult = F2(
+var $author$project$Checklist$Messages$VerifyChecklistResult = F2(
 	function (a, b) {
 		return {$: 'VerifyChecklistResult', a: a, b: b};
 	});
-var $author$project$Api$verifyChecklist = F3(
+var $author$project$Checklist$Api$verifyChecklist = F3(
 	function (checklist, plantId, token) {
 		return $elm$http$Http$request(
 			{
@@ -13444,8 +13453,8 @@ var $author$project$Api$verifyChecklist = F3(
 				expect: $elm$http$Http$expectWhatever(
 					A2(
 						$elm$core$Basics$composeL,
-						$author$project$Messages$GotApiResult,
-						$author$project$Messages$VerifyChecklistResult(checklist))),
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$VerifyChecklistResult(checklist))),
 				headers: _List_fromArray(
 					[
 						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
@@ -13454,7 +13463,7 @@ var $author$project$Api$verifyChecklist = F3(
 				timeout: $elm$core$Maybe$Nothing,
 				tracker: $elm$core$Maybe$Nothing,
 				url: A2(
-					$author$project$Api$url,
+					$author$project$Checklist$Api$url,
 					_List_fromArray(
 						[
 							'CheckList',
@@ -13474,11 +13483,11 @@ var $author$project$Api$verifyChecklist = F3(
 					_List_fromArray(
 						[
 							A2($elm$url$Url$Builder$string, 'plantId', plantId),
-							$author$project$Api$apiVersion
+							$author$project$Checklist$Api$apiVersion
 						]))
 			});
 	});
-var $author$project$Update$update = F2(
+var $author$project$Checklist$Update$update = F2(
 	function (msg, model) {
 		var mc = _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		switch (msg.$) {
@@ -13486,13 +13495,13 @@ var $author$project$Update$update = F2(
 				return mc;
 			case 'GotToken':
 				var tokenSuccess = msg.a;
-				return A2($author$project$Update$sendRequestsWaitingForToken, tokenSuccess, mc);
+				return A2($author$project$Checklist$Update$sendRequestsWaitingForToken, tokenSuccess, mc);
 			case 'GotChecklists':
 				var checklists = msg.a;
-				return A2($author$project$Update$setChecklistsTo, checklists, mc);
+				return A2($author$project$Checklist$Update$setChecklistsTo, checklists, mc);
 			case 'GotApiResult':
 				var apiResult = msg.a;
-				return A2($author$project$Update$handleApiResult, apiResult, mc);
+				return A2($author$project$Checklist$Update$handleApiResult, apiResult, mc);
 			case 'DecodeError':
 				var err = msg.a;
 				return mc;
@@ -13500,16 +13509,16 @@ var $author$project$Update$update = F2(
 				var checklist = msg.a;
 				return _Utils_eq(
 					model.selectedChecklist,
-					$elm$core$Maybe$Just(checklist.id)) ? $author$project$Update$unSelectChecklist(mc) : A2(
-					$author$project$Update$getChecklistDetails,
+					$elm$core$Maybe$Just(checklist.id)) ? $author$project$Checklist$Update$unSelectChecklist(mc) : A2(
+					$author$project$Checklist$Update$getChecklistDetails,
 					checklist,
-					A2($author$project$Update$selectChecklist, checklist, mc));
+					A2($author$project$Checklist$Update$selectChecklist, checklist, mc));
 			case 'NaCheckItemPressed':
 				var checklist = msg.a;
 				var checkItem = msg.b;
-				var apiCall = checkItem.isNa ? $author$project$Api$clearCheckItem : $author$project$Api$setCheckItemNa;
+				var apiCall = checkItem.isNa ? $author$project$Checklist$Api$clearCheckItem : $author$project$Checklist$Api$setCheckItemNa;
 				return A2(
-					$author$project$Update$apiRequest,
+					$author$project$Checklist$Update$apiRequest,
 					_List_fromArray(
 						[
 							A2(apiCall, checklist, checkItem)
@@ -13518,9 +13527,9 @@ var $author$project$Update$update = F2(
 			case 'OkCheckItemPressed':
 				var checklist = msg.a;
 				var checkItem = msg.b;
-				var apiCall = checkItem.isOk ? $author$project$Api$clearCheckItem : $author$project$Api$setCheckItemOk;
+				var apiCall = checkItem.isOk ? $author$project$Checklist$Api$clearCheckItem : $author$project$Checklist$Api$setCheckItemOk;
 				return A2(
-					$author$project$Update$apiRequest,
+					$author$project$Checklist$Update$apiRequest,
 					_List_fromArray(
 						[
 							A2(apiCall, checklist, checkItem)
@@ -13529,37 +13538,37 @@ var $author$project$Update$update = F2(
 			case 'SignChecklistButtonPressed':
 				var checklist = msg.a;
 				return A2(
-					$author$project$Update$apiRequest,
+					$author$project$Checklist$Update$apiRequest,
 					_List_fromArray(
 						[
-							$author$project$Api$signChecklist(checklist)
+							$author$project$Checklist$Api$signChecklist(checklist)
 						]),
 					mc);
 			case 'UnsignChecklistButtonPressed':
 				var checklist = msg.a;
 				return A2(
-					$author$project$Update$apiRequest,
+					$author$project$Checklist$Update$apiRequest,
 					_List_fromArray(
 						[
-							$author$project$Api$unSignChecklist(checklist)
+							$author$project$Checklist$Api$unSignChecklist(checklist)
 						]),
 					mc);
 			case 'VerifyChecklistButtonPressed':
 				var checklist = msg.a;
 				return A2(
-					$author$project$Update$apiRequest,
+					$author$project$Checklist$Update$apiRequest,
 					_List_fromArray(
 						[
-							$author$project$Api$verifyChecklist(checklist)
+							$author$project$Checklist$Api$verifyChecklist(checklist)
 						]),
 					mc);
 			case 'UnverifyChecklistButtonPressed':
 				var checklist = msg.a;
 				return A2(
-					$author$project$Update$apiRequest,
+					$author$project$Checklist$Update$apiRequest,
 					_List_fromArray(
 						[
-							$author$project$Api$unVerifyChecklist(checklist)
+							$author$project$Checklist$Api$unVerifyChecklist(checklist)
 						]),
 					mc);
 			case 'MetaTableCellLostFocus':
@@ -13568,10 +13577,10 @@ var $author$project$Update$update = F2(
 				var tableRow = msg.c;
 				var cell = msg.d;
 				return A2(
-					$author$project$Update$apiRequest,
+					$author$project$Checklist$Update$apiRequest,
 					_List_fromArray(
 						[
-							A4($author$project$Api$updateMetaTableCell, checklist, checkItem, tableRow, cell)
+							A4($author$project$Checklist$Api$updateMetaTableCell, checklist, checkItem, tableRow, cell)
 						]),
 					mc);
 			case 'MetaTableCellInput':
@@ -13583,11 +13592,13 @@ var $author$project$Update$update = F2(
 				var updater = function (cl) {
 					var _v1 = cl.details;
 					if (_v1.$ === 'Loaded') {
-						var details = _v1.a;
+						var details = _v1.b;
 						return _Utils_update(
 							cl,
 							{
-								details: $author$project$Types$Loaded(
+								details: A2(
+									$author$project$Equinor$Types$Loaded,
+									'',
 									_Utils_update(
 										details,
 										{
@@ -13649,12 +13660,14 @@ var $author$project$Update$update = F2(
 				var updater = function (cl) {
 					var _v2 = cl.details;
 					if (_v2.$ === 'Loaded') {
-						var details = _v2.a;
+						var details = _v2.b;
 						var oldChecklistDetails = details.checklistDetails;
 						return _Utils_update(
 							cl,
 							{
-								details: $author$project$Types$Loaded(
+								details: A2(
+									$author$project$Equinor$Types$Loaded,
+									'',
 									_Utils_update(
 										details,
 										{
@@ -13682,10 +13695,10 @@ var $author$project$Update$update = F2(
 				var checklist = msg.a;
 				var str = msg.b;
 				return A2(
-					$author$project$Update$apiRequest,
+					$author$project$Checklist$Update$apiRequest,
 					_List_fromArray(
 						[
-							A2($author$project$Api$updateComment, checklist, str)
+							A2($author$project$Checklist$Api$updateComment, checklist, str)
 						]),
 					mc);
 			case 'CustomCheckItemInput':
@@ -13698,18 +13711,18 @@ var $author$project$Update$update = F2(
 			case 'AddCustomCheckItemButtonPressed':
 				var checklist = msg.a;
 				return A2(
-					$author$project$Update$apiRequest,
+					$author$project$Checklist$Update$apiRequest,
 					_List_fromArray(
 						[
-							$author$project$Api$nextCustomItemNo(checklist)
+							$author$project$Checklist$Api$nextCustomItemNo(checklist)
 						]),
 					mc);
 			case 'OkCustomCheckItemPressed':
 				var checklist = msg.a;
 				var customItem = msg.b;
-				var apiCall = customItem.isOk ? $author$project$Api$clearCustomCheckItem : $author$project$Api$setCustomCheckItemOk;
+				var apiCall = customItem.isOk ? $author$project$Checklist$Api$clearCustomCheckItem : $author$project$Checklist$Api$setCustomCheckItemOk;
 				return A2(
-					$author$project$Update$apiRequest,
+					$author$project$Checklist$Update$apiRequest,
 					_List_fromArray(
 						[
 							A2(apiCall, checklist, customItem)
@@ -13719,10 +13732,10 @@ var $author$project$Update$update = F2(
 				var checklist = msg.a;
 				var customItem = msg.b;
 				return A2(
-					$author$project$Update$apiRequest,
+					$author$project$Checklist$Update$apiRequest,
 					_List_fromArray(
 						[
-							A2($author$project$Api$deleteCustomItem, checklist, customItem)
+							A2($author$project$Checklist$Api$deleteCustomItem, checklist, customItem)
 						]),
 					mc);
 		}
@@ -13811,12 +13824,12 @@ var $mdgriffith$elm_ui$Element$el = F2(
 				_List_fromArray(
 					[child])));
 	});
-var $author$project$Palette$mistBlue = A3($mdgriffith$elm_ui$Element$rgb255, 213, 234, 244);
-var $author$project$Palette$mossGreen = A3($mdgriffith$elm_ui$Element$rgb255, 0, 112, 121);
-var $author$project$Messages$ChecklistPressed = function (a) {
+var $author$project$Equinor$Palette$mistBlue = A3($mdgriffith$elm_ui$Element$rgb255, 213, 234, 244);
+var $author$project$Equinor$Palette$mossGreen = A3($mdgriffith$elm_ui$Element$rgb255, 0, 112, 121);
+var $author$project$Checklist$Messages$ChecklistPressed = function (a) {
 	return {$: 'ChecklistPressed', a: a};
 };
-var $author$project$Messages$NoOp = {$: 'NoOp'};
+var $author$project$Checklist$Messages$NoOp = {$: 'NoOp'};
 var $mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
 	return {$: 'AlignX', a: a};
 };
@@ -13826,11 +13839,11 @@ var $mdgriffith$elm_ui$Element$rgba255 = F4(
 	function (red, green, blue, a) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, a);
 	});
-var $author$project$Palette$alphaMossGreen = A4($mdgriffith$elm_ui$Element$rgba255, 0, 112, 121, 0.7);
-var $author$project$Palette$alphaYellow = A4($mdgriffith$elm_ui$Element$rgba255, 251, 202, 54, 1);
+var $author$project$Equinor$Palette$alphaMossGreen = A4($mdgriffith$elm_ui$Element$rgba255, 0, 112, 121, 0.7);
+var $author$project$Equinor$Palette$alphaYellow = A4($mdgriffith$elm_ui$Element$rgba255, 251, 202, 54, 1);
 var $mdgriffith$elm_ui$Internal$Flag$overflow = $mdgriffith$elm_ui$Internal$Flag$flag(20);
 var $mdgriffith$elm_ui$Element$clip = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.clip);
-var $author$project$Palette$combination = F3(
+var $author$project$Equinor$Palette$combination = F3(
 	function (fontColor, backgroundColor, attributes) {
 		return _Utils_ap(
 			attributes,
@@ -13840,7 +13853,7 @@ var $author$project$Palette$combination = F3(
 					$mdgriffith$elm_ui$Element$Background$color(backgroundColor)
 				]));
 	});
-var $author$project$Palette$grey = A3($mdgriffith$elm_ui$Element$rgb255, 217, 217, 217);
+var $author$project$Equinor$Palette$grey = A3($mdgriffith$elm_ui$Element$rgb255, 217, 217, 217);
 var $elm$core$Basics$always = F2(
 	function (a, _v0) {
 		return a;
@@ -13855,14 +13868,14 @@ var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var $author$project$Icon$cable = A2(
+var $author$project$Equinor$Icon$cable = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
-			$elm$svg$Svg$Attributes$viewBox('0 0 96 96'),
+			$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
 			$elm$svg$Svg$Attributes$fill('currentColor'),
-			A2($elm$html$Html$Attributes$style, '-webkit-transform', 'scale(1.2) translate(-5px,5px)'),
-			A2($elm$html$Html$Attributes$style, 'transform', 'scale(1.2) translate(-5px,5px)')
+			A2($elm$html$Html$Attributes$style, '-webkit-transform', 'scale(0.7) translate(0px,0px)'),
+			A2($elm$html$Html$Attributes$style, 'transform', 'scale(0.7) translate(0px,0px)')
 		]),
 	_List_fromArray(
 		[
@@ -13870,12 +13883,26 @@ var $author$project$Icon$cable = A2(
 			$elm$svg$Svg$path,
 			_List_fromArray(
 				[
-					$elm$svg$Svg$Attributes$d('M82.3,26.5c-0.4-0.4-1-0.5-1.4-0.1L76,30.6c-0.8-0.6-1.5-0.9-2.2-0.7c0,0,0,0,0,0c0,0-0.1,0-0.1,0c-0.1,0-0.3,0.1-0.4,0.2l-0.1,0.1c0,0,0,0,0,0c0,0,0,0,0,0l-6.7,5.7c-0.3-0.4-0.7-0.8-1-1.2l11.6-11.6c0,0,0,0,0,0c0,0,0,0,0,0l0.1-0.1c0,0,0,0,0,0c0,0,0,0,0-0.1c0.1-0.1,0.1-0.2,0.1-0.2c0,0,0,0,0-0.1c0,0,0,0,0,0c0.2-0.6,0.1-1.4-0.4-2.2l4.5-4.5c0.4-0.4,0.4-1,0-1.4c-0.4-0.4-1-0.4-1.4,0l-4.5,4.5c-0.8-0.5-1.6-0.7-2.2-0.4c0,0,0,0,0,0c0,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0-0.1,0-0.1,0c-0.1,0-0.1,0.1-0.2,0.1L61.2,30.4c-0.3-0.3-0.6-0.6-1-0.9l5.7-6.7l0.1-0.1c0,0,0.1-0.1,0.1-0.1c0,0,0-0.1,0.1-0.1c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0-0.1,0-0.2c0,0,0,0,0,0c0.2-0.6-0.1-1.4-0.7-2.2l4.1-4.9c0.4-0.4,0.3-1.1-0.1-1.4c-0.4-0.4-1.1-0.3-1.4,0.1L64,18.8c-0.8-0.4-1.6-0.5-2.1-0.2c0,0,0,0,0,0c0,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c-0.1,0-0.1,0.1-0.2,0.2L61.4,19c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0l0,0l-5.9,7c-2.4-1.5-4.5-2.1-5.6-1.1c0,0-0.1,0.1-0.1,0.1c0,0-0.1,0-0.1,0.1L13.2,61.5c0,0,0,0-0.1,0.1c0,0-0.1,0.1-0.1,0.1c-2.4,2.4,3.7,9.7,7.6,13.6c2.7,2.7,5.5,5,7.9,6.5c1.8,1.1,3.2,1.7,4.3,1.7c0.6,0,1.1-0.2,1.5-0.6c0,0,0.1-0.1,0.1-0.1c0,0,0.1,0,0.1-0.1l36.4-36.4c0,0,0.1-0.1,0.1-0.1l0,0c0,0,0,0,0.1-0.1c1-1,0.7-2.8-1-5.5l7-5.9l0.1-0.1c0.2-0.1,0.3-0.3,0.3-0.5c0,0,0,0,0,0c0.2-0.6,0.2-1.3-0.2-2.1l4.9-4.2C82.6,27.6,82.6,27,82.3,26.5z M65,37.1L64,38l-1.5,1.3l-0.7,0.6c0,0,0,0,0,0c-0.3-0.2-0.5-0.4-0.8-0.7l0.7-0.6l1.4-1.4l1-1C64.4,36.4,64.7,36.8,65,37.1z M73,21.5c0.2,0.3,0.4,0.5,0.6,0.8c0.2,0.2,0.5,0.5,0.8,0.6l0,0L64.1,33.2l-1.4,1.4l-1.1,1.1l-1.4,1.4l-0.7,0.7c-0.2-0.2-0.5-0.5-0.7-0.7s-0.5-0.5-0.7-0.7l0.7-0.7l1.4-1.4l1-1l1.4-1.4L73,21.5z M59.8,31.8l-1,1l-1.4,1.4l-0.6,0.6c-0.1,0-0.1-0.1-0.2-0.2c0,0-0.1-0.1-0.1-0.2c-0.1-0.1-0.2-0.2-0.2-0.3l0.6-0.7l1.3-1.5l0.9-1C59.3,31.3,59.5,31.6,59.8,31.8z M61.7,21.7L61.7,21.7c0.2,0.2,0.4,0.5,0.7,0.7c0.3,0.2,0.5,0.4,0.8,0.6l-4.5,5.3l-1.3,1.5l-0.8,0.9l-1.3,1.5l-0.3,0.3c-0.4-0.4-0.7-0.8-1-1.2c-0.1-0.1-0.2-0.2-0.3-0.3l0.2-0.2l1.3-1.5l0.6-0.7l1.3-1.5L61.7,21.7z M54.1,27.5l-0.3,0.4l-1.3,1.5l0,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0-0.1c-0.2-0.4-0.4-0.7-0.6-1c-0.3-0.5-0.4-0.9-0.5-1.2c0-0.1-0.1-0.2-0.1-0.3c0-0.1,0-0.3,0-0.3c0.3,0,0.8,0.1,1.4,0.4C53.1,26.9,53.6,27.2,54.1,27.5z M33.2,81.1c-0.1,0.1-0.3,0.2-0.4,0.4c-1,0.2-5.3-2.1-10.8-7.6c-5.6-5.6-7.8-9.9-7.6-10.8c0.1-0.1,0.3-0.2,0.4-0.4L49.6,28c0,0,0,0,0,0c0,0,0,0.1,0,0.1c0.1,0.2,0.1,0.4,0.2,0.5c0.1,0.2,0.2,0.5,0.3,0.7c0.1,0.2,0.2,0.5,0.4,0.7c0.3,0.5,0.7,1.1,1.1,1.7c0.2,0.3,0.4,0.5,0.6,0.8c0.2,0.3,0.5,0.6,0.7,1c0.3,0.3,0.5,0.7,0.8,1c0,0,0.1,0.1,0.1,0.1c0.1,0.1,0.2,0.3,0.3,0.4c0.1,0.2,0.3,0.3,0.4,0.5c0.2,0.2,0.4,0.5,0.6,0.7c0.3,0.3,0.5,0.6,0.8,0.9c0.1,0.1,0.1,0.1,0.2,0.2c0.4,0.4,0.8,0.9,1.2,1.3c0.4,0.4,0.9,0.8,1.3,1.2c0.5,0.4,0.9,0.9,1.4,1.3c0.2,0.2,0.4,0.4,0.6,0.5c0.2,0.2,0.5,0.4,0.7,0.6c0.2,0.2,0.4,0.3,0.6,0.5c0.8,0.7,1.6,1.2,2.3,1.7c0,0,0.1,0.1,0.1,0.1c0.2,0.1,0.4,0.3,0.7,0.4c0.1,0.1,0.2,0.1,0.3,0.2c0.5,0.3,0.9,0.6,1.4,0.8c0.5,0.3,0.9,0.5,1.3,0.6L33.2,81.1z M69.2,43.2c0.3,0.7,0.4,1.2,0.4,1.4c0,0-0.1,0-0.2,0c0,0,0,0-0.1,0c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.2,0c0,0,0,0,0,0c-0.2-0.1-0.6-0.2-1-0.4c-0.1,0-0.3-0.1-0.4-0.2c-0.3-0.1-0.6-0.3-0.9-0.5c0,0,0,0,0,0l1.5-1.3l0.3-0.3C68.8,42.4,69,42.9,69.2,43.2z M69,39l-1.5,1.3l-0.7,0.6l-1.5,1.3l-0.2,0.2c-0.1-0.1-0.2-0.2-0.3-0.3c-0.4-0.3-0.8-0.7-1.2-1l0.3-0.3l1.5-1.3l0.9-0.7l1.5-1.3l5.3-4.5c0.2,0.3,0.3,0.6,0.6,0.8c0.2,0.3,0.5,0.5,0.7,0.7L69,39z')
+					$elm$svg$Svg$Attributes$d('M21.8 2.3C21.7 2.1 21.4 2 21.1 2.1C20.4 2.5 19.9 3.2 19.4 3.8V1.6C19.5 1.2 19.2 1 19 1C18.7 1 18.5 1.2 18.5 1.5V3.8C18 3.2 17.4 2.5 16.6 2.1C16.4 2 16.1 2.1 15.9 2.3C15.8 2.5 15.9 2.8 16.1 3C16.7 3.3 16.8 3.3 17.1 3.8H16.9V6.8H20.9V3.7H20.5C20.9 3.2 21 3.2 21.5 2.9C21.9 2.8 22 2.5 21.8 2.3Z')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$path,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$d('M2.09999 21.3C2.19999 21.5 2.49999 21.6 2.79999 21.5C3.49999 21.1 3.99999 20.4 4.49999 19.8V22C4.49999 22.3 4.69999 22.5 4.99999 22.5C5.29999 22.5 5.49999 22.3 5.49999 22V19.7C5.99999 20.3 6.59999 21 7.39999 21.4C7.59999 21.5 7.89999 21.4 8.09999 21.2C8.19999 21 8.09999 20.7 7.89999 20.5C7.29999 20.2 7.19999 20.2 6.89999 19.7H7.09999V16.7H3.09999V19.8H3.49999C3.09999 20.3 2.99999 20.3 2.49999 20.6C1.99999 20.7 1.89999 21 2.09999 21.3Z')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$path,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$d('M16.9 18.8H13.9C12.2 18.8 10.9 17.5 10.9 15.8V7.79999C10.9 7.29999 10.5 6.79999 9.89999 6.79999H6.89999C6.39999 6.79999 5.89999 7.19999 5.89999 7.79999V15.8H3.89999V7.79999C3.89999 6.09999 5.19999 4.79999 6.89999 4.79999H9.89999C11.6 4.79999 12.9 6.09999 12.9 7.79999V15.8C12.9 16.3 13.3 16.8 13.9 16.8H16.9C17.4 16.8 17.9 16.4 17.9 15.8V7.79999H19.9V15.8C19.9 17.4 18.6 18.8 16.9 18.8Z')
 				]),
 			_List_Nil)
 		]));
 var $elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
-var $author$project$Icon$circuit = A2(
+var $author$project$Equinor$Icon$circuit = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -13901,7 +13928,7 @@ var $author$project$Icon$circuit = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Icon$ducting = A2(
+var $author$project$Equinor$Icon$ducting = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -13927,7 +13954,7 @@ var $author$project$Icon$ducting = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Icon$electrical = A2(
+var $author$project$Equinor$Icon$electrical = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -13953,7 +13980,7 @@ var $author$project$Icon$electrical = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Icon$fireAndGas = A2(
+var $author$project$Equinor$Icon$fireAndGas = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -13970,7 +13997,7 @@ var $author$project$Icon$fireAndGas = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Icon$function = A2(
+var $author$project$Equinor$Icon$function = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -13996,7 +14023,7 @@ var $author$project$Icon$function = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Icon$heatTrace = A2(
+var $author$project$Equinor$Icon$heatTrace = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -14015,7 +14042,7 @@ var $author$project$Icon$heatTrace = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Icon$instrument = A2(
+var $author$project$Equinor$Icon$instrument = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -14034,7 +14061,7 @@ var $author$project$Icon$instrument = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Icon$junctionBox = A2(
+var $author$project$Equinor$Icon$junctionBox = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -14051,7 +14078,7 @@ var $author$project$Icon$junctionBox = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Icon$line_ = A2(
+var $author$project$Equinor$Icon$line_ = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -14077,7 +14104,7 @@ var $author$project$Icon$line_ = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Icon$manualValve = A2(
+var $author$project$Equinor$Icon$manualValve = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -14096,7 +14123,7 @@ var $author$project$Icon$manualValve = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Icon$signal = A2(
+var $author$project$Equinor$Icon$signal = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -14128,7 +14155,7 @@ var $elm$svg$Svg$Attributes$transform = _VirtualDom_attribute('transform');
 var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
 var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var $author$project$Icon$tag = F2(
+var $author$project$Equinor$Icon$tag = F2(
 	function (letters, backgroundColor) {
 		return A2(
 			$elm$svg$Svg$svg,
@@ -14179,7 +14206,7 @@ var $author$project$Icon$tag = F2(
 						]))
 				]));
 	});
-var $author$project$Icon$telecom = A2(
+var $author$project$Equinor$Icon$telecom = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
@@ -14217,70 +14244,70 @@ var $author$project$Icon$telecom = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$View$iconFromCategory = function (category) {
+var $author$project$Checklist$View$iconFromCategory = function (category) {
 	switch (category) {
 		case 'Circuit/Starter':
-			return $author$project$Icon$circuit;
+			return $author$project$Equinor$Icon$circuit;
 		case 'CIRCUIT_AND_STARTER':
-			return $author$project$Icon$circuit;
+			return $author$project$Equinor$Icon$circuit;
 		case 'Electrical':
-			return $author$project$Icon$electrical;
+			return $author$project$Equinor$Icon$electrical;
 		case 'ELECTRICAL_FIELD':
-			return $author$project$Icon$electrical;
+			return $author$project$Equinor$Icon$electrical;
 		case 'Cable':
-			return $author$project$Icon$cable;
+			return $author$project$Equinor$Icon$cable;
 		case 'CABLE':
-			return $author$project$Icon$cable;
+			return $author$project$Equinor$Icon$cable;
 		case 'Instrument':
-			return $author$project$Icon$instrument;
+			return $author$project$Equinor$Icon$instrument;
 		case 'INSTRUMENT_FIELD':
-			return $author$project$Icon$instrument;
+			return $author$project$Equinor$Icon$instrument;
 		case 'Fire & Gas':
-			return $author$project$Icon$fireAndGas;
+			return $author$project$Equinor$Icon$fireAndGas;
 		case 'FIRE_AND_GAS_FIELD':
-			return $author$project$Icon$fireAndGas;
+			return $author$project$Equinor$Icon$fireAndGas;
 		case 'Line':
-			return $author$project$Icon$line_;
+			return $author$project$Equinor$Icon$line_;
 		case 'LINE':
-			return $author$project$Icon$line_;
+			return $author$project$Equinor$Icon$line_;
 		case 'Main Equipment':
-			return A2($author$project$Icon$tag, 'M', 'none');
+			return A2($author$project$Equinor$Icon$tag, 'M', 'none');
 		case 'MAIN_EQUIPMENT':
-			return A2($author$project$Icon$tag, 'M', 'none');
+			return A2($author$project$Equinor$Icon$tag, 'M', 'none');
 		case 'Telecom':
-			return $author$project$Icon$telecom;
+			return $author$project$Equinor$Icon$telecom;
 		case 'TELECOM_FIELD':
-			return $author$project$Icon$telecom;
+			return $author$project$Equinor$Icon$telecom;
 		case 'Junction Box':
-			return $author$project$Icon$junctionBox;
+			return $author$project$Equinor$Icon$junctionBox;
 		case 'JUNCTION_BOX':
-			return $author$project$Icon$junctionBox;
+			return $author$project$Equinor$Icon$junctionBox;
 		case 'Special Item':
-			return A2($author$project$Icon$tag, 'SI', 'none');
+			return A2($author$project$Equinor$Icon$tag, 'SI', 'none');
 		case 'SPECIAL_ITEM':
-			return A2($author$project$Icon$tag, 'SI', 'none');
+			return A2($author$project$Equinor$Icon$tag, 'SI', 'none');
 		case 'Heat Tracing Cable':
-			return $author$project$Icon$heatTrace;
+			return $author$project$Equinor$Icon$heatTrace;
 		case 'HEAT_TRACING_CABLE':
-			return $author$project$Icon$heatTrace;
+			return $author$project$Equinor$Icon$heatTrace;
 		case 'Signal':
-			return $author$project$Icon$signal;
+			return $author$project$Equinor$Icon$signal;
 		case 'SIGNAL':
-			return $author$project$Icon$signal;
+			return $author$project$Equinor$Icon$signal;
 		case 'Manual Valve':
-			return $author$project$Icon$manualValve;
+			return $author$project$Equinor$Icon$manualValve;
 		case 'MANUAL_VALVE':
-			return $author$project$Icon$manualValve;
+			return $author$project$Equinor$Icon$manualValve;
 		case 'Function':
-			return $author$project$Icon$function;
+			return $author$project$Equinor$Icon$function;
 		case 'FUNCTION':
-			return $author$project$Icon$function;
+			return $author$project$Equinor$Icon$function;
 		case 'Ducting':
-			return $author$project$Icon$ducting;
+			return $author$project$Equinor$Icon$ducting;
 		case 'DUCTING':
-			return $author$project$Icon$ducting;
+			return $author$project$Equinor$Icon$ducting;
 		default:
-			return A2($author$project$Icon$tag, '', 'none');
+			return A2($author$project$Equinor$Icon$tag, '', 'none');
 	}
 };
 var $mdgriffith$elm_ui$Internal$Model$InFront = {$: 'InFront'};
@@ -14314,7 +14341,7 @@ var $elm$html$Html$Events$custom = F2(
 			$elm$virtual_dom$VirtualDom$Custom(decoder));
 	});
 var $mdgriffith$elm_ui$Element$htmlAttribute = $mdgriffith$elm_ui$Internal$Model$Attr;
-var $author$project$View$onClick = function (msg) {
+var $author$project$Checklist$View$onClick = function (msg) {
 	return $mdgriffith$elm_ui$Element$htmlAttribute(
 		A2(
 			$elm$html$Html$Events$custom,
@@ -14416,13 +14443,13 @@ var $mdgriffith$elm_ui$Internal$Model$Px = function (a) {
 	return {$: 'Px', a: a};
 };
 var $mdgriffith$elm_ui$Element$px = $mdgriffith$elm_ui$Internal$Model$Px;
-var $author$project$Palette$red = A3($mdgriffith$elm_ui$Element$rgb255, 255, 59, 59);
-var $author$project$Palette$blue = A3($mdgriffith$elm_ui$Element$rgb255, 95, 192, 220);
-var $author$project$Messages$NaCheckItemPressed = F2(
+var $author$project$Equinor$Palette$red = A3($mdgriffith$elm_ui$Element$rgb255, 255, 59, 59);
+var $author$project$Equinor$Palette$blue = A3($mdgriffith$elm_ui$Element$rgb255, 95, 192, 220);
+var $author$project$Checklist$Messages$NaCheckItemPressed = F2(
 	function (a, b) {
 		return {$: 'NaCheckItemPressed', a: a, b: b};
 	});
-var $author$project$Messages$OkCheckItemPressed = F2(
+var $author$project$Checklist$Messages$OkCheckItemPressed = F2(
 	function (a, b) {
 		return {$: 'OkCheckItemPressed', a: a, b: b};
 	});
@@ -14483,7 +14510,7 @@ var $mdgriffith$elm_ui$Element$rgb = F3(
 	function (r, g, b) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
 	});
-var $author$project$Palette$white = A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1);
+var $author$project$Equinor$Palette$white = A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1);
 var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
 	function (a, b, c, d, e) {
 		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
@@ -14500,7 +14527,7 @@ var $mdgriffith$elm_ui$Element$Border$width = function (v) {
 			v,
 			v));
 };
-var $author$project$View$checkButton = F4(
+var $author$project$Checklist$View$checkButton = F4(
 	function (size, isDisabled, isActive, msg) {
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
@@ -14514,10 +14541,10 @@ var $author$project$View$checkButton = F4(
 						$mdgriffith$elm_ui$Element$px(
 							$elm$core$Basics$round(size))),
 						$mdgriffith$elm_ui$Element$Border$rounded(1000),
-						$mdgriffith$elm_ui$Element$Border$color($author$project$Palette$mistBlue),
+						$mdgriffith$elm_ui$Element$Border$color($author$project$Equinor$Palette$mistBlue),
 						$mdgriffith$elm_ui$Element$Border$width(2),
 						$mdgriffith$elm_ui$Element$Background$color(
-						isActive ? $author$project$Palette$blue : $author$project$Palette$white)
+						isActive ? $author$project$Equinor$Palette$blue : $author$project$Equinor$Palette$white)
 					]),
 				isDisabled ? _List_fromArray(
 					[
@@ -14529,7 +14556,7 @@ var $author$project$View$checkButton = F4(
 					]) : _List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$pointer,
-						$author$project$View$onClick(msg)
+						$author$project$Checklist$View$onClick(msg)
 					])),
 			$mdgriffith$elm_ui$Element$none);
 	});
@@ -14546,11 +14573,11 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $author$project$Messages$MetaTableCellInput = F5(
+var $author$project$Checklist$Messages$MetaTableCellInput = F5(
 	function (a, b, c, d, e) {
 		return {$: 'MetaTableCellInput', a: a, b: b, c: c, d: d, e: e};
 	});
-var $author$project$Messages$MetaTableCellLostFocus = F4(
+var $author$project$Checklist$Messages$MetaTableCellLostFocus = F4(
 	function (a, b, c, d) {
 		return {$: 'MetaTableCellLostFocus', a: a, b: b, c: c, d: d};
 	});
@@ -15442,7 +15469,7 @@ var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$tex
 		spellchecked: false,
 		type_: $mdgriffith$elm_ui$Element$Input$TextInputNode('text')
 	});
-var $author$project$View$renderCellInput = F7(
+var $author$project$Checklist$View$renderCellInput = F7(
 	function (size, isDisabled, checklist, checkItem, columnHeader, tableRow, cell) {
 		return A2(
 			$mdgriffith$elm_ui$Element$row,
@@ -15458,18 +15485,18 @@ var $author$project$View$renderCellInput = F7(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$Font$color($author$project$Palette$blue)
+							$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$blue)
 						]),
 					$mdgriffith$elm_ui$Element$text(cell.value)) : A2(
 					$mdgriffith$elm_ui$Element$Input$text,
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$Events$onLoseFocus(
-							A4($author$project$Messages$MetaTableCellLostFocus, checklist, checkItem, tableRow, cell))
+							A4($author$project$Checklist$Messages$MetaTableCellLostFocus, checklist, checkItem, tableRow, cell))
 						]),
 					{
 						label: $mdgriffith$elm_ui$Element$Input$labelHidden(''),
-						onChange: A4($author$project$Messages$MetaTableCellInput, checklist, checkItem, tableRow, columnHeader),
+						onChange: A4($author$project$Checklist$Messages$MetaTableCellInput, checklist, checkItem, tableRow, columnHeader),
 						placeholder: $elm$core$Maybe$Nothing,
 						text: cell.value
 					}),
@@ -15481,13 +15508,13 @@ var $mdgriffith$elm_ui$Element$modular = F3(
 	function (normal, ratio, rescale) {
 		return (!rescale) ? normal : ((rescale < 0) ? (normal * A2($elm$core$Basics$pow, ratio, rescale)) : (normal * A2($elm$core$Basics$pow, ratio, rescale - 1)));
 	});
-var $author$project$Data$Common$scaled = function (size) {
+var $author$project$Equinor$Palette$scaled = function (size) {
 	return A2($mdgriffith$elm_ui$Element$modular, size, 1.15);
 };
-var $author$project$Data$Common$scaledInt = function (size) {
+var $author$project$Equinor$Palette$scaledInt = function (size) {
 	return A2(
 		$elm$core$Basics$composeR,
-		$author$project$Data$Common$scaled(size),
+		$author$project$Equinor$Palette$scaled(size),
 		$elm$core$Basics$round);
 };
 var $mdgriffith$elm_ui$Element$InternalColumn = function (a) {
@@ -15714,7 +15741,7 @@ var $mdgriffith$elm_ui$Element$table = F2(
 				data: config.data
 			});
 	});
-var $author$project$View$renderMetaTable = F4(
+var $author$project$Checklist$View$renderMetaTable = F4(
 	function (size, isDisabled, checklist, checkItem) {
 		return A2(
 			$mdgriffith$elm_ui$Element$table,
@@ -15732,7 +15759,7 @@ var $author$project$View$renderMetaTable = F4(
 								_List_fromArray(
 									[
 										$mdgriffith$elm_ui$Element$Font$size(
-										A2($author$project$Data$Common$scaledInt, size, -1))
+										A2($author$project$Equinor$Palette$scaledInt, size, -1))
 									]),
 								$mdgriffith$elm_ui$Element$text(ch.label)),
 							view: function (row) {
@@ -15741,7 +15768,7 @@ var $author$project$View$renderMetaTable = F4(
 									$mdgriffith$elm_ui$Element$none,
 									A2(
 										$elm$core$Maybe$map,
-										A6($author$project$View$renderCellInput, size, isDisabled, checklist, checkItem, ch, row),
+										A6($author$project$Checklist$View$renderCellInput, size, isDisabled, checklist, checkItem, ch, row),
 										$elm$core$List$head(
 											A2(
 												$elm$core$List$filter,
@@ -15770,7 +15797,7 @@ var $mdgriffith$elm_ui$Element$Border$widthXY = F2(
 				y,
 				x));
 	});
-var $author$project$View$renderChecklistCheckItem = F4(
+var $author$project$Checklist$View$renderChecklistCheckItem = F4(
 	function (size, checklist, signedAt, item) {
 		var isDisabled = signedAt !== '';
 		return item.isHeading ? A2(
@@ -15779,8 +15806,8 @@ var $author$project$View$renderChecklistCheckItem = F4(
 				[
 					(A2($elm$core$String$startsWith, 'NOTE', item.text) || A2($elm$core$String$startsWith, '-', item.text)) ? $mdgriffith$elm_ui$Element$Font$regular : $mdgriffith$elm_ui$Element$Font$bold,
 					(A2($elm$core$String$startsWith, 'NOTE', item.text) || A2($elm$core$String$startsWith, '-', item.text)) ? $mdgriffith$elm_ui$Element$Font$size(
-					A2($author$project$Data$Common$scaledInt, size, -3)) : $mdgriffith$elm_ui$Element$Font$size(
-					A2($author$project$Data$Common$scaledInt, size, -2)),
+					A2($author$project$Equinor$Palette$scaledInt, size, -3)) : $mdgriffith$elm_ui$Element$Font$size(
+					A2($author$project$Equinor$Palette$scaledInt, size, -2)),
 					$mdgriffith$elm_ui$Element$padding(4),
 					$mdgriffith$elm_ui$Element$centerX
 				]),
@@ -15804,7 +15831,7 @@ var $author$project$View$renderChecklistCheckItem = F4(
 					A2($mdgriffith$elm_ui$Element$paddingXY, 10, 2),
 					A2($mdgriffith$elm_ui$Element$Border$widthXY, 0, 1),
 					$mdgriffith$elm_ui$Element$Border$dashed,
-					$mdgriffith$elm_ui$Element$Border$color($author$project$Palette$mistBlue)
+					$mdgriffith$elm_ui$Element$Border$color($author$project$Equinor$Palette$mistBlue)
 				]),
 			_List_fromArray(
 				[
@@ -15822,7 +15849,7 @@ var $author$project$View$renderChecklistCheckItem = F4(
 								[
 									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 									$mdgriffith$elm_ui$Element$Font$size(
-									A2($author$project$Data$Common$scaledInt, size, -2)),
+									A2($author$project$Equinor$Palette$scaledInt, size, -2)),
 									$mdgriffith$elm_ui$Element$padding(4)
 								]),
 							A2(
@@ -15837,7 +15864,7 @@ var $author$project$View$renderChecklistCheckItem = F4(
 											]));
 								},
 								$elm$core$String$lines(item.text))),
-							$elm$core$List$isEmpty(item.metaTable.columnLabels) ? $mdgriffith$elm_ui$Element$none : A4($author$project$View$renderMetaTable, size, isDisabled, checklist, item)
+							$elm$core$List$isEmpty(item.metaTable.columnLabels) ? $mdgriffith$elm_ui$Element$none : A4($author$project$Checklist$View$renderMetaTable, size, isDisabled, checklist, item)
 						])),
 					A2(
 					$mdgriffith$elm_ui$Element$row,
@@ -15850,21 +15877,21 @@ var $author$project$View$renderChecklistCheckItem = F4(
 					_List_fromArray(
 						[
 							A4(
-							$author$project$View$checkButton,
+							$author$project$Checklist$View$checkButton,
 							size,
 							isDisabled,
 							item.isOk,
-							A2($author$project$Messages$OkCheckItemPressed, checklist, item)),
+							A2($author$project$Checklist$Messages$OkCheckItemPressed, checklist, item)),
 							A4(
-							$author$project$View$checkButton,
+							$author$project$Checklist$View$checkButton,
 							size,
 							isDisabled,
 							item.isNa,
-							A2($author$project$Messages$NaCheckItemPressed, checklist, item))
+							A2($author$project$Checklist$Messages$NaCheckItemPressed, checklist, item))
 						]))
 				]));
 	});
-var $author$project$View$renderChecklistItems = F3(
+var $author$project$Checklist$View$renderChecklistItems = F3(
 	function (size, checklist, details) {
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -15879,11 +15906,11 @@ var $author$project$View$renderChecklistItems = F3(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$Background$color($author$project$Palette$blue),
-							$mdgriffith$elm_ui$Element$Font$color($author$project$Palette$white),
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$blue),
+							$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$white),
 							A2($mdgriffith$elm_ui$Element$paddingXY, 8, 6),
 							$mdgriffith$elm_ui$Element$Font$size(
-							A2($author$project$Data$Common$scaledInt, size, -1))
+							A2($author$project$Equinor$Palette$scaledInt, size, -1))
 						]),
 					_List_fromArray(
 						[
@@ -15919,15 +15946,15 @@ var $author$project$View$renderChecklistItems = F3(
 						]),
 					A2(
 						$elm$core$List$map,
-						A3($author$project$View$renderChecklistCheckItem, size, checklist, details.checklistDetails.signedAt),
+						A3($author$project$Checklist$View$renderChecklistCheckItem, size, checklist, details.checklistDetails.signedAt),
 						details.items))
 				]));
 	});
-var $author$project$Messages$CommentFieldInput = F2(
+var $author$project$Checklist$Messages$CommentFieldInput = F2(
 	function (a, b) {
 		return {$: 'CommentFieldInput', a: a, b: b};
 	});
-var $author$project$Messages$CommentFieldLostFocus = F2(
+var $author$project$Checklist$Messages$CommentFieldLostFocus = F2(
 	function (a, b) {
 		return {$: 'CommentFieldLostFocus', a: a, b: b};
 	});
@@ -15944,7 +15971,7 @@ var $mdgriffith$elm_ui$Element$Input$Placeholder = F2(
 		return {$: 'Placeholder', a: a, b: b};
 	});
 var $mdgriffith$elm_ui$Element$Input$placeholder = $mdgriffith$elm_ui$Element$Input$Placeholder;
-var $author$project$View$renderCommentField = F3(
+var $author$project$Checklist$View$renderCommentField = F3(
 	function (size, checklist, details) {
 		var isEnabled = $elm$core$String$isEmpty(details.checklistDetails.signedAt);
 		return ($elm$core$String$isEmpty(details.checklistDetails.comment) && (!isEnabled)) ? $mdgriffith$elm_ui$Element$none : A2(
@@ -15960,11 +15987,11 @@ var $author$project$View$renderCommentField = F3(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$Background$color($author$project$Palette$blue),
-							$mdgriffith$elm_ui$Element$Font$color($author$project$Palette$white),
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$blue),
+							$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$white),
 							$mdgriffith$elm_ui$Element$padding(8),
 							$mdgriffith$elm_ui$Element$Font$size(
-							A2($author$project$Data$Common$scaledInt, size, -1))
+							A2($author$project$Equinor$Palette$scaledInt, size, -1))
 						]),
 					$mdgriffith$elm_ui$Element$text('Comment')),
 					isEnabled ? A2(
@@ -15973,11 +16000,11 @@ var $author$project$View$renderCommentField = F3(
 						[
 							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 							$mdgriffith$elm_ui$Element$Events$onLoseFocus(
-							A2($author$project$Messages$CommentFieldLostFocus, checklist, details.checklistDetails.comment))
+							A2($author$project$Checklist$Messages$CommentFieldLostFocus, checklist, details.checklistDetails.comment))
 						]),
 					{
 						label: $mdgriffith$elm_ui$Element$Input$labelHidden(''),
-						onChange: $author$project$Messages$CommentFieldInput(checklist),
+						onChange: $author$project$Checklist$Messages$CommentFieldInput(checklist),
 						placeholder: $elm$core$Maybe$Just(
 							A2(
 								$mdgriffith$elm_ui$Element$Input$placeholder,
@@ -16009,21 +16036,21 @@ var $author$project$View$renderCommentField = F3(
 						$elm$core$String$lines(details.checklistDetails.comment)))
 				]));
 	});
-var $author$project$Messages$AddCustomCheckItemButtonPressed = function (a) {
+var $author$project$Checklist$Messages$AddCustomCheckItemButtonPressed = function (a) {
 	return {$: 'AddCustomCheckItemButtonPressed', a: a};
 };
-var $author$project$Messages$CustomCheckItemInput = function (a) {
+var $author$project$Checklist$Messages$CustomCheckItemInput = function (a) {
 	return {$: 'CustomCheckItemInput', a: a};
 };
-var $author$project$Messages$DeleteCustomCheckItemButtomPressed = F2(
+var $author$project$Checklist$Messages$DeleteCustomCheckItemButtomPressed = F2(
 	function (a, b) {
 		return {$: 'DeleteCustomCheckItemButtomPressed', a: a, b: b};
 	});
-var $author$project$Messages$OkCustomCheckItemPressed = F2(
+var $author$project$Checklist$Messages$OkCustomCheckItemPressed = F2(
 	function (a, b) {
 		return {$: 'OkCustomCheckItemPressed', a: a, b: b};
 	});
-var $author$project$View$renderCustomChecklistCheckItem = F4(
+var $author$project$Checklist$View$renderCustomChecklistCheckItem = F4(
 	function (size, checklist, signedAt, item) {
 		var notActiveProperties = _List_fromArray(
 			[
@@ -16037,8 +16064,8 @@ var $author$project$View$renderCustomChecklistCheckItem = F4(
 		var activeProperties = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$pointer,
-				$author$project$View$onClick(
-				A2($author$project$Messages$DeleteCustomCheckItemButtomPressed, checklist, item))
+				$author$project$Checklist$View$onClick(
+				A2($author$project$Checklist$Messages$DeleteCustomCheckItemButtomPressed, checklist, item))
 			]);
 		var deleteButton = A2(
 			$mdgriffith$elm_ui$Element$el,
@@ -16066,7 +16093,7 @@ var $author$project$View$renderCustomChecklistCheckItem = F4(
 					A2($mdgriffith$elm_ui$Element$paddingXY, 10, 2),
 					A2($mdgriffith$elm_ui$Element$Border$widthXY, 0, 1),
 					$mdgriffith$elm_ui$Element$Border$dashed,
-					$mdgriffith$elm_ui$Element$Border$color($author$project$Palette$mistBlue)
+					$mdgriffith$elm_ui$Element$Border$color($author$project$Equinor$Palette$mistBlue)
 				]),
 			_List_fromArray(
 				[
@@ -16084,7 +16111,7 @@ var $author$project$View$renderCustomChecklistCheckItem = F4(
 								[
 									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 									$mdgriffith$elm_ui$Element$Font$size(
-									A2($author$project$Data$Common$scaledInt, size, -2)),
+									A2($author$project$Equinor$Palette$scaledInt, size, -2)),
 									$mdgriffith$elm_ui$Element$padding(4)
 								]),
 							A2(
@@ -16111,16 +16138,16 @@ var $author$project$View$renderCustomChecklistCheckItem = F4(
 					_List_fromArray(
 						[
 							A4(
-							$author$project$View$checkButton,
+							$author$project$Checklist$View$checkButton,
 							size,
 							isDisabled,
 							item.isOk,
-							A2($author$project$Messages$OkCustomCheckItemPressed, checklist, item)),
+							A2($author$project$Checklist$Messages$OkCustomCheckItemPressed, checklist, item)),
 							deleteButton
 						]))
 				]));
 	});
-var $author$project$View$signButton = F4(
+var $author$project$Checklist$View$signButton = F4(
 	function (size, name, maybeDisabled, msg) {
 		var deactiveAttributes = function (message) {
 			return _List_fromArray(
@@ -16135,7 +16162,7 @@ var $author$project$View$signButton = F4(
 		var activeAttributes = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$pointer,
-				$author$project$View$onClick(msg)
+				$author$project$Checklist$View$onClick(msg)
 			]);
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
@@ -16148,8 +16175,8 @@ var $author$project$View$signButton = F4(
 						$mdgriffith$elm_ui$Element$height(
 						$mdgriffith$elm_ui$Element$px(
 							$elm$core$Basics$round(size * 2))),
-						$mdgriffith$elm_ui$Element$Background$color($author$project$Palette$blue),
-						$mdgriffith$elm_ui$Element$Font$color($author$project$Palette$white),
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$blue),
+						$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$white),
 						$mdgriffith$elm_ui$Element$Border$rounded(10)
 					]),
 				function () {
@@ -16171,7 +16198,7 @@ var $author$project$View$signButton = F4(
 					]),
 				$mdgriffith$elm_ui$Element$text(name)));
 	});
-var $author$project$View$renderCustomChecklistItems = F4(
+var $author$project$Checklist$View$renderCustomChecklistItems = F4(
 	function (size, checklist, details, customCheckItemField) {
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -16186,11 +16213,11 @@ var $author$project$View$renderCustomChecklistItems = F4(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$Background$color($author$project$Palette$blue),
-							$mdgriffith$elm_ui$Element$Font$color($author$project$Palette$white),
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$blue),
+							$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$white),
 							A2($mdgriffith$elm_ui$Element$paddingXY, 8, 6),
 							$mdgriffith$elm_ui$Element$Font$size(
-							A2($author$project$Data$Common$scaledInt, size, -1))
+							A2($author$project$Equinor$Palette$scaledInt, size, -1))
 						]),
 					_List_fromArray(
 						[
@@ -16226,7 +16253,7 @@ var $author$project$View$renderCustomChecklistItems = F4(
 						]),
 					A2(
 						$elm$core$List$map,
-						A3($author$project$View$renderCustomChecklistCheckItem, size, checklist, details.checklistDetails.signedAt),
+						A3($author$project$Checklist$View$renderCustomChecklistCheckItem, size, checklist, details.checklistDetails.signedAt),
 						details.customItems)),
 					$elm$core$String$isEmpty(details.checklistDetails.signedAt) ? A2(
 					$mdgriffith$elm_ui$Element$row,
@@ -16246,7 +16273,7 @@ var $author$project$View$renderCustomChecklistItems = F4(
 								]),
 							{
 								label: $mdgriffith$elm_ui$Element$Input$labelHidden('customItem'),
-								onChange: $author$project$Messages$CustomCheckItemInput,
+								onChange: $author$project$Checklist$Messages$CustomCheckItemInput,
 								placeholder: $elm$core$Maybe$Just(
 									A2(
 										$mdgriffith$elm_ui$Element$Input$placeholder,
@@ -16260,24 +16287,24 @@ var $author$project$View$renderCustomChecklistItems = F4(
 							_List_fromArray(
 								[$mdgriffith$elm_ui$Element$alignRight]),
 							A4(
-								$author$project$View$signButton,
+								$author$project$Checklist$View$signButton,
 								size,
 								'Add',
 								$elm$core$String$isEmpty(customCheckItemField) ? $elm$core$Maybe$Just('You must type what to check') : $elm$core$Maybe$Nothing,
-								$author$project$Messages$AddCustomCheckItemButtonPressed(checklist)))
+								$author$project$Checklist$Messages$AddCustomCheckItemButtonPressed(checklist)))
 						])) : $mdgriffith$elm_ui$Element$none
 				]));
 	});
-var $author$project$Messages$SignChecklistButtonPressed = function (a) {
+var $author$project$Checklist$Messages$SignChecklistButtonPressed = function (a) {
 	return {$: 'SignChecklistButtonPressed', a: a};
 };
-var $author$project$Messages$UnsignChecklistButtonPressed = function (a) {
+var $author$project$Checklist$Messages$UnsignChecklistButtonPressed = function (a) {
 	return {$: 'UnsignChecklistButtonPressed', a: a};
 };
-var $author$project$Messages$UnverifyChecklistButtonPressed = function (a) {
+var $author$project$Checklist$Messages$UnverifyChecklistButtonPressed = function (a) {
 	return {$: 'UnverifyChecklistButtonPressed', a: a};
 };
-var $author$project$Messages$VerifyChecklistButtonPressed = function (a) {
+var $author$project$Checklist$Messages$VerifyChecklistButtonPressed = function (a) {
 	return {$: 'VerifyChecklistButtonPressed', a: a};
 };
 var $mdgriffith$elm_ui$Element$spacingXY = F2(
@@ -16475,7 +16502,7 @@ var $mdgriffith$elm_ui$Element$wrappedRow = F2(
 			}
 		}
 	});
-var $author$project$View$signatures = F4(
+var $author$project$Checklist$View$signatures = F4(
 	function (size, checklist, hasUnsignedItems, details) {
 		var x = details.checklistDetails;
 		return A2(
@@ -16491,11 +16518,11 @@ var $author$project$View$signatures = F4(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$Background$color($author$project$Palette$blue),
-							$mdgriffith$elm_ui$Element$Font$color($author$project$Palette$white),
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$blue),
+							$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$white),
 							$mdgriffith$elm_ui$Element$padding(8),
 							$mdgriffith$elm_ui$Element$Font$size(
-							A2($author$project$Data$Common$scaledInt, size, -1))
+							A2($author$project$Equinor$Palette$scaledInt, size, -1))
 						]),
 					$mdgriffith$elm_ui$Element$text('Signatures')),
 					A2(
@@ -16513,11 +16540,11 @@ var $author$project$View$signatures = F4(
 							_List_fromArray(
 								[$mdgriffith$elm_ui$Element$alignRight]),
 							A4(
-								$author$project$View$signButton,
+								$author$project$Checklist$View$signButton,
 								size,
 								'Sign',
 								hasUnsignedItems ? $elm$core$Maybe$Just('There is unsigned items') : $elm$core$Maybe$Nothing,
-								$author$project$Messages$SignChecklistButtonPressed(checklist))) : A2(
+								$author$project$Checklist$Messages$SignChecklistButtonPressed(checklist))) : A2(
 							$mdgriffith$elm_ui$Element$row,
 							_List_fromArray(
 								[
@@ -16557,22 +16584,22 @@ var $author$project$View$signatures = F4(
 												]))
 										])),
 									A4(
-									$author$project$View$signButton,
+									$author$project$Checklist$View$signButton,
 									size,
 									'Unsign',
 									(x.verifiedAt !== '') ? $elm$core$Maybe$Just('Checklist is verified') : $elm$core$Maybe$Nothing,
-									$author$project$Messages$UnsignChecklistButtonPressed(checklist))
+									$author$project$Checklist$Messages$UnsignChecklistButtonPressed(checklist))
 								])),
-							((!_Utils_eq(checklist.group, $author$project$Data$Checklist$CPCL)) && (x.signedAt !== '')) ? ($elm$core$String$isEmpty(x.verifiedAt) ? A2(
+							((!_Utils_eq(checklist.group, $author$project$Checklist$CPCL)) && (x.signedAt !== '')) ? ($elm$core$String$isEmpty(x.verifiedAt) ? A2(
 							$mdgriffith$elm_ui$Element$el,
 							_List_fromArray(
 								[$mdgriffith$elm_ui$Element$alignRight]),
 							A4(
-								$author$project$View$signButton,
+								$author$project$Checklist$View$signButton,
 								size,
 								'Verify',
 								$elm$core$Maybe$Nothing,
-								$author$project$Messages$VerifyChecklistButtonPressed(checklist))) : A2(
+								$author$project$Checklist$Messages$VerifyChecklistButtonPressed(checklist))) : A2(
 							$mdgriffith$elm_ui$Element$row,
 							_List_fromArray(
 								[
@@ -16617,16 +16644,16 @@ var $author$project$View$signatures = F4(
 												]))
 										])),
 									A4(
-									$author$project$View$signButton,
+									$author$project$Checklist$View$signButton,
 									size,
 									'Unverify',
 									$elm$core$Maybe$Nothing,
-									$author$project$Messages$UnverifyChecklistButtonPressed(checklist))
+									$author$project$Checklist$Messages$UnverifyChecklistButtonPressed(checklist))
 								]))) : $mdgriffith$elm_ui$Element$none
 						]))
 				]));
 	});
-var $author$project$Data$Common$statusToString = function (status) {
+var $author$project$Equinor$Data$Procosys$Status$toString = function (status) {
 	switch (status.$) {
 		case 'OS':
 			return 'OS';
@@ -16638,17 +16665,17 @@ var $author$project$Data$Common$statusToString = function (status) {
 			return 'OK';
 	}
 };
-var $author$project$Palette$yellow = A3($mdgriffith$elm_ui$Element$rgb255, 251, 202, 54);
-var $author$project$View$renderChecklistItem = F5(
+var $author$project$Equinor$Palette$yellow = A3($mdgriffith$elm_ui$Element$rgb255, 251, 202, 54);
+var $author$project$Checklist$View$renderChecklistItem = F5(
 	function (size, maybeSelected, errorMsg, customCheckItemField, item) {
 		var tagNo = A2(
 			$mdgriffith$elm_ui$Element$paragraph,
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$Font$size(
-					A2($author$project$Data$Common$scaledInt, size, -1)),
+					A2($author$project$Equinor$Palette$scaledInt, size, -1)),
 					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$Font$color($author$project$Palette$mossGreen)
+					$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$mossGreen)
 				]),
 			_List_fromArray(
 				[
@@ -16660,7 +16687,7 @@ var $author$project$View$renderChecklistItem = F5(
 				[
 					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 					$mdgriffith$elm_ui$Element$Font$size(
-					A2($author$project$Data$Common$scaledInt, size, -2))
+					A2($author$project$Equinor$Palette$scaledInt, size, -2))
 				]),
 			_List_fromArray(
 				[
@@ -16672,7 +16699,7 @@ var $author$project$View$renderChecklistItem = F5(
 				[
 					$mdgriffith$elm_ui$Element$alignRight,
 					$mdgriffith$elm_ui$Element$Font$size(
-					A2($author$project$Data$Common$scaledInt, size, -2))
+					A2($author$project$Equinor$Palette$scaledInt, size, -2))
 				]),
 			$mdgriffith$elm_ui$Element$text(item.responsible));
 		var itemType = A2(
@@ -16682,7 +16709,7 @@ var $author$project$View$renderChecklistItem = F5(
 					$mdgriffith$elm_ui$Element$alignRight,
 					$mdgriffith$elm_ui$Element$clip,
 					$mdgriffith$elm_ui$Element$Font$size(
-					A2($author$project$Data$Common$scaledInt, size, -2))
+					A2($author$project$Equinor$Palette$scaledInt, size, -2))
 				]),
 			$mdgriffith$elm_ui$Element$text(item.type_));
 		var isSelected = _Utils_eq(
@@ -16692,13 +16719,13 @@ var $author$project$View$renderChecklistItem = F5(
 			var _v1 = item.status;
 			switch (_v1.$) {
 				case 'PA':
-					return A2($author$project$Palette$combination, $author$project$Palette$white, $author$project$Palette$red);
+					return A2($author$project$Equinor$Palette$combination, $author$project$Equinor$Palette$white, $author$project$Equinor$Palette$red);
 				case 'PB':
-					return A2($author$project$Palette$combination, $author$project$Palette$white, $author$project$Palette$yellow);
+					return A2($author$project$Equinor$Palette$combination, $author$project$Equinor$Palette$white, $author$project$Equinor$Palette$yellow);
 				case 'OK':
-					return A2($author$project$Palette$combination, $author$project$Palette$white, $author$project$Palette$alphaMossGreen);
+					return A2($author$project$Equinor$Palette$combination, $author$project$Equinor$Palette$white, $author$project$Equinor$Palette$alphaMossGreen);
 				default:
-					return A2($author$project$Palette$combination, $author$project$Palette$white, $author$project$Palette$grey);
+					return A2($author$project$Equinor$Palette$combination, $author$project$Equinor$Palette$white, $author$project$Equinor$Palette$grey);
 			}
 		}();
 		var statusBadge = A2(
@@ -16709,10 +16736,10 @@ var $author$project$View$renderChecklistItem = F5(
 						A2($mdgriffith$elm_ui$Element$paddingXY, 2, 1),
 						$mdgriffith$elm_ui$Element$Border$rounded(4),
 						$mdgriffith$elm_ui$Element$Font$size(
-						A2($author$project$Data$Common$scaledInt, size, -4))
+						A2($author$project$Equinor$Palette$scaledInt, size, -4))
 					])),
 			$mdgriffith$elm_ui$Element$text(
-				$author$project$Data$Common$statusToString(item.status)));
+				$author$project$Equinor$Data$Procosys$Status$toString(item.status)));
 		var icon = A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
@@ -16725,8 +16752,8 @@ var $author$project$View$renderChecklistItem = F5(
 					$mdgriffith$elm_ui$Element$clip
 				]),
 			$mdgriffith$elm_ui$Element$html(
-				$author$project$View$iconFromCategory(item.register)));
-		var color = $author$project$Palette$white;
+				$author$project$Checklist$View$iconFromCategory(item.register)));
+		var color = $author$project$Equinor$Palette$white;
 		return _Utils_Tuple2(
 			$elm$core$String$fromInt(item.id),
 			A2(
@@ -16735,7 +16762,7 @@ var $author$project$View$renderChecklistItem = F5(
 					[
 						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 						$mdgriffith$elm_ui$Element$Background$color(
-						isSelected ? $author$project$Palette$mistBlue : $author$project$Palette$white),
+						isSelected ? $author$project$Equinor$Palette$mistBlue : $author$project$Equinor$Palette$white),
 						$mdgriffith$elm_ui$Element$padding(
 						$elm$core$Basics$round(size / 2))
 					]),
@@ -16746,8 +16773,8 @@ var $author$project$View$renderChecklistItem = F5(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-								$author$project$View$onClick(
-								$author$project$Messages$ChecklistPressed(item)),
+								$author$project$Checklist$View$onClick(
+								$author$project$Checklist$Messages$ChecklistPressed(item)),
 								$mdgriffith$elm_ui$Element$pointer
 							]),
 						_List_fromArray(
@@ -16786,7 +16813,7 @@ var $author$project$View$renderChecklistItem = F5(
 								case 'DataError':
 									return $mdgriffith$elm_ui$Element$text('Error getting details');
 								default:
-									var details = _v0.a;
+									var details = _v0.b;
 									var hasUnsignedNormalItems = A2(
 										$elm$core$List$any,
 										function (i) {
@@ -16806,21 +16833,21 @@ var $author$project$View$renderChecklistItem = F5(
 											[
 												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 												$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-												$mdgriffith$elm_ui$Element$Background$color($author$project$Palette$white),
-												$author$project$View$onClick($author$project$Messages$NoOp)
+												$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$white),
+												$author$project$Checklist$View$onClick($author$project$Checklist$Messages$NoOp)
 											]),
 										_List_fromArray(
 											[
-												A3($author$project$View$renderChecklistItems, size, item, details),
-												A4($author$project$View$renderCustomChecklistItems, size, item, details, customCheckItemField),
-												A3($author$project$View$renderCommentField, size, item, details),
-												A4($author$project$View$signatures, size, item, hasUnsignedItems, details),
+												A3($author$project$Checklist$View$renderChecklistItems, size, item, details),
+												A4($author$project$Checklist$View$renderCustomChecklistItems, size, item, details, customCheckItemField),
+												A3($author$project$Checklist$View$renderCommentField, size, item, details),
+												A4($author$project$Checklist$View$signatures, size, item, hasUnsignedItems, details),
 												$elm$core$String$isEmpty(errorMsg) ? $mdgriffith$elm_ui$Element$none : A2(
 												$mdgriffith$elm_ui$Element$paragraph,
 												_List_fromArray(
 													[
 														$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-														$mdgriffith$elm_ui$Element$Background$color($author$project$Palette$alphaYellow),
+														$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$alphaYellow),
 														$mdgriffith$elm_ui$Element$padding(6)
 													]),
 												_List_fromArray(
@@ -16835,7 +16862,7 @@ var $author$project$View$renderChecklistItem = F5(
 					}()
 					])));
 	});
-var $author$project$View$renderChecklists = F5(
+var $author$project$Checklist$View$renderChecklists = F5(
 	function (size, maybeSelected, errorMsg, customCheckItemField, checklists) {
 		var updater = F2(
 			function (c, mV) {
@@ -16903,7 +16930,7 @@ var $author$project$View$renderChecklists = F5(
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
 									[
-										$mdgriffith$elm_ui$Element$Font$color($author$project$Palette$mossGreen),
+										$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$mossGreen),
 										$mdgriffith$elm_ui$Element$Font$bold
 									]),
 								$mdgriffith$elm_ui$Element$text(groupName)),
@@ -16914,12 +16941,12 @@ var $author$project$View$renderChecklists = F5(
 										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 										$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 										$mdgriffith$elm_ui$Element$scrollbarY,
-										$mdgriffith$elm_ui$Element$Background$color($author$project$Palette$mistBlue),
+										$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$mistBlue),
 										$mdgriffith$elm_ui$Element$spacing(1)
 									]),
 								A2(
 									$elm$core$List$map,
-									A4($author$project$View$renderChecklistItem, size, maybeSelected, errorMsg, customCheckItemField),
+									A4($author$project$Checklist$View$renderChecklistItem, size, maybeSelected, errorMsg, customCheckItemField),
 									groupChecklists))
 							]));
 				},
@@ -16935,22 +16962,22 @@ var $elm$core$Dict$values = function (dict) {
 		_List_Nil,
 		dict);
 };
-var $author$project$Main$view = function (model) {
+var $author$project$Checklist$Main$view = function (model) {
 	return $elm$core$Dict$isEmpty(model.checklists) ? $mdgriffith$elm_ui$Element$text('No Checklists') : A5(
-		$author$project$View$renderChecklists,
+		$author$project$Checklist$View$renderChecklists,
 		16,
 		model.selectedChecklist,
 		model.errorMsg,
 		model.customCheckItemField,
 		$elm$core$Dict$values(model.checklists));
 };
-var $author$project$Main$main = $elm$browser$Browser$element(
+var $author$project$Checklist$Main$main = $elm$browser$Browser$element(
 	{
-		init: $author$project$Model$initialModel,
+		init: $author$project$Checklist$Model$initialModel,
 		subscriptions: function (model) {
-			return $author$project$Ports$fromJs($author$project$Main$handleJsMsg);
+			return $author$project$Checklist$Ports$fromJs($author$project$Checklist$Main$handleJsMsg);
 		},
-		update: $author$project$Update$update,
+		update: $author$project$Checklist$Update$update,
 		view: function (model) {
 			return A2(
 				$mdgriffith$elm_ui$Element$layout,
@@ -16958,17 +16985,17 @@ var $author$project$Main$main = $elm$browser$Browser$element(
 					[
 						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$Font$color($author$project$Palette$slateBlue),
+						$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$slateBlue),
 						$mdgriffith$elm_ui$Element$Font$size(14)
 					]),
-				$author$project$Main$view(model));
+				$author$project$Checklist$Main$view(model));
 		}
 	});
-_Platform_export({'Main':{'init':$author$project$Main$main(
+_Platform_export({'Checklist':{'Main':{'init':$author$project$Checklist$Main$main(
 	A2(
 		$elm$json$Json$Decode$andThen,
 		function (procosysPlantId) {
 			return $elm$json$Json$Decode$succeed(
 				{procosysPlantId: procosysPlantId});
 		},
-		A2($elm$json$Json$Decode$field, 'procosysPlantId', $elm$json$Json$Decode$string)))(0)}});}(this));
+		A2($elm$json$Json$Decode$field, 'procosysPlantId', $elm$json$Json$Decode$string)))(0)}}});}(this));

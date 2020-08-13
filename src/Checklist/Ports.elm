@@ -1,4 +1,4 @@
-port module Ports exposing (fromJs, toJs)
+port module Checklist.Ports exposing (fromJs, toJs)
 
 import Json.Encode as E
 

@@ -1,15 +1,16 @@
-module Update exposing (update)
+module Checklist.Update exposing (update)
 
-import Api
-import Data.Checklist exposing (Checklist)
+import Checklist.Api as Api
+import Checklist exposing (Checklist)
 import Dict exposing (Dict)
 import Http
 import Json.Encode as E
-import Messages exposing (..)
-import Model exposing (Model)
-import Ports
+import Checklist.Messages exposing (..)
+import Checklist.Model exposing (Model)
+import Checklist.Ports as Ports
 import Svg.Attributes exposing (z)
-import Types exposing (..)
+import Checklist.Types exposing (..)
+import Equinor.Types exposing (..)
 
 
 type alias MC =
@@ -97,10 +98,10 @@ update msg model =
             let
                 updater cl =
                     case cl.details of
-                        Loaded details ->
+                        Loaded _ details ->
                             { cl
                                 | details =
-                                    Loaded
+                                    Loaded ""
                                         { details
                                             | items =
                                                 List.map
@@ -158,12 +159,12 @@ update msg model =
             let
                 updater cl =
                     case cl.details of
-                        Loaded details ->
+                        Loaded _ details ->
                             let
                                 oldChecklistDetails =
                                     details.checklistDetails
                             in
-                            { cl | details = Loaded { details | checklistDetails = { oldChecklistDetails | comment = str } } }
+                            { cl | details = Loaded "" { details | checklistDetails = { oldChecklistDetails | comment = str } } }
 
                         _ ->
                             cl
@@ -222,7 +223,7 @@ getChecklistDetails : Checklist -> MC -> MC
 getChecklistDetails checklist ( m, c ) =
     let
         updater cl =
-            { cl | details = Loading }
+            { cl | details = Loading "" Nothing }
     in
     ( { m | checklists = Dict.update checklist.id (Maybe.map updater) m.checklists }, c )
         |> apiRequest [ Api.checklistDetails checklist ]
@@ -293,10 +294,10 @@ handleApiResult apiResult ( m, c ) =
                         | details =
                             case result of
                                 Ok details ->
-                                    Loaded details
+                                    Loaded "" details
 
                                 Err err ->
-                                    DataError
+                                    DataError "" Nothing
                         , status =
                             case result of
                                 Ok details ->

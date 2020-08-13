@@ -1,9 +1,9 @@
-module Model exposing (Flags, Model, initialModel)
+module Checklist.Model exposing (Flags, Model, initialModel)
 
-import Data.Checklist as Checklist exposing (Checklist)
+import Checklist as Checklist exposing (Checklist)
 import Dict exposing (Dict)
 import Json.Decode as D
-import Messages exposing (Msg)
+import Checklist.Messages exposing (Msg)
 
 
 type alias Flags =

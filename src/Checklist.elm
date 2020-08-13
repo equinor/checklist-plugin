@@ -1,11 +1,12 @@
-module Data.Checklist exposing (Cell, Checklist, ColumnLabel, CustomItem, Details, Group(..), Item, MetaTable, Row, apiDecoder, decoder, detailsApiDecoder, groupToString)
+module Checklist exposing (Cell, Checklist, ColumnLabel, CustomItem, Details, Group(..), Item, MetaTable, Row, apiDecoder, decoder, detailsApiDecoder, groupToString)
 
-import Data.Common as Common
+
 import Json.Decode as D
 import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Json.Encode as E
-import Types exposing (..)
-
+import Checklist.Types exposing (..)
+import Equinor.Data.Procosys.Status as Status exposing (Status(..))
+import Equinor.Types exposing (..)
 
 type Group
     = CPCL
@@ -18,9 +19,10 @@ type Group
 
 apiGroupDecoder : D.Decoder Group
 apiGroupDecoder =
-    Common.nullString
+    nullString
         |> D.andThen
             (\str ->
+
                 case str of
                     "Mechanical Completion Check Record" ->
                         D.succeed MCCR
@@ -168,7 +170,7 @@ itemDecoder =
             )
         )
         (D.field "SequenceNumber" D.string)
-        (D.field "Text" Common.nullString)
+        (D.field "Text" nullString)
 
 
 customItemDecoder : D.Decoder CustomItem
@@ -177,7 +179,7 @@ customItemDecoder =
         (D.field "Id" D.int)
         (D.field "IsOk" D.bool)
         (D.field "ItemNo" D.string)
-        (D.field "Text" Common.nullString)
+        (D.field "Text" nullString)
 
 
 type alias MetaTable =
@@ -191,7 +193,7 @@ metaTableDecoder : D.Decoder MetaTable
 metaTableDecoder =
     D.map3 MetaTable
         (D.field "ColumnLabels" (D.list columnLabelDecoder))
-        (D.field "Info" Common.nullString)
+        (D.field "Info" nullString)
         (D.field "Rows" (D.list rowDecoder))
 
 
@@ -205,7 +207,7 @@ columnLabelDecoder : D.Decoder ColumnLabel
 columnLabelDecoder =
     D.map2 ColumnLabel
         (D.field "Id" D.int)
-        (D.field "Label" Common.nullString)
+        (D.field "Label" nullString)
 
 
 type alias Row =
@@ -220,7 +222,7 @@ rowDecoder =
     D.map3 Row
         (D.field "Cells" (D.list cellDecoder))
         (D.field "Id" D.int)
-        (D.field "Label" Common.nullString)
+        (D.field "Label" nullString)
 
 
 type alias Cell =
@@ -234,8 +236,8 @@ cellDecoder : D.Decoder Cell
 cellDecoder =
     D.map3 Cell
         (D.field "ColumnId" D.int)
-        (D.field "Unit" Common.nullString)
-        (D.field "Value" Common.nullString)
+        (D.field "Unit" nullString)
+        (D.field "Value" nullString)
 
 
 type alias LoopTag =
@@ -254,13 +256,13 @@ detailsApiDecoder =
 checklistDetails : D.Decoder ChecklistDetails
 checklistDetails =
     D.succeed ChecklistDetails
-        |> required "Comment" Common.nullString
-        |> required "SignedAt" Common.nullString
-        |> required "SignedByFirstName" Common.nullString
-        |> required "SignedByLastName" Common.nullString
-        |> optional "VerifiedAt" Common.nullString ""
-        |> optional "VerifiedByFirstName" Common.nullString ""
-        |> optional "VerifiedByLastName" Common.nullString ""
+        |> required "Comment" nullString
+        |> required "SignedAt" nullString
+        |> required "SignedByFirstName" nullString
+        |> required "SignedByLastName" nullString
+        |> optional "VerifiedAt" nullString ""
+        |> optional "VerifiedByFirstName" nullString ""
+        |> optional "VerifiedByLastName" nullString ""
         |> required "Status" statusDecoder
 
 
@@ -278,13 +280,13 @@ apiDecoder =
         |> required "TagFormularType__Tag__TagNo" D.string
         |> required "TagFormularType__Tag__TagNo" D.string
         |> required "Status__Id" statusDecoder
-        |> required "TagFormularType__Tag__McPkg__CommPkg__CommPkgNo" Common.nullString
-        |> required "TagFormularType__Tag__McPkg__McPkgNo" Common.nullString
-        |> required "UpdatedAt" Common.nullString
-        |> required "TagFormularType__Tag__Register__Id" Common.nullString
-        |> required "TagFormularType__Tag__Description" Common.nullString
-        |> required "TagFormularType__SheetNo" Common.nullInt
-        |> required "TagFormularType__SubsheetNo" Common.nullInt
+        |> required "TagFormularType__Tag__McPkg__CommPkg__CommPkgNo" nullString
+        |> required "TagFormularType__Tag__McPkg__McPkgNo" nullString
+        |> required "UpdatedAt" nullString
+        |> required "TagFormularType__Tag__Register__Id" nullString
+        |> required "TagFormularType__Tag__Description" nullString
+        |> required "TagFormularType__SheetNo" nullInt
+        |> required "TagFormularType__SubsheetNo" nullInt
         |> hardcoded NotLoaded
 
 
@@ -357,3 +359,24 @@ statusFromString str =
 
         _ ->
             OS
+
+
+
+
+
+nullString : D.Decoder String
+nullString =
+    D.oneOf
+        [ D.string
+        , D.null ""
+        ]
+
+
+nullInt : D.Decoder Int
+nullInt =
+    D.oneOf
+        [ D.int
+        , D.null 0
+        ]
+
+

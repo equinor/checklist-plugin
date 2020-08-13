@@ -1,20 +1,20 @@
-module Main exposing (..)
+module Checklist.Main exposing (..)
 
 import Browser
-import Data.Checklist as Checklist exposing (Checklist)
+import Checklist as Checklist exposing (Checklist)
 import Dict
 import Element exposing (..)
 import Element.Font as Font
 import Html exposing (Html)
 import Json.Decode as D
 import Json.Encode as E
-import Messages exposing (Msg(..))
-import Model exposing (Flags, Model)
+import Checklist.Messages exposing (Msg(..))
+import Checklist.Model as Model exposing (Flags, Model)
 import Equinor.Palette as Palette
-import Ports
-import Types exposing (..)
-import Update exposing (update)
-import View
+import Checklist.Ports as Ports
+import Checklist.Types exposing (..)
+import Checklist.Update exposing (update)
+import Checklist.View as View
 
 
 view : Model -> Element Msg
