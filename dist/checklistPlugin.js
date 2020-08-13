@@ -13126,25 +13126,6 @@ var $author$project$Checklist$Api$setCheckItemOk = F4(
 						]))
 			});
 	});
-var $author$project$Checklist$Update$setChecklistsTo = F2(
-	function (checklists, _v0) {
-		var m = _v0.a;
-		var c = _v0.b;
-		return _Utils_Tuple2(
-			_Utils_update(
-				m,
-				{
-					checklists: A3(
-						$elm$core$List$foldl,
-						F2(
-							function (checklist, dict) {
-								return A3($elm$core$Dict$insert, checklist.id, checklist, dict);
-							}),
-						$elm$core$Dict$empty,
-						checklists)
-				}),
-			c);
-	});
 var $author$project$Checklist$Api$setCustomCheckItemOk = F4(
 	function (checklist, checkItem, plantId, token) {
 		return $elm$http$Http$request(
@@ -13498,7 +13479,26 @@ var $author$project$Checklist$Update$update = F2(
 				return A2($author$project$Checklist$Update$sendRequestsWaitingForToken, tokenSuccess, mc);
 			case 'GotChecklists':
 				var checklists = msg.a;
-				return A2($author$project$Checklist$Update$setChecklistsTo, checklists, mc);
+				var nextDict = A3(
+					$elm$core$List$foldl,
+					F2(
+						function (c, dict) {
+							return A3(
+								$elm$core$Dict$insert,
+								c.id,
+								A2(
+									$elm$core$Maybe$withDefault,
+									c,
+									A2($elm$core$Dict$get, c.id, model.checklists)),
+								dict);
+						}),
+					$elm$core$Dict$empty,
+					checklists);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{checklists: nextDict}),
+					$elm$core$Platform$Cmd$none);
 			case 'GotApiResult':
 				var apiResult = msg.a;
 				return A2($author$project$Checklist$Update$handleApiResult, apiResult, mc);

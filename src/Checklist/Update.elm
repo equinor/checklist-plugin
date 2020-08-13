@@ -32,7 +32,18 @@ update msg model =
             mc |> sendRequestsWaitingForToken tokenSuccess
 
         GotChecklists checklists ->
-            mc |> setChecklistsTo checklists
+            let
+                nextDict =
+                    List.foldl
+                        (\c dict ->
+                            Dict.insert c.id
+                                (Dict.get c.id model.checklists |> Maybe.withDefault c)
+                                dict
+                        )
+                        Dict.empty
+                        checklists
+            in
+            ( { model | checklists = nextDict }, Cmd.none )
 
         GotApiResult apiResult ->
             mc |> handleApiResult apiResult
@@ -317,6 +328,9 @@ handleApiResult apiResult ( m, c ) =
         SetNaResult checklist result ->
             case result of
                 Ok _ ->
+                    
+
+                    
                     ( m, c ) |> apiRequest [ Api.checklistDetails checklist ]
 
                 Err err ->
