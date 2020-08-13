@@ -1,4 +1,4 @@
-module Checklist exposing (Cell, Checklist, ColumnLabel, CustomItem, Details, Group(..), Item, MetaTable, Row, apiDecoder, decoder, detailsApiDecoder, groupToString)
+module Checklist exposing (Cell, Checklist, ColumnLabel, CustomItem, Details, Group(..), Item, MetaTable, Row, encoder,apiDecoder, decoder, detailsApiDecoder, groupToString)
 
 
 import Json.Decode as D
@@ -309,27 +309,7 @@ decoder =
         |> hardcoded NotLoaded
 
 
-groupEncoder : Group -> E.Value
-groupEncoder group =
-    E.string <|
-        case group of
-            MCCR ->
-                "MCCR"
 
-            CPCL ->
-                "CPCL"
-
-            Preservation ->
-                "Preservation"
-
-            RunningLogs ->
-                "RunningLogs"
-
-            DCCL ->
-                "DeCommissioningCheckList"
-
-            SignalTag ->
-                "SignalTag"
 
 
 statusDecoder : D.Decoder Status
@@ -380,3 +360,44 @@ nullInt =
         ]
 
 
+
+encoder : Checklist -> E.Value
+encoder c =
+    E.object
+        [ ( "id", E.int c.id )
+        , ( "group", groupEncoder c.group )
+        , ( "type_", E.string c.type_ )
+        , ( "tagNo", E.string c.tagNo )
+        , ( "responsible", E.string c.responsible )
+        , ( "status", Status.encoder c.status )
+        , ( "commPk", E.string c.commPk )
+        , ( "mcPk", E.string c.mcPk )
+        , ( "updatedAt", E.string c.updatedAt )
+        , ( "register", E.string c.register )
+        , ( "description", E.string c.description )
+        , ( "sheet", E.int c.sheet )
+        , ( "subSheet", E.int c.subSheet )
+        ]
+
+
+groupEncoder : Group -> E.Value
+groupEncoder group =
+    E.string <|
+        case group of
+            MCCR ->
+                "MCCR"
+
+            CPCL ->
+                "CPCL"
+
+            Preservation ->
+                "Preservation"
+
+            RunningLogs ->
+                "RunningLogs"
+
+            DCCL ->
+                "DeCommissioningCheckList"
+
+            SignalTag ->
+                "SignalTag"
