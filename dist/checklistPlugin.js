@@ -4584,7 +4584,185 @@ function _Http_track(router, xhr, tracker)
 			size: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
 		}))));
 	});
-}var $elm$core$List$cons = _List_cons;
+}
+
+
+// DECODER
+
+var _File_decoder = _Json_decodePrim(function(value) {
+	// NOTE: checks if `File` exists in case this is run on node
+	return (typeof File !== 'undefined' && value instanceof File)
+		? $elm$core$Result$Ok(value)
+		: _Json_expecting('a FILE', value);
+});
+
+
+// METADATA
+
+function _File_name(file) { return file.name; }
+function _File_mime(file) { return file.type; }
+function _File_size(file) { return file.size; }
+
+function _File_lastModified(file)
+{
+	return $elm$time$Time$millisToPosix(file.lastModified);
+}
+
+
+// DOWNLOAD
+
+var _File_downloadNode;
+
+function _File_getDownloadNode()
+{
+	return _File_downloadNode || (_File_downloadNode = document.createElement('a'));
+}
+
+var _File_download = F3(function(name, mime, content)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var blob = new Blob([content], {type: mime});
+
+		// for IE10+
+		if (navigator.msSaveOrOpenBlob)
+		{
+			navigator.msSaveOrOpenBlob(blob, name);
+			return;
+		}
+
+		// for HTML5
+		var node = _File_getDownloadNode();
+		var objectUrl = URL.createObjectURL(blob);
+		node.href = objectUrl;
+		node.download = name;
+		_File_click(node);
+		URL.revokeObjectURL(objectUrl);
+	});
+});
+
+function _File_downloadUrl(href)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var node = _File_getDownloadNode();
+		node.href = href;
+		node.download = '';
+		node.origin === location.origin || (node.target = '_blank');
+		_File_click(node);
+	});
+}
+
+
+// IE COMPATIBILITY
+
+function _File_makeBytesSafeForInternetExplorer(bytes)
+{
+	// only needed by IE10 and IE11 to fix https://github.com/elm/file/issues/10
+	// all other browsers can just run `new Blob([bytes])` directly with no problem
+	//
+	return new Uint8Array(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+}
+
+function _File_click(node)
+{
+	// only needed by IE10 and IE11 to fix https://github.com/elm/file/issues/11
+	// all other browsers have MouseEvent and do not need this conditional stuff
+	//
+	if (typeof MouseEvent === 'function')
+	{
+		node.dispatchEvent(new MouseEvent('click'));
+	}
+	else
+	{
+		var event = document.createEvent('MouseEvents');
+		event.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+		document.body.appendChild(node);
+		node.dispatchEvent(event);
+		document.body.removeChild(node);
+	}
+}
+
+
+// UPLOAD
+
+var _File_node;
+
+function _File_uploadOne(mimes)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		_File_node = document.createElement('input');
+		_File_node.type = 'file';
+		_File_node.accept = A2($elm$core$String$join, ',', mimes);
+		_File_node.addEventListener('change', function(event)
+		{
+			callback(_Scheduler_succeed(event.target.files[0]));
+		});
+		_File_click(_File_node);
+	});
+}
+
+function _File_uploadOneOrMore(mimes)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		_File_node = document.createElement('input');
+		_File_node.type = 'file';
+		_File_node.multiple = true;
+		_File_node.accept = A2($elm$core$String$join, ',', mimes);
+		_File_node.addEventListener('change', function(event)
+		{
+			var elmFiles = _List_fromArray(event.target.files);
+			callback(_Scheduler_succeed(_Utils_Tuple2(elmFiles.a, elmFiles.b)));
+		});
+		_File_click(_File_node);
+	});
+}
+
+
+// CONTENT
+
+function _File_toString(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(reader.result));
+		});
+		reader.readAsText(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+function _File_toBytes(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(new DataView(reader.result)));
+		});
+		reader.readAsArrayBuffer(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+function _File_toUrl(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(reader.result));
+		});
+		reader.readAsDataURL(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
 	function (func, baseCase, _v0) {
@@ -5446,7 +5624,9 @@ var $author$project$Checklist$Checklist = function (id) {
 											return function (sheet) {
 												return function (subSheet) {
 													return function (details) {
-														return {commPk: commPk, description: description, details: details, group: group, id: id, mcPk: mcPk, register: register, responsible: responsible, sheet: sheet, status: status, subSheet: subSheet, tagNo: tagNo, type_: type_, updatedAt: updatedAt};
+														return function (attachments) {
+															return {attachments: attachments, commPk: commPk, description: description, details: details, group: group, id: id, mcPk: mcPk, register: register, responsible: responsible, sheet: sheet, status: status, subSheet: subSheet, tagNo: tagNo, type_: type_, updatedAt: updatedAt};
+														};
 													};
 												};
 											};
@@ -5580,61 +5760,64 @@ var $author$project$Checklist$statusDecoder = $elm$json$Json$Decode$oneOf(
 var $author$project$Checklist$decoder = A2(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded,
 	$author$project$Equinor$Types$NotLoaded,
-	A4(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-		'subSheet',
-		$elm$json$Json$Decode$int,
-		0,
+	A2(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded,
+		$author$project$Equinor$Types$NotLoaded,
 		A4(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-			'sheet',
+			'subSheet',
 			$elm$json$Json$Decode$int,
 			0,
-			A3(
-				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-				'description',
-				$elm$json$Json$Decode$string,
+			A4(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+				'sheet',
+				$elm$json$Json$Decode$int,
+				0,
 				A3(
 					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-					'register',
+					'description',
 					$elm$json$Json$Decode$string,
 					A3(
 						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-						'updatedAt',
+						'register',
 						$elm$json$Json$Decode$string,
 						A3(
 							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-							'mcPk',
+							'updatedAt',
 							$elm$json$Json$Decode$string,
 							A3(
 								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-								'commPk',
+								'mcPk',
 								$elm$json$Json$Decode$string,
 								A3(
 									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-									'status',
-									$author$project$Checklist$statusDecoder,
+									'commPk',
+									$elm$json$Json$Decode$string,
 									A3(
 										$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-										'responsible',
-										$elm$json$Json$Decode$string,
+										'status',
+										$author$project$Checklist$statusDecoder,
 										A3(
 											$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-											'tagNo',
+											'responsible',
 											$elm$json$Json$Decode$string,
 											A3(
 												$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-												'type_',
+												'tagNo',
 												$elm$json$Json$Decode$string,
 												A3(
 													$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-													'group',
-													$author$project$Checklist$groupDecoder,
+													'type_',
+													$elm$json$Json$Decode$string,
 													A3(
 														$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-														'id',
-														$elm$json$Json$Decode$int,
-														$elm$json$Json$Decode$succeed($author$project$Checklist$Checklist)))))))))))))));
+														'group',
+														$author$project$Checklist$groupDecoder,
+														A3(
+															$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+															'id',
+															$elm$json$Json$Decode$int,
+															$elm$json$Json$Decode$succeed($author$project$Checklist$Checklist))))))))))))))));
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $author$project$Checklist$Types$TokenSuccess = F2(
 	function (refNo, token) {
@@ -5687,7 +5870,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Checklist$Model$initialModel = function (flags) {
 	return _Utils_Tuple2(
-		{apiToken: '', checklists: $elm$core$Dict$empty, customCheckItemField: '', errorMsg: '', procosysPlantId: flags.procosysPlantId, requests: $elm$core$Dict$empty, selectedChecklist: $elm$core$Maybe$Nothing},
+		{apiToken: '', checklists: $elm$core$Dict$empty, currentAttachment: $elm$core$Maybe$Nothing, customCheckItemField: '', errorMsg: '', procosysPlantId: flags.procosysPlantId, requests: $elm$core$Dict$empty, selectedChecklist: $elm$core$Maybe$Nothing},
 		$elm$core$Platform$Cmd$none);
 };
 var $mdgriffith$elm_ui$Internal$Style$classes = {above: 'a', active: 'atv', alignBottom: 'ab', alignCenterX: 'cx', alignCenterY: 'cy', alignContainerBottom: 'acb', alignContainerCenterX: 'accx', alignContainerCenterY: 'accy', alignContainerRight: 'acr', alignLeft: 'al', alignRight: 'ar', alignTop: 'at', alignedHorizontally: 'ah', alignedVertically: 'av', any: 's', behind: 'bh', below: 'b', bold: 'w7', borderDashed: 'bd', borderDotted: 'bdt', borderNone: 'bn', borderSolid: 'bs', capturePointerEvents: 'cpe', clip: 'cp', clipX: 'cpx', clipY: 'cpy', column: 'c', container: 'ctr', contentBottom: 'cb', contentCenterX: 'ccx', contentCenterY: 'ccy', contentLeft: 'cl', contentRight: 'cr', contentTop: 'ct', cursorPointer: 'cptr', cursorText: 'ctxt', focus: 'fcs', focusedWithin: 'focus-within', fullSize: 'fs', grid: 'g', hasBehind: 'hbh', heightContent: 'hc', heightExact: 'he', heightFill: 'hf', heightFillPortion: 'hfp', hover: 'hv', imageContainer: 'ic', inFront: 'fr', inputLabel: 'lbl', inputMultiline: 'iml', inputMultilineFiller: 'imlf', inputMultilineParent: 'imlp', inputMultilineWrapper: 'implw', inputText: 'it', italic: 'i', link: 'lnk', nearby: 'nb', noTextSelection: 'notxt', onLeft: 'ol', onRight: 'or', opaque: 'oq', overflowHidden: 'oh', page: 'pg', paragraph: 'p', passPointerEvents: 'ppe', root: 'ui', row: 'r', scrollbars: 'sb', scrollbarsX: 'sbx', scrollbarsY: 'sby', seButton: 'sbt', single: 'e', sizeByCapital: 'cap', spaceEvenly: 'sev', strike: 'sk', text: 't', textCenter: 'tc', textExtraBold: 'w8', textExtraLight: 'w2', textHeavy: 'w9', textJustify: 'tj', textJustifyAll: 'tja', textLeft: 'tl', textLight: 'w3', textMedium: 'w5', textNormalWeight: 'w4', textRight: 'tr', textSemiBold: 'w6', textThin: 'w1', textUnitalicized: 'tun', transition: 'ts', transparent: 'clr', underline: 'u', widthContent: 'wc', widthExact: 'we', widthFill: 'wf', widthFillPortion: 'wfp', wrapped: 'wrp'};
@@ -11549,63 +11732,21 @@ var $mdgriffith$elm_ui$Element$rgb255 = F3(
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
 	});
 var $author$project$Equinor$Palette$slateBlue = A3($mdgriffith$elm_ui$Element$rgb255, 36, 55, 70);
+var $author$project$Checklist$Messages$AttachmentDecoded = F4(
+	function (a, b, c, d) {
+		return {$: 'AttachmentDecoded', a: a, b: b, c: c, d: d};
+	});
+var $author$project$Checklist$Messages$AttachmentFileLoaded = F2(
+	function (a, b) {
+		return {$: 'AttachmentFileLoaded', a: a, b: b};
+	});
 var $author$project$Equinor$Types$Loaded = F2(
 	function (a, b) {
 		return {$: 'Loaded', a: a, b: b};
 	});
-var $author$project$Checklist$Api$clientId = '47641c40-0135-459b-8ab4-459e68dc8d08/.default';
-var $author$project$Checklist$Ports$toJs = _Platform_outgoingPort('toJs', $elm$core$Basics$identity);
-var $author$project$Checklist$Update$createEvent = F2(
-	function (topic, payload) {
-		return $author$project$Checklist$Ports$toJs(
-			$elm$json$Json$Encode$object(
-				_List_fromArray(
-					[
-						_Utils_Tuple2(
-						'topic',
-						$elm$json$Json$Encode$string(topic)),
-						_Utils_Tuple2('payload', payload)
-					])));
-	});
-var $elm$json$Json$Encode$int = _Json_wrap;
-var $author$project$Checklist$Update$apiRequest = F2(
-	function (requests, _v0) {
-		var m = _v0.a;
-		var c = _v0.b;
-		var highestRefNo = A2(
-			$elm$core$Maybe$withDefault,
-			0,
-			$elm$core$List$maximum(
-				$elm$core$Dict$keys(m.requests)));
-		var nextRef = highestRefNo + 1;
-		return _Utils_Tuple2(
-			_Utils_update(
-				m,
-				{
-					requests: A3($elm$core$Dict$insert, nextRef, requests, m.requests)
-				}),
-			$elm$core$Platform$Cmd$batch(
-				_List_fromArray(
-					[
-						c,
-						A2(
-						$author$project$Checklist$Update$createEvent,
-						'getToken',
-						$elm$json$Json$Encode$object(
-							_List_fromArray(
-								[
-									_Utils_Tuple2(
-									'clientId',
-									$elm$json$Json$Encode$string($author$project$Checklist$Api$clientId)),
-									_Utils_Tuple2(
-									'refNo',
-									$elm$json$Json$Encode$int(nextRef))
-								])))
-					])));
-	});
-var $author$project$Checklist$Messages$ClearResult = F2(
-	function (a, b) {
-		return {$: 'ClearResult', a: a, b: b};
+var $author$project$Checklist$Messages$AddAttachmentResult = F3(
+	function (a, b, c) {
+		return {$: 'AddAttachmentResult', a: a, b: b, c: c};
 	});
 var $author$project$Checklist$Messages$GotApiResult = function (a) {
 	return {$: 'GotApiResult', a: a};
@@ -12090,16 +12231,24 @@ var $elm$http$Http$expectWhatever = function (toMsg) {
 				return $elm$core$Result$Ok(_Utils_Tuple0);
 			}));
 };
+var $elm$http$Http$filePart = _Http_pair;
 var $elm$http$Http$Header = F2(
 	function (a, b) {
 		return {$: 'Header', a: a, b: b};
 	});
 var $elm$http$Http$header = $elm$http$Http$Header;
-var $elm$http$Http$jsonBody = function (value) {
+var $elm$url$Url$Builder$int = F2(
+	function (key, value) {
+		return A2(
+			$elm$url$Url$Builder$QueryParameter,
+			$elm$url$Url$percentEncode(key),
+			$elm$core$String$fromInt(value));
+	});
+var $elm$http$Http$multipartBody = function (parts) {
 	return A2(
 		_Http_pair,
-		'application/json',
-		A2($elm$json$Json$Encode$encode, 0, value));
+		'',
+		_Http_toFormData(parts));
 };
 var $elm$http$Http$Request = function (a) {
 	return {$: 'Request', a: a};
@@ -12289,6 +12438,168 @@ var $author$project$Checklist$Api$url = F2(
 				A2($elm$core$List$cons, $author$project$Checklist$Api$apiVersion, queryParams));
 		}
 	});
+var $author$project$Checklist$Api$addAttachment = F4(
+	function (checklist, att, plantId, token) {
+		return $elm$http$Http$request(
+			{
+				body: $elm$http$Http$multipartBody(
+					_List_fromArray(
+						[
+							A2($elm$http$Http$filePart, 'ImportImage', att.file)
+						])),
+				expect: $elm$http$Http$expectWhatever(
+					A2(
+						$elm$core$Basics$composeL,
+						$author$project$Checklist$Messages$GotApiResult,
+						A2($author$project$Checklist$Messages$AddAttachmentResult, checklist, att))),
+				headers: _List_fromArray(
+					[
+						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
+					]),
+				method: 'POST',
+				timeout: $elm$core$Maybe$Nothing,
+				tracker: $elm$core$Maybe$Nothing,
+				url: A2(
+					$author$project$Checklist$Api$url,
+					_List_fromArray(
+						['CheckList', 'Attachment']),
+					_List_fromArray(
+						[
+							A2($elm$url$Url$Builder$string, 'plantId', plantId),
+							A2($elm$url$Url$Builder$int, 'checkListId', att.checklistId),
+							A2($elm$url$Url$Builder$string, 'title', att.name),
+							$author$project$Checklist$Api$apiVersion
+						]))
+			});
+	});
+var $author$project$Checklist$Api$clientId = '47641c40-0135-459b-8ab4-459e68dc8d08/.default';
+var $author$project$Checklist$Ports$toJs = _Platform_outgoingPort('toJs', $elm$core$Basics$identity);
+var $author$project$Checklist$Update$createEvent = F2(
+	function (topic, payload) {
+		return $author$project$Checklist$Ports$toJs(
+			$elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'topic',
+						$elm$json$Json$Encode$string(topic)),
+						_Utils_Tuple2('payload', payload)
+					])));
+	});
+var $elm$json$Json$Encode$int = _Json_wrap;
+var $author$project$Checklist$Update$apiRequest = F2(
+	function (requests, _v0) {
+		var m = _v0.a;
+		var c = _v0.b;
+		var highestRefNo = A2(
+			$elm$core$Maybe$withDefault,
+			0,
+			$elm$core$List$maximum(
+				$elm$core$Dict$keys(m.requests)));
+		var nextRef = highestRefNo + 1;
+		return _Utils_Tuple2(
+			_Utils_update(
+				m,
+				{
+					requests: A3($elm$core$Dict$insert, nextRef, requests, m.requests)
+				}),
+			$elm$core$Platform$Cmd$batch(
+				_List_fromArray(
+					[
+						c,
+						A2(
+						$author$project$Checklist$Update$createEvent,
+						'getToken',
+						$elm$json$Json$Encode$object(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'clientId',
+									$elm$json$Json$Encode$string($author$project$Checklist$Api$clientId)),
+									_Utils_Tuple2(
+									'refNo',
+									$elm$json$Json$Encode$int(nextRef))
+								])))
+					])));
+	});
+var $author$project$Checklist$Messages$GotAttachment = F3(
+	function (a, b, c) {
+		return {$: 'GotAttachment', a: a, b: b, c: c};
+	});
+var $author$project$Checklist$Types$Blob = F2(
+	function (contentType, bytes) {
+		return {bytes: bytes, contentType: contentType};
+	});
+var $author$project$Checklist$Api$base64Decoder = function (response) {
+	switch (response.$) {
+		case 'BadUrl_':
+			var u = response.a;
+			return $elm$core$Result$Err(
+				$elm$http$Http$BadUrl(u));
+		case 'Timeout_':
+			return $elm$core$Result$Err($elm$http$Http$Timeout);
+		case 'NetworkError_':
+			return $elm$core$Result$Err($elm$http$Http$NetworkError);
+		case 'BadStatus_':
+			var metadata = response.a;
+			return $elm$core$Result$Err(
+				$elm$http$Http$BadStatus(metadata.statusCode));
+		default:
+			var meta = response.a;
+			var body = response.b;
+			return $elm$core$Result$Ok(
+				A2(
+					$author$project$Checklist$Types$Blob,
+					A2(
+						$elm$core$Maybe$withDefault,
+						'',
+						A2($elm$core$Dict$get, 'content-type', meta.headers)),
+					body));
+	}
+};
+var $elm$http$Http$emptyBody = _Http_emptyBody;
+var $author$project$Checklist$Api$attachment = F4(
+	function (checklist, att, plantId, token) {
+		return $elm$http$Http$request(
+			{
+				body: $elm$http$Http$emptyBody,
+				expect: A2(
+					$elm$http$Http$expectBytesResponse,
+					A2(
+						$elm$core$Basics$composeL,
+						$author$project$Checklist$Messages$GotApiResult,
+						A2($author$project$Checklist$Messages$GotAttachment, checklist, att)),
+					$author$project$Checklist$Api$base64Decoder),
+				headers: _List_fromArray(
+					[
+						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
+					]),
+				method: 'GET',
+				timeout: $elm$core$Maybe$Nothing,
+				tracker: $elm$core$Maybe$Nothing,
+				url: A2(
+					$author$project$Checklist$Api$url,
+					_List_fromArray(
+						['CheckList', 'Attachment']),
+					_List_fromArray(
+						[
+							A2($elm$url$Url$Builder$string, 'plantId', plantId),
+							A2($elm$url$Url$Builder$int, 'checkListId', checklist.id),
+							A2($elm$url$Url$Builder$int, 'attachmentId', att.id),
+							$author$project$Checklist$Api$apiVersion
+						]))
+			});
+	});
+var $author$project$Checklist$Messages$ClearResult = F2(
+	function (a, b) {
+		return {$: 'ClearResult', a: a, b: b};
+	});
+var $elm$http$Http$jsonBody = function (value) {
+	return A2(
+		_Http_pair,
+		'application/json',
+		A2($elm$json$Json$Encode$encode, 0, value));
+};
 var $author$project$Checklist$Api$clearCheckItem = F4(
 	function (checklist, checkItem, plantId, token) {
 		return $elm$http$Http$request(
@@ -12365,6 +12676,47 @@ var $author$project$Checklist$Api$clearCustomCheckItem = F4(
 						]))
 			});
 	});
+var $author$project$Checklist$Messages$DeleteAttachmentResult = F3(
+	function (a, b, c) {
+		return {$: 'DeleteAttachmentResult', a: a, b: b, c: c};
+	});
+var $author$project$Checklist$Api$deleteAttachment = F4(
+	function (checklist, att, plantId, token) {
+		return $elm$http$Http$request(
+			{
+				body: $elm$http$Http$jsonBody(
+					$elm$json$Json$Encode$object(
+						_List_fromArray(
+							[
+								_Utils_Tuple2(
+								'CheckListId',
+								$elm$json$Json$Encode$int(checklist.id)),
+								_Utils_Tuple2(
+								'AttachmentId',
+								$elm$json$Json$Encode$int(att.id))
+							]))),
+				expect: $elm$http$Http$expectWhatever(
+					A2(
+						$elm$core$Basics$composeL,
+						$author$project$Checklist$Messages$GotApiResult,
+						A2($author$project$Checklist$Messages$DeleteAttachmentResult, checklist, att))),
+				headers: _List_fromArray(
+					[
+						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
+					]),
+				method: 'DELETE',
+				timeout: $elm$core$Maybe$Nothing,
+				tracker: $elm$core$Maybe$Nothing,
+				url: A2(
+					$author$project$Checklist$Api$url,
+					_List_fromArray(
+						['CheckList', 'Attachment']),
+					_List_fromArray(
+						[
+							A2($elm$url$Url$Builder$string, 'plantId', plantId)
+						]))
+			});
+	});
 var $author$project$Checklist$Messages$DeleteCustomItemResult = F2(
 	function (a, b) {
 		return {$: 'DeleteCustomItemResult', a: a, b: b};
@@ -12407,6 +12759,118 @@ var $author$project$Checklist$Api$deleteCustomItem = F4(
 						]))
 			});
 	});
+var $elm$time$Time$Posix = function (a) {
+	return {$: 'Posix', a: a};
+};
+var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
+var $elm$file$File$Select$file = F2(
+	function (mimes, toMsg) {
+		return A2(
+			$elm$core$Task$perform,
+			toMsg,
+			_File_uploadOne(mimes));
+	});
+var $author$project$Checklist$Messages$GotAttachments = F2(
+	function (a, b) {
+		return {$: 'GotAttachments', a: a, b: b};
+	});
+var $author$project$Checklist$Attachment = F6(
+	function (id, uri, title, mimeType, thumbnailAsBase64, hasFile) {
+		return {hasFile: hasFile, id: id, mimeType: mimeType, thumbnailAsBase64: thumbnailAsBase64, title: title, uri: uri};
+	});
+var $elm$json$Json$Decode$bool = _Json_decodeBool;
+var $author$project$Checklist$nullString = $elm$json$Json$Decode$oneOf(
+	_List_fromArray(
+		[
+			$elm$json$Json$Decode$string,
+			$elm$json$Json$Decode$null('')
+		]));
+var $author$project$Checklist$attachmentDecoder = A3(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+	'HasFile',
+	$elm$json$Json$Decode$bool,
+	A3(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+		'ThumbnailAsBase64',
+		$author$project$Checklist$nullString,
+		A3(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+			'MimeType',
+			$author$project$Checklist$nullString,
+			A3(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+				'Title',
+				$author$project$Checklist$nullString,
+				A3(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+					'Uri',
+					$author$project$Checklist$nullString,
+					A3(
+						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+						'Id',
+						$elm$json$Json$Decode$int,
+						$elm$json$Json$Decode$succeed($author$project$Checklist$Attachment)))))));
+var $elm$json$Json$Decode$decodeString = _Json_runOnString;
+var $elm$http$Http$expectStringResponse = F2(
+	function (toMsg, toResult) {
+		return A3(
+			_Http_expect,
+			'',
+			$elm$core$Basics$identity,
+			A2($elm$core$Basics$composeR, toResult, toMsg));
+	});
+var $elm$http$Http$expectJson = F2(
+	function (toMsg, decoder) {
+		return A2(
+			$elm$http$Http$expectStringResponse,
+			toMsg,
+			$elm$http$Http$resolve(
+				function (string) {
+					return A2(
+						$elm$core$Result$mapError,
+						$elm$json$Json$Decode$errorToString,
+						A2($elm$json$Json$Decode$decodeString, decoder, string));
+				}));
+	});
+var $author$project$Checklist$Api$attachments = F3(
+	function (checklist, plantId, token) {
+		return $elm$http$Http$request(
+			{
+				body: $elm$http$Http$emptyBody,
+				expect: A2(
+					$elm$http$Http$expectJson,
+					A2(
+						$elm$core$Basics$composeL,
+						$author$project$Checklist$Messages$GotApiResult,
+						$author$project$Checklist$Messages$GotAttachments(checklist)),
+					$elm$json$Json$Decode$list($author$project$Checklist$attachmentDecoder)),
+				headers: _List_fromArray(
+					[
+						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token)
+					]),
+				method: 'GET',
+				timeout: $elm$core$Maybe$Nothing,
+				tracker: $elm$core$Maybe$Nothing,
+				url: A2(
+					$author$project$Checklist$Api$url,
+					_List_fromArray(
+						['CheckList', 'Attachments']),
+					_List_fromArray(
+						[
+							A2($elm$url$Url$Builder$string, 'plantId', plantId),
+							A2($elm$url$Url$Builder$int, 'checklistId', checklist.id),
+							A2($elm$url$Url$Builder$int, 'thumbnailSize', 100),
+							$author$project$Checklist$Api$apiVersion
+						]))
+			});
+	});
+var $author$project$Checklist$Update$getAttachments = function (checklist) {
+	return $author$project$Checklist$Update$apiRequest(
+		_List_fromArray(
+			[
+				$author$project$Checklist$Api$attachments(checklist)
+			]));
+};
 var $author$project$Equinor$Types$Loading = F2(
 	function (a, b) {
 		return {$: 'Loading', a: a, b: b};
@@ -12419,57 +12883,54 @@ var $author$project$Checklist$Details = F4(
 	function (loopTags, items, customItems, checklistDetails) {
 		return {checklistDetails: checklistDetails, customItems: customItems, items: items, loopTags: loopTags};
 	});
-var $author$project$Checklist$ChecklistDetails = F8(
-	function (comment, signedAt, signedByFirstName, signedByLastName, verifiedAt, verifiedByFirstName, verifiedByLastName, status) {
-		return {comment: comment, signedAt: signedAt, signedByFirstName: signedByFirstName, signedByLastName: signedByLastName, status: status, verifiedAt: verifiedAt, verifiedByFirstName: verifiedByFirstName, verifiedByLastName: verifiedByLastName};
+var $author$project$Checklist$ChecklistDetails = F9(
+	function (comment, signedAt, signedByFirstName, signedByLastName, verifiedAt, verifiedByFirstName, verifiedByLastName, status, attachmentCount) {
+		return {attachmentCount: attachmentCount, comment: comment, signedAt: signedAt, signedByFirstName: signedByFirstName, signedByLastName: signedByLastName, status: status, verifiedAt: verifiedAt, verifiedByFirstName: verifiedByFirstName, verifiedByLastName: verifiedByLastName};
 	});
-var $author$project$Checklist$nullString = $elm$json$Json$Decode$oneOf(
-	_List_fromArray(
-		[
-			$elm$json$Json$Decode$string,
-			$elm$json$Json$Decode$null('')
-		]));
 var $author$project$Checklist$checklistDetails = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-	'Status',
-	$author$project$Checklist$statusDecoder,
-	A4(
-		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-		'VerifiedByLastName',
-		$author$project$Checklist$nullString,
-		'',
+	'AttachmentCount',
+	$elm$json$Json$Decode$int,
+	A3(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+		'Status',
+		$author$project$Checklist$statusDecoder,
 		A4(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-			'VerifiedByFirstName',
+			'VerifiedByLastName',
 			$author$project$Checklist$nullString,
 			'',
 			A4(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-				'VerifiedAt',
+				'VerifiedByFirstName',
 				$author$project$Checklist$nullString,
 				'',
-				A3(
-					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-					'SignedByLastName',
+				A4(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+					'VerifiedAt',
 					$author$project$Checklist$nullString,
+					'',
 					A3(
 						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-						'SignedByFirstName',
+						'SignedByLastName',
 						$author$project$Checklist$nullString,
 						A3(
 							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-							'SignedAt',
+							'SignedByFirstName',
 							$author$project$Checklist$nullString,
 							A3(
 								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-								'Comment',
+								'SignedAt',
 								$author$project$Checklist$nullString,
-								$elm$json$Json$Decode$succeed($author$project$Checklist$ChecklistDetails)))))))));
+								A3(
+									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+									'Comment',
+									$author$project$Checklist$nullString,
+									$elm$json$Json$Decode$succeed($author$project$Checklist$ChecklistDetails))))))))));
 var $author$project$Checklist$CustomItem = F4(
 	function (id, isOk, itemNo, text) {
 		return {id: id, isOk: isOk, itemNo: itemNo, text: text};
 	});
-var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $elm$json$Json$Decode$map4 = _Json_map4;
 var $author$project$Checklist$customItemDecoder = A5(
 	$elm$json$Json$Decode$map4,
@@ -12571,36 +13032,6 @@ var $author$project$Checklist$detailsApiDecoder = A3(
 				$elm$json$Json$Decode$list($author$project$Checklist$loopTagDecoder),
 				_List_Nil,
 				$elm$json$Json$Decode$succeed($author$project$Checklist$Details)))));
-var $elm$http$Http$emptyBody = _Http_emptyBody;
-var $elm$json$Json$Decode$decodeString = _Json_runOnString;
-var $elm$http$Http$expectStringResponse = F2(
-	function (toMsg, toResult) {
-		return A3(
-			_Http_expect,
-			'',
-			$elm$core$Basics$identity,
-			A2($elm$core$Basics$composeR, toResult, toMsg));
-	});
-var $elm$http$Http$expectJson = F2(
-	function (toMsg, decoder) {
-		return A2(
-			$elm$http$Http$expectStringResponse,
-			toMsg,
-			$elm$http$Http$resolve(
-				function (string) {
-					return A2(
-						$elm$core$Result$mapError,
-						$elm$json$Json$Decode$errorToString,
-						A2($elm$json$Json$Decode$decodeString, decoder, string));
-				}));
-	});
-var $elm$url$Url$Builder$int = F2(
-	function (key, value) {
-		return A2(
-			$elm$url$Url$Builder$QueryParameter,
-			$elm$url$Url$percentEncode(key),
-			$elm$core$String$fromInt(value));
-	});
 var $author$project$Checklist$Api$checklistDetails = F3(
 	function (checklist, plantId, token) {
 		return $elm$http$Http$request(
@@ -12726,6 +13157,17 @@ var $author$project$Checklist$Api$addCustomItem = F6(
 							$author$project$Checklist$Api$apiVersion
 						]))
 			});
+	});
+var $elm$file$File$Download$bytes = F3(
+	function (name, mime, content) {
+		return A2(
+			$elm$core$Task$perform,
+			$elm$core$Basics$never,
+			A3(
+				_File_download,
+				name,
+				mime,
+				_File_makeBytesSafeForInternetExplorer(content)));
 	});
 var $elm$core$String$replace = F3(
 	function (before, after, string) {
@@ -12948,7 +13390,7 @@ var $author$project$Checklist$Update$handleApiResult = F2(
 					var err = result.a;
 					return _Utils_Tuple2(m, c);
 				}
-			default:
+			case 'DeleteCustomItemResult':
 				var checklist = apiResult.a;
 				var result = apiResult.b;
 				if (result.$ === 'Ok') {
@@ -12963,8 +13405,109 @@ var $author$project$Checklist$Update$handleApiResult = F2(
 					var err = result.a;
 					return _Utils_Tuple2(m, c);
 				}
+			case 'GotAttachments':
+				var oldChecklist = apiResult.a;
+				var result = apiResult.b;
+				var updater = function (checklist) {
+					if (result.$ === 'Ok') {
+						var attachments = result.a;
+						return _Utils_update(
+							checklist,
+							{
+								attachments: A2($author$project$Equinor$Types$Loaded, '', attachments),
+								details: function () {
+									var _v17 = checklist.details;
+									if (_v17.$ === 'Loaded') {
+										var str = _v17.a;
+										var x = _v17.b;
+										var oldChecklistDetails = x.checklistDetails;
+										return A2(
+											$author$project$Equinor$Types$Loaded,
+											str,
+											_Utils_update(
+												x,
+												{
+													checklistDetails: _Utils_update(
+														oldChecklistDetails,
+														{
+															attachmentCount: $elm$core$List$length(attachments)
+														})
+												}));
+									} else {
+										return checklist.details;
+									}
+								}()
+							});
+					} else {
+						var err = result.a;
+						return _Utils_update(
+							checklist,
+							{
+								attachments: A2($author$project$Equinor$Types$DataError, '', $elm$core$Maybe$Nothing)
+							});
+					}
+				};
+				return _Utils_Tuple2(
+					_Utils_update(
+						m,
+						{
+							checklists: A3(
+								$elm$core$Dict$update,
+								oldChecklist.id,
+								$elm$core$Maybe$map(updater),
+								m.checklists)
+						}),
+					c);
+			case 'GotAttachment':
+				var oldPunch = apiResult.a;
+				var attachment = apiResult.b;
+				var result = apiResult.c;
+				if (result.$ === 'Ok') {
+					var data = result.a;
+					return _Utils_Tuple2(
+						m,
+						A3($elm$file$File$Download$bytes, attachment.title, data.contentType, data.bytes));
+				} else {
+					var err = result.a;
+					return _Utils_Tuple2(m, c);
+				}
+			case 'DeleteAttachmentResult':
+				var punch = apiResult.a;
+				var att = apiResult.b;
+				var result = apiResult.c;
+				if (result.$ === 'Ok') {
+					return A2(
+						$author$project$Checklist$Update$getAttachments,
+						punch,
+						_Utils_Tuple2(m, c));
+				} else {
+					var err = result.a;
+					return _Utils_Tuple2(m, c);
+				}
+			default:
+				var checklist = apiResult.a;
+				var att = apiResult.b;
+				var result = apiResult.c;
+				if (result.$ === 'Ok') {
+					return A2(
+						$author$project$Checklist$Update$getAttachments,
+						checklist,
+						_Utils_Tuple2(
+							_Utils_update(
+								m,
+								{currentAttachment: $elm$core$Maybe$Nothing}),
+							c));
+				} else {
+					var err = result.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							m,
+							{errorMsg: 'Cound not add Attachment'}),
+						c);
+				}
 		}
 	});
+var $elm$file$File$name = _File_name;
 var $author$project$Checklist$Messages$GotNextCustomItemNo = F2(
 	function (a, b) {
 		return {$: 'GotNextCustomItemNo', a: a, b: b};
@@ -13211,6 +13754,7 @@ var $author$project$Checklist$Api$signChecklist = F3(
 						]))
 			});
 	});
+var $elm$file$File$toUrl = _File_toUrl;
 var $author$project$Checklist$Update$unSelectChecklist = function (_v0) {
 	var m = _v0.a;
 	var c = _v0.b;
@@ -13510,9 +14054,12 @@ var $author$project$Checklist$Update$update = F2(
 				return _Utils_eq(
 					model.selectedChecklist,
 					$elm$core$Maybe$Just(checklist.id)) ? $author$project$Checklist$Update$unSelectChecklist(mc) : A2(
-					$author$project$Checklist$Update$getChecklistDetails,
+					$author$project$Checklist$Update$getAttachments,
 					checklist,
-					A2($author$project$Checklist$Update$selectChecklist, checklist, mc));
+					A2(
+						$author$project$Checklist$Update$getChecklistDetails,
+						checklist,
+						A2($author$project$Checklist$Update$selectChecklist, checklist, mc)));
 			case 'NaCheckItemPressed':
 				var checklist = msg.a;
 				var checkItem = msg.b;
@@ -13728,7 +14275,7 @@ var $author$project$Checklist$Update$update = F2(
 							A2(apiCall, checklist, customItem)
 						]),
 					mc);
-			default:
+			case 'DeleteCustomCheckItemButtomPressed':
 				var checklist = msg.a;
 				var customItem = msg.b;
 				return A2(
@@ -13738,6 +14285,91 @@ var $author$project$Checklist$Update$update = F2(
 							A2($author$project$Checklist$Api$deleteCustomItem, checklist, customItem)
 						]),
 					mc);
+			case 'AttachmentPressed':
+				var checklist = msg.a;
+				var attachment = msg.b;
+				return A2(
+					$author$project$Checklist$Update$apiRequest,
+					_List_fromArray(
+						[
+							A2($author$project$Checklist$Api$attachment, checklist, attachment)
+						]),
+					mc);
+			case 'DeleteAttachmentButtonPressed':
+				var checklist = msg.a;
+				var attachment = msg.b;
+				return A2(
+					$author$project$Checklist$Update$apiRequest,
+					_List_fromArray(
+						[
+							A2($author$project$Checklist$Api$deleteAttachment, checklist, attachment)
+						]),
+					mc);
+			case 'NewAttachmentButtonPressed':
+				var checklist = msg.a;
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$elm$file$File$Select$file,
+						_List_Nil,
+						$author$project$Checklist$Messages$AttachmentFileLoaded(checklist.id)));
+			case 'AttachmentFileLoaded':
+				var checklistId = msg.a;
+				var file = msg.b;
+				var uri = $elm$file$File$toUrl(file);
+				var name = $elm$file$File$name(file);
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$elm$core$Task$perform,
+						A3($author$project$Checklist$Messages$AttachmentDecoded, file, checklistId, name),
+						uri));
+			case 'AttachmentDecoded':
+				var file = msg.a;
+				var checklistId = msg.b;
+				var name = msg.c;
+				var uri = msg.d;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							currentAttachment: $elm$core$Maybe$Just(
+								{checklistId: checklistId, file: file, name: name, uri: uri})
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'FileNameInputChanged':
+				var str = msg.a;
+				var _v3 = model.currentAttachment;
+				if (_v3.$ === 'Just') {
+					var currentAttachment = _v3.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								currentAttachment: $elm$core$Maybe$Just(
+									_Utils_update(
+										currentAttachment,
+										{name: str}))
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return mc;
+				}
+			default:
+				var checklist = msg.a;
+				var _v4 = model.currentAttachment;
+				if (_v4.$ === 'Just') {
+					var currentAttachment = _v4.a;
+					return A2(
+						$author$project$Checklist$Update$apiRequest,
+						_List_fromArray(
+							[
+								A2($author$project$Checklist$Api$addAttachment, checklist, currentAttachment)
+							]),
+						mc);
+				} else {
+					return mc;
+				}
 		}
 	});
 var $elm$core$Dict$isEmpty = function (dict) {
@@ -14444,45 +15076,25 @@ var $mdgriffith$elm_ui$Internal$Model$Px = function (a) {
 };
 var $mdgriffith$elm_ui$Element$px = $mdgriffith$elm_ui$Internal$Model$Px;
 var $author$project$Equinor$Palette$red = A3($mdgriffith$elm_ui$Element$rgb255, 255, 59, 59);
-var $author$project$Equinor$Palette$blue = A3($mdgriffith$elm_ui$Element$rgb255, 95, 192, 220);
-var $author$project$Checklist$Messages$NaCheckItemPressed = F2(
+var $author$project$Checklist$Messages$AddUploadedAttachmentToChecklist = function (a) {
+	return {$: 'AddUploadedAttachmentToChecklist', a: a};
+};
+var $author$project$Checklist$Messages$FileNameInputChanged = function (a) {
+	return {$: 'FileNameInputChanged', a: a};
+};
+var $author$project$Checklist$Messages$NewAttachmentButtonPressed = function (a) {
+	return {$: 'NewAttachmentButtonPressed', a: a};
+};
+var $author$project$Checklist$Messages$AttachmentPressed = F2(
 	function (a, b) {
-		return {$: 'NaCheckItemPressed', a: a, b: b};
+		return {$: 'AttachmentPressed', a: a, b: b};
 	});
-var $author$project$Checklist$Messages$OkCheckItemPressed = F2(
+var $author$project$Checklist$Messages$DeleteAttachmentButtonPressed = F2(
 	function (a, b) {
-		return {$: 'OkCheckItemPressed', a: a, b: b};
+		return {$: 'DeleteAttachmentButtonPressed', a: a, b: b};
 	});
-var $mdgriffith$elm_ui$Internal$Flag$fontAlignment = $mdgriffith$elm_ui$Internal$Flag$flag(12);
-var $mdgriffith$elm_ui$Element$Font$center = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontAlignment, $mdgriffith$elm_ui$Internal$Style$classes.textCenter);
 var $mdgriffith$elm_ui$Internal$Model$CenterX = {$: 'CenterX'};
 var $mdgriffith$elm_ui$Element$centerX = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$CenterX);
-var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
-	return {$: 'AlignY', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
-var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
-var $mdgriffith$elm_ui$Internal$Model$Transparency = F2(
-	function (a, b) {
-		return {$: 'Transparency', a: a, b: b};
-	});
-var $mdgriffith$elm_ui$Internal$Flag$transparency = $mdgriffith$elm_ui$Internal$Flag$flag(0);
-var $mdgriffith$elm_ui$Element$alpha = function (o) {
-	var transparency = function (x) {
-		return 1 - x;
-	}(
-		A2(
-			$elm$core$Basics$min,
-			1.0,
-			A2($elm$core$Basics$max, 0.0, o)));
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$transparency,
-		A2(
-			$mdgriffith$elm_ui$Internal$Model$Transparency,
-			'transparency-' + $mdgriffith$elm_ui$Internal$Model$floatClass(transparency),
-			transparency));
-};
 var $mdgriffith$elm_ui$Internal$Flag$borderColor = $mdgriffith$elm_ui$Internal$Flag$flag(28);
 var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
 	return A2(
@@ -14494,6 +15106,58 @@ var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
 			'border-color',
 			clr));
 };
+var $author$project$Equinor$Palette$energyRed = A3($mdgriffith$elm_ui$Element$rgb255, 255, 18, 67);
+var $elm$html$Html$Attributes$alt = $elm$html$Html$Attributes$stringProperty('alt');
+var $elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
+var $mdgriffith$elm_ui$Element$image = F2(
+	function (attrs, _v0) {
+		var src = _v0.src;
+		var description = _v0.description;
+		var imageAttributes = A2(
+			$elm$core$List$filter,
+			function (a) {
+				switch (a.$) {
+					case 'Width':
+						return true;
+					case 'Height':
+						return true;
+					default:
+						return false;
+				}
+			},
+			attrs);
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asEl,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.imageContainer),
+				attrs),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+				_List_fromArray(
+					[
+						A4(
+						$mdgriffith$elm_ui$Internal$Model$element,
+						$mdgriffith$elm_ui$Internal$Model$asEl,
+						$mdgriffith$elm_ui$Internal$Model$NodeName('img'),
+						_Utils_ap(
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Internal$Model$Attr(
+									$elm$html$Html$Attributes$src(src)),
+									$mdgriffith$elm_ui$Internal$Model$Attr(
+									$elm$html$Html$Attributes$alt(description))
+								]),
+							imageAttributes),
+						$mdgriffith$elm_ui$Internal$Model$Unkeyed(_List_Nil))
+					])));
+	});
 var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
 var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
 	return A2(
@@ -14505,103 +15169,6 @@ var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
 			'border-radius',
 			$elm$core$String$fromInt(radius) + 'px'));
 };
-var $elm$html$Html$Attributes$title = $elm$html$Html$Attributes$stringProperty('title');
-var $mdgriffith$elm_ui$Element$rgb = F3(
-	function (r, g, b) {
-		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
-	});
-var $author$project$Equinor$Palette$white = A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1);
-var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
-	function (a, b, c, d, e) {
-		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
-	});
-var $mdgriffith$elm_ui$Element$Border$width = function (v) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
-		A5(
-			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
-			'b-' + $elm$core$String$fromInt(v),
-			v,
-			v,
-			v,
-			v));
-};
-var $author$project$Checklist$View$checkButton = F4(
-	function (size, isDisabled, isActive, msg) {
-		return A2(
-			$mdgriffith$elm_ui$Element$el,
-			_Utils_ap(
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$height(
-						$mdgriffith$elm_ui$Element$px(
-							$elm$core$Basics$round(size))),
-						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(
-							$elm$core$Basics$round(size))),
-						$mdgriffith$elm_ui$Element$Border$rounded(1000),
-						$mdgriffith$elm_ui$Element$Border$color($author$project$Equinor$Palette$mistBlue),
-						$mdgriffith$elm_ui$Element$Border$width(2),
-						$mdgriffith$elm_ui$Element$Background$color(
-						isActive ? $author$project$Equinor$Palette$blue : $author$project$Equinor$Palette$white)
-					]),
-				isDisabled ? _List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$alpha(0.3),
-						$mdgriffith$elm_ui$Element$htmlAttribute(
-						A2($elm$html$Html$Attributes$style, 'cursor', 'not-allowed')),
-						$mdgriffith$elm_ui$Element$htmlAttribute(
-						$elm$html$Html$Attributes$title('Checklist is signed'))
-					]) : _List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$pointer,
-						$author$project$Checklist$View$onClick(msg)
-					])),
-			$mdgriffith$elm_ui$Element$none);
-	});
-var $mdgriffith$elm_ui$Internal$Flag$borderStyle = $mdgriffith$elm_ui$Internal$Flag$flag(11);
-var $mdgriffith$elm_ui$Element$Border$dashed = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$borderStyle, $mdgriffith$elm_ui$Internal$Style$classes.borderDashed);
-var $elm$core$String$lines = _String_lines;
-var $mdgriffith$elm_ui$Element$Font$regular = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textNormalWeight);
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $author$project$Checklist$Messages$MetaTableCellInput = F5(
-	function (a, b, c, d, e) {
-		return {$: 'MetaTableCellInput', a: a, b: b, c: c, d: d, e: e};
-	});
-var $author$project$Checklist$Messages$MetaTableCellLostFocus = F4(
-	function (a, b, c, d) {
-		return {$: 'MetaTableCellLostFocus', a: a, b: b, c: c, d: d};
-	});
-var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
-	return {$: 'HiddenLabel', a: a};
-};
-var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onBlur = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'blur',
-		$elm$json$Json$Decode$succeed(msg));
-};
-var $mdgriffith$elm_ui$Element$Events$onLoseFocus = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Attr, $elm$html$Html$Events$onBlur);
 var $mdgriffith$elm_ui$Internal$Model$AsRow = {$: 'AsRow'};
 var $mdgriffith$elm_ui$Internal$Model$asRow = $mdgriffith$elm_ui$Internal$Model$AsRow;
 var $mdgriffith$elm_ui$Element$row = F2(
@@ -14627,6 +15194,178 @@ var $mdgriffith$elm_ui$Internal$Model$Text = function (a) {
 };
 var $mdgriffith$elm_ui$Element$text = function (content) {
 	return $mdgriffith$elm_ui$Internal$Model$Text(content);
+};
+var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
+	function (a, b, c, d, e) {
+		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
+	});
+var $mdgriffith$elm_ui$Element$Border$width = function (v) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
+		A5(
+			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
+			'b-' + $elm$core$String$fromInt(v),
+			v,
+			v,
+			v,
+			v));
+};
+var $author$project$Checklist$View$renderAttachmentItem = F3(
+	function (size, checklist, a) {
+		return A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$padding(10),
+					$mdgriffith$elm_ui$Element$spacing(
+					$elm$core$Basics$round(size))
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$pointer,
+							$mdgriffith$elm_ui$Element$spacing(
+							$elm$core$Basics$round(size)),
+							$author$project$Checklist$View$onClick(
+							A2($author$project$Checklist$Messages$AttachmentPressed, checklist, a))
+						]),
+					_List_fromArray(
+						[
+							$elm$core$String$isEmpty(a.thumbnailAsBase64) ? A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$width(
+									$mdgriffith$elm_ui$Element$px(100))
+								]),
+							A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[$mdgriffith$elm_ui$Element$centerX]),
+								$mdgriffith$elm_ui$Element$text('no preview'))) : A2(
+							$mdgriffith$elm_ui$Element$image,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$width(
+									$mdgriffith$elm_ui$Element$px(100))
+								]),
+							{
+								description: 'preview',
+								src: $elm$core$String$concat(
+									_List_fromArray(
+										['data:', a.mimeType, ';base64,', a.thumbnailAsBase64]))
+							}),
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+								]),
+							$mdgriffith$elm_ui$Element$text(a.title))
+						])),
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$alignRight,
+							$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$energyRed),
+							$mdgriffith$elm_ui$Element$padding(6),
+							$mdgriffith$elm_ui$Element$Border$rounded(4),
+							$mdgriffith$elm_ui$Element$Border$width(1),
+							$mdgriffith$elm_ui$Element$Border$color($author$project$Equinor$Palette$energyRed),
+							$mdgriffith$elm_ui$Element$pointer,
+							$author$project$Checklist$View$onClick(
+							A2($author$project$Checklist$Messages$DeleteAttachmentButtonPressed, checklist, a))
+						]),
+					$mdgriffith$elm_ui$Element$text('X'))
+				]));
+	});
+var $author$project$Checklist$View$attachmentPreview = F3(
+	function (size, model, checklist) {
+		var _v0 = checklist.attachments;
+		switch (_v0.$) {
+			case 'Loaded':
+				var attachments = _v0.b;
+				return A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+						]),
+					A2(
+						$elm$core$List$map,
+						A2($author$project$Checklist$View$renderAttachmentItem, size, checklist),
+						attachments));
+			case 'Loading':
+				return $mdgriffith$elm_ui$Element$text('Loading attachments');
+			case 'DataError':
+				return $mdgriffith$elm_ui$Element$text('Problem getting attachments');
+			default:
+				return $mdgriffith$elm_ui$Element$none;
+		}
+	});
+var $author$project$Equinor$Palette$blue = A3($mdgriffith$elm_ui$Element$rgb255, 95, 192, 220);
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$autofocus = $elm$html$Html$Attributes$boolProperty('autofocus');
+var $mdgriffith$elm_ui$Element$Input$focusedOnLoad = $mdgriffith$elm_ui$Internal$Model$Attr(
+	$elm$html$Html$Attributes$autofocus(true));
+var $author$project$Equinor$Palette$green = A3($mdgriffith$elm_ui$Element$rgb255, 75, 183, 72);
+var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
+	return {$: 'HiddenLabel', a: a};
+};
+var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $author$project$Checklist$View$onEnterKey = function (msg) {
+	return $mdgriffith$elm_ui$Element$htmlAttribute(
+		A2(
+			$elm$html$Html$Events$on,
+			'keydown',
+			A2(
+				$elm$json$Json$Decode$andThen,
+				function (keyCode) {
+					return (keyCode === 13) ? $elm$json$Json$Decode$succeed(msg) : $elm$json$Json$Decode$fail('');
+				},
+				A2($elm$json$Json$Decode$field, 'keyCode', $elm$json$Json$Decode$int))));
+};
+var $mdgriffith$elm_ui$Element$Input$Placeholder = F2(
+	function (a, b) {
+		return {$: 'Placeholder', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Element$Input$placeholder = $mdgriffith$elm_ui$Element$Input$Placeholder;
+var $elm$core$Basics$pow = _Basics_pow;
+var $mdgriffith$elm_ui$Element$modular = F3(
+	function (normal, ratio, rescale) {
+		return (!rescale) ? normal : ((rescale < 0) ? (normal * A2($elm$core$Basics$pow, ratio, rescale)) : (normal * A2($elm$core$Basics$pow, ratio, rescale - 1)));
+	});
+var $author$project$Equinor$Palette$scaled = function (size) {
+	return A2($mdgriffith$elm_ui$Element$modular, size, 1.15);
+};
+var $author$project$Equinor$Palette$scaledInt = function (size) {
+	return A2(
+		$elm$core$Basics$composeR,
+		$author$project$Equinor$Palette$scaled(size),
+		$elm$core$Basics$round);
 };
 var $mdgriffith$elm_ui$Element$Input$TextInputNode = function (a) {
 	return {$: 'TextInputNode', a: a};
@@ -14758,6 +15497,10 @@ var $mdgriffith$elm_ui$Element$Input$calcMoveToCompensateForPadding = function (
 			$elm$core$Basics$floor(vSpace / 2));
 	}
 };
+var $mdgriffith$elm_ui$Element$rgb = F3(
+	function (r, g, b) {
+		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
+	});
 var $mdgriffith$elm_ui$Element$Input$darkGrey = A3($mdgriffith$elm_ui$Element$rgb, 186 / 255, 189 / 255, 182 / 255);
 var $mdgriffith$elm_ui$Element$Input$defaultTextPadding = A2($mdgriffith$elm_ui$Element$paddingXY, 12, 12);
 var $mdgriffith$elm_ui$Element$Input$white = A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1);
@@ -14787,6 +15530,15 @@ var $mdgriffith$elm_ui$Element$Input$hasFocusStyle = function (attr) {
 		return true;
 	} else {
 		return false;
+	}
+};
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
 	}
 };
 var $mdgriffith$elm_ui$Internal$Model$Label = function (a) {
@@ -15176,6 +15928,27 @@ var $mdgriffith$elm_ui$Element$Input$renderBox = function (_v0) {
 	var left = _v0.left;
 	return $elm$core$String$fromInt(top) + ('px ' + ($elm$core$String$fromInt(right) + ('px ' + ($elm$core$String$fromInt(bottom) + ('px ' + ($elm$core$String$fromInt(left) + 'px'))))));
 };
+var $mdgriffith$elm_ui$Internal$Model$Transparency = F2(
+	function (a, b) {
+		return {$: 'Transparency', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$transparency = $mdgriffith$elm_ui$Internal$Flag$flag(0);
+var $mdgriffith$elm_ui$Element$alpha = function (o) {
+	var transparency = function (x) {
+		return 1 - x;
+	}(
+		A2(
+			$elm$core$Basics$min,
+			1.0,
+			A2($elm$core$Basics$max, 0.0, o)));
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$transparency,
+		A2(
+			$mdgriffith$elm_ui$Internal$Model$Transparency,
+			'transparency-' + $mdgriffith$elm_ui$Internal$Model$floatClass(transparency),
+			transparency));
+};
 var $mdgriffith$elm_ui$Element$Input$charcoal = A3($mdgriffith$elm_ui$Element$rgb, 136 / 255, 138 / 255, 133 / 255);
 var $mdgriffith$elm_ui$Element$rgba = $mdgriffith$elm_ui$Internal$Model$Rgba;
 var $mdgriffith$elm_ui$Element$Input$renderPlaceholder = F3(
@@ -15206,13 +15979,6 @@ var $mdgriffith$elm_ui$Element$Input$renderPlaceholder = F3(
 	});
 var $mdgriffith$elm_ui$Element$scrollbarY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsY);
 var $elm$html$Html$span = _VirtualDom_node('span');
-var $elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$bool(bool));
-	});
 var $elm$html$Html$Attributes$spellcheck = $elm$html$Html$Attributes$boolProperty('spellcheck');
 var $mdgriffith$elm_ui$Element$Input$spellcheck = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Attr, $elm$html$Html$Attributes$spellcheck);
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
@@ -15469,6 +16235,182 @@ var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$tex
 		spellchecked: false,
 		type_: $mdgriffith$elm_ui$Element$Input$TextInputNode('text')
 	});
+var $author$project$Equinor$Palette$white = A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1);
+var $author$project$Checklist$View$renderAttachments = F5(
+	function (size, model, readOnly, details, checklist) {
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$blue),
+							$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$white),
+							$mdgriffith$elm_ui$Element$Font$size(
+							A2($author$project$Equinor$Palette$scaledInt, size, -1)),
+							A2($mdgriffith$elm_ui$Element$paddingXY, 8, 4)
+						]),
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$text(
+							'Attachments (' + ($elm$core$String$fromInt(details.checklistDetails.attachmentCount) + ')')),
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$padding(6),
+									$mdgriffith$elm_ui$Element$alignRight,
+									$mdgriffith$elm_ui$Element$Border$width(1),
+									$mdgriffith$elm_ui$Element$Border$color($author$project$Equinor$Palette$white),
+									$mdgriffith$elm_ui$Element$Border$rounded(4),
+									$mdgriffith$elm_ui$Element$pointer,
+									$author$project$Checklist$View$onClick(
+									$author$project$Checklist$Messages$NewAttachmentButtonPressed(checklist))
+								]),
+							$mdgriffith$elm_ui$Element$text('Add new'))
+						])),
+					function () {
+					var _v0 = model.currentAttachment;
+					if (_v0.$ === 'Just') {
+						var file = _v0.a;
+						return A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+									$mdgriffith$elm_ui$Element$spacing(
+									$elm$core$Basics$round(size)),
+									$mdgriffith$elm_ui$Element$padding(4)
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$mdgriffith$elm_ui$Element$image,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$width(
+											$mdgriffith$elm_ui$Element$px(
+												$elm$core$Basics$round(size * 4)))
+										]),
+									{description: 'Thumbnail of new attachment', src: file.uri}),
+									A2(
+									$mdgriffith$elm_ui$Element$Input$text,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+											$mdgriffith$elm_ui$Element$Input$focusedOnLoad,
+											$author$project$Checklist$View$onEnterKey(
+											$author$project$Checklist$Messages$AddUploadedAttachmentToChecklist(checklist))
+										]),
+									{
+										label: $mdgriffith$elm_ui$Element$Input$labelHidden('Name'),
+										onChange: $author$project$Checklist$Messages$FileNameInputChanged,
+										placeholder: $elm$core$Maybe$Just(
+											A2(
+												$mdgriffith$elm_ui$Element$Input$placeholder,
+												_List_Nil,
+												$mdgriffith$elm_ui$Element$text('Enter name...'))),
+										text: file.name
+									}),
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$padding(6),
+											$mdgriffith$elm_ui$Element$alignRight,
+											$mdgriffith$elm_ui$Element$Border$width(1),
+											$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$green),
+											$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$white),
+											$mdgriffith$elm_ui$Element$Border$color($author$project$Equinor$Palette$blue),
+											$mdgriffith$elm_ui$Element$Border$rounded(4),
+											$mdgriffith$elm_ui$Element$pointer,
+											$author$project$Checklist$View$onClick(
+											$author$project$Checklist$Messages$AddUploadedAttachmentToChecklist(checklist))
+										]),
+									$mdgriffith$elm_ui$Element$text('Add'))
+								]));
+					} else {
+						return $mdgriffith$elm_ui$Element$none;
+					}
+				}(),
+					A3($author$project$Checklist$View$attachmentPreview, size, model, checklist)
+				]));
+	});
+var $author$project$Checklist$Messages$NaCheckItemPressed = F2(
+	function (a, b) {
+		return {$: 'NaCheckItemPressed', a: a, b: b};
+	});
+var $author$project$Checklist$Messages$OkCheckItemPressed = F2(
+	function (a, b) {
+		return {$: 'OkCheckItemPressed', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$fontAlignment = $mdgriffith$elm_ui$Internal$Flag$flag(12);
+var $mdgriffith$elm_ui$Element$Font$center = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontAlignment, $mdgriffith$elm_ui$Internal$Style$classes.textCenter);
+var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
+	return {$: 'AlignY', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
+var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
+var $elm$html$Html$Attributes$title = $elm$html$Html$Attributes$stringProperty('title');
+var $author$project$Checklist$View$checkButton = F4(
+	function (size, isDisabled, isActive, msg) {
+		return A2(
+			$mdgriffith$elm_ui$Element$el,
+			_Utils_ap(
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$height(
+						$mdgriffith$elm_ui$Element$px(
+							$elm$core$Basics$round(size))),
+						$mdgriffith$elm_ui$Element$width(
+						$mdgriffith$elm_ui$Element$px(
+							$elm$core$Basics$round(size))),
+						$mdgriffith$elm_ui$Element$Border$rounded(1000),
+						$mdgriffith$elm_ui$Element$Border$color($author$project$Equinor$Palette$mistBlue),
+						$mdgriffith$elm_ui$Element$Border$width(2),
+						$mdgriffith$elm_ui$Element$Background$color(
+						isActive ? $author$project$Equinor$Palette$blue : $author$project$Equinor$Palette$white)
+					]),
+				isDisabled ? _List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$alpha(0.3),
+						$mdgriffith$elm_ui$Element$htmlAttribute(
+						A2($elm$html$Html$Attributes$style, 'cursor', 'not-allowed')),
+						$mdgriffith$elm_ui$Element$htmlAttribute(
+						$elm$html$Html$Attributes$title('Checklist is signed'))
+					]) : _List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$pointer,
+						$author$project$Checklist$View$onClick(msg)
+					])),
+			$mdgriffith$elm_ui$Element$none);
+	});
+var $mdgriffith$elm_ui$Internal$Flag$borderStyle = $mdgriffith$elm_ui$Internal$Flag$flag(11);
+var $mdgriffith$elm_ui$Element$Border$dashed = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$borderStyle, $mdgriffith$elm_ui$Internal$Style$classes.borderDashed);
+var $elm$core$String$lines = _String_lines;
+var $mdgriffith$elm_ui$Element$Font$regular = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textNormalWeight);
+var $author$project$Checklist$Messages$MetaTableCellInput = F5(
+	function (a, b, c, d, e) {
+		return {$: 'MetaTableCellInput', a: a, b: b, c: c, d: d, e: e};
+	});
+var $author$project$Checklist$Messages$MetaTableCellLostFocus = F4(
+	function (a, b, c, d) {
+		return {$: 'MetaTableCellLostFocus', a: a, b: b, c: c, d: d};
+	});
+var $elm$html$Html$Events$onBlur = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'blur',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $mdgriffith$elm_ui$Element$Events$onLoseFocus = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Attr, $elm$html$Html$Events$onBlur);
 var $author$project$Checklist$View$renderCellInput = F7(
 	function (size, isDisabled, checklist, checkItem, columnHeader, tableRow, cell) {
 		return A2(
@@ -15503,20 +16445,6 @@ var $author$project$Checklist$View$renderCellInput = F7(
 					$mdgriffith$elm_ui$Element$text(cell.unit)
 				]));
 	});
-var $elm$core$Basics$pow = _Basics_pow;
-var $mdgriffith$elm_ui$Element$modular = F3(
-	function (normal, ratio, rescale) {
-		return (!rescale) ? normal : ((rescale < 0) ? (normal * A2($elm$core$Basics$pow, ratio, rescale)) : (normal * A2($elm$core$Basics$pow, ratio, rescale - 1)));
-	});
-var $author$project$Equinor$Palette$scaled = function (size) {
-	return A2($mdgriffith$elm_ui$Element$modular, size, 1.15);
-};
-var $author$project$Equinor$Palette$scaledInt = function (size) {
-	return A2(
-		$elm$core$Basics$composeR,
-		$author$project$Equinor$Palette$scaled(size),
-		$elm$core$Basics$round);
-};
 var $mdgriffith$elm_ui$Element$InternalColumn = function (a) {
 	return {$: 'InternalColumn', a: a};
 };
@@ -15966,11 +16894,6 @@ var $mdgriffith$elm_ui$Element$Input$multiline = F2(
 			attrs,
 			{label: multi.label, onChange: multi.onChange, placeholder: multi.placeholder, text: multi.text});
 	});
-var $mdgriffith$elm_ui$Element$Input$Placeholder = F2(
-	function (a, b) {
-		return {$: 'Placeholder', a: a, b: b};
-	});
-var $mdgriffith$elm_ui$Element$Input$placeholder = $mdgriffith$elm_ui$Element$Input$Placeholder;
 var $author$project$Checklist$View$renderCommentField = F3(
 	function (size, checklist, details) {
 		var isEnabled = $elm$core$String$isEmpty(details.checklistDetails.signedAt);
@@ -16666,8 +17589,8 @@ var $author$project$Equinor$Data$Procosys$Status$toString = function (status) {
 	}
 };
 var $author$project$Equinor$Palette$yellow = A3($mdgriffith$elm_ui$Element$rgb255, 251, 202, 54);
-var $author$project$Checklist$View$renderChecklistItem = F5(
-	function (size, maybeSelected, errorMsg, customCheckItemField, item) {
+var $author$project$Checklist$View$renderChecklistItem = F3(
+	function (size, model, item) {
 		var tagNo = A2(
 			$mdgriffith$elm_ui$Element$paragraph,
 			_List_fromArray(
@@ -16713,7 +17636,7 @@ var $author$project$Checklist$View$renderChecklistItem = F5(
 				]),
 			$mdgriffith$elm_ui$Element$text(item.type_));
 		var isSelected = _Utils_eq(
-			maybeSelected,
+			model.selectedChecklist,
 			$elm$core$Maybe$Just(item.id));
 		var colors = function () {
 			var _v1 = item.status;
@@ -16839,10 +17762,11 @@ var $author$project$Checklist$View$renderChecklistItem = F5(
 										_List_fromArray(
 											[
 												A3($author$project$Checklist$View$renderChecklistItems, size, item, details),
-												A4($author$project$Checklist$View$renderCustomChecklistItems, size, item, details, customCheckItemField),
+												A4($author$project$Checklist$View$renderCustomChecklistItems, size, item, details, model.customCheckItemField),
 												A3($author$project$Checklist$View$renderCommentField, size, item, details),
+												A5($author$project$Checklist$View$renderAttachments, size, model, true, details, item),
 												A4($author$project$Checklist$View$signatures, size, item, hasUnsignedItems, details),
-												$elm$core$String$isEmpty(errorMsg) ? $mdgriffith$elm_ui$Element$none : A2(
+												$elm$core$String$isEmpty(model.errorMsg) ? $mdgriffith$elm_ui$Element$none : A2(
 												$mdgriffith$elm_ui$Element$paragraph,
 												_List_fromArray(
 													[
@@ -16852,7 +17776,7 @@ var $author$project$Checklist$View$renderChecklistItem = F5(
 													]),
 												_List_fromArray(
 													[
-														$mdgriffith$elm_ui$Element$text(errorMsg)
+														$mdgriffith$elm_ui$Element$text(model.errorMsg)
 													]))
 											]));
 							}
@@ -16862,8 +17786,18 @@ var $author$project$Checklist$View$renderChecklistItem = F5(
 					}()
 					])));
 	});
-var $author$project$Checklist$View$renderChecklists = F5(
-	function (size, maybeSelected, errorMsg, customCheckItemField, checklists) {
+var $elm$core$Dict$values = function (dict) {
+	return A3(
+		$elm$core$Dict$foldr,
+		F3(
+			function (key, value, valueList) {
+				return A2($elm$core$List$cons, value, valueList);
+			}),
+		_List_Nil,
+		dict);
+};
+var $author$project$Checklist$View$renderChecklists = F2(
+	function (size, model) {
 		var updater = F2(
 			function (c, mV) {
 				return $elm$core$Maybe$Just(
@@ -16905,7 +17839,7 @@ var $author$project$Checklist$View$renderChecklists = F5(
 							dict);
 					}),
 				$elm$core$Dict$empty,
-				checklists));
+				$elm$core$Dict$values(model.checklists)));
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -16946,30 +17880,14 @@ var $author$project$Checklist$View$renderChecklists = F5(
 									]),
 								A2(
 									$elm$core$List$map,
-									A4($author$project$Checklist$View$renderChecklistItem, size, maybeSelected, errorMsg, customCheckItemField),
+									A2($author$project$Checklist$View$renderChecklistItem, size, model),
 									groupChecklists))
 							]));
 				},
 				groups));
 	});
-var $elm$core$Dict$values = function (dict) {
-	return A3(
-		$elm$core$Dict$foldr,
-		F3(
-			function (key, value, valueList) {
-				return A2($elm$core$List$cons, value, valueList);
-			}),
-		_List_Nil,
-		dict);
-};
 var $author$project$Checklist$Main$view = function (model) {
-	return $elm$core$Dict$isEmpty(model.checklists) ? $mdgriffith$elm_ui$Element$text('No Checklists') : A5(
-		$author$project$Checklist$View$renderChecklists,
-		16,
-		model.selectedChecklist,
-		model.errorMsg,
-		model.customCheckItemField,
-		$elm$core$Dict$values(model.checklists));
+	return $elm$core$Dict$isEmpty(model.checklists) ? $mdgriffith$elm_ui$Element$text('No Checklists') : A2($author$project$Checklist$View$renderChecklists, 16, model);
 };
 var $author$project$Checklist$Main$main = $elm$browser$Browser$element(
 	{

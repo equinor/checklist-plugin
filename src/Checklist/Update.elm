@@ -1,16 +1,20 @@
 module Checklist.Update exposing (update)
 
-import Checklist.Api as Api
 import Checklist exposing (Checklist)
-import Dict exposing (Dict)
-import Http
-import Json.Encode as E
+import Checklist.Api as Api exposing (checklistDetails)
 import Checklist.Messages exposing (..)
 import Checklist.Model exposing (Model)
 import Checklist.Ports as Ports
-import Svg.Attributes exposing (z)
 import Checklist.Types exposing (..)
+import Dict exposing (Dict)
 import Equinor.Types exposing (..)
+import File
+import File.Download
+import File.Select
+import Http
+import Json.Encode as E
+import Svg.Attributes exposing (z)
+import Task
 
 
 type alias MC =
@@ -60,6 +64,7 @@ update msg model =
                 mc
                     |> selectChecklist checklist
                     |> getChecklistDetails checklist
+                    |> getAttachments checklist
 
         NaCheckItemPressed checklist checkItem ->
             let
@@ -214,6 +219,44 @@ update msg model =
             mc
                 |> apiRequest [ Api.deleteCustomItem checklist customItem ]
 
+        AttachmentPressed checklist attachment ->
+            mc |> apiRequest [ Api.attachment checklist attachment ]
+
+        DeleteAttachmentButtonPressed checklist attachment ->
+            mc |> apiRequest [ Api.deleteAttachment checklist attachment ]
+
+        NewAttachmentButtonPressed checklist ->
+            ( model, File.Select.file [] (AttachmentFileLoaded checklist.id) )
+
+        AttachmentFileLoaded checklistId file ->
+            let
+                name =
+                    File.name file
+
+                uri =
+                    File.toUrl file
+            in
+            ( model, Task.perform (AttachmentDecoded file checklistId name) uri )
+
+        AttachmentDecoded file checklistId name uri ->
+            ( { model | currentAttachment = Just { file = file, name = name, uri = uri, checklistId = checklistId } }, Cmd.none )
+
+        FileNameInputChanged str ->
+            case model.currentAttachment of
+                Just currentAttachment ->
+                    ( { model | currentAttachment = Just { currentAttachment | name = str } }, Cmd.none )
+
+                Nothing ->
+                    mc
+
+        AddUploadedAttachmentToChecklist checklist ->
+            case model.currentAttachment of
+                Just currentAttachment ->
+                    mc |> apiRequest [ Api.addAttachment checklist currentAttachment ]
+
+                Nothing ->
+                    mc
+
 
 setChecklistsTo : List Checklist -> MC -> MC
 setChecklistsTo checklists ( m, c ) =
@@ -328,9 +371,6 @@ handleApiResult apiResult ( m, c ) =
         SetNaResult checklist result ->
             case result of
                 Ok _ ->
-                    
-
-                    
                     ( m, c ) |> apiRequest [ Api.checklistDetails checklist ]
 
                 Err err ->
@@ -426,3 +466,75 @@ handleApiResult apiResult ( m, c ) =
 
                 Err err ->
                     ( m, c )
+
+        GotAttachments oldChecklist result ->
+            let
+                updater checklist =
+                    case result of
+                        Ok attachments ->
+                            { checklist
+                                | attachments = Loaded "" attachments
+                                , details =
+                                    case checklist.details of
+                                        Loaded str x ->
+                                            let
+                                                oldChecklistDetails =
+                                                    x.checklistDetails
+                                            in
+                                            Loaded str
+                                                { x | checklistDetails = { oldChecklistDetails | attachmentCount = List.length attachments } }
+
+                                        _ ->
+                                            checklist.details
+                            }
+
+                        Err err ->
+                            { checklist | attachments = DataError "" Nothing }
+            in
+            ( { m | checklists = Dict.update oldChecklist.id (Maybe.map updater) m.checklists }
+            , c
+            )
+
+        GotAttachment oldPunch attachment result ->
+            case result of
+                Ok data ->
+                    {- ( m
+                       , E.object
+                           [ ( "topic", E.string "openFile" )
+                           , ( "payload"
+                             , E.object
+                                   [ ( "contentType", E.string data.contentType )
+                                   , ( "base64", E.string data.base64 )
+                                   ]
+                             )
+                           ]
+                           |> Ports.toJs
+                       )
+                    -}
+                    ( m, File.Download.bytes attachment.title data.contentType data.bytes )
+
+                Err err ->
+                    ( m, c )
+
+        DeleteAttachmentResult punch att result ->
+            case result of
+                Ok _ ->
+                    ( m, c )
+                        |> getAttachments punch
+
+                Err err ->
+                    ( m, c )
+
+        AddAttachmentResult checklist att result ->
+            case result of
+                Ok _ ->
+                    ( { m | currentAttachment = Nothing }, c )
+                        |> getAttachments checklist
+
+                Err err ->
+                    ( { m | errorMsg = "Cound not add Attachment" }, c )
+
+
+getAttachments : Checklist -> MC -> MC
+getAttachments checklist =
+    apiRequest [ Api.attachments checklist ]

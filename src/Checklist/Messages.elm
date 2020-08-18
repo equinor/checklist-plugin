@@ -1,9 +1,10 @@
 module Checklist.Messages exposing (ApiResult(..), Msg(..))
 
 import Checklist as Checklist exposing (Checklist)
+import Checklist.Types exposing (..)
+import File exposing (File)
 import Http
 import Json.Decode as D
-import Checklist.Types exposing (..)
 
 
 type Msg
@@ -29,6 +30,13 @@ type Msg
     | AddCustomCheckItemButtonPressed Checklist
     | OkCustomCheckItemPressed Checklist Checklist.CustomItem
     | DeleteCustomCheckItemButtomPressed Checklist Checklist.CustomItem
+    | AttachmentPressed Checklist Checklist.Attachment
+    | DeleteAttachmentButtonPressed Checklist Checklist.Attachment
+    | NewAttachmentButtonPressed Checklist
+    | AttachmentFileLoaded Int File
+    | AttachmentDecoded File Int String String
+    | FileNameInputChanged String
+    | AddUploadedAttachmentToChecklist Checklist
 
 
 type ApiResult
@@ -45,3 +53,7 @@ type ApiResult
     | GotNextCustomItemNo Checklist (Result Http.Error String)
     | AddCustomItemResult Checklist (Result Http.Error ())
     | DeleteCustomItemResult Checklist (Result Http.Error ())
+    | GotAttachments Checklist (Result Http.Error (List Checklist.Attachment))
+    | GotAttachment Checklist Checklist.Attachment (Result Http.Error Blob)
+    | DeleteAttachmentResult Checklist Checklist.Attachment (Result Http.Error ())
+    | AddAttachmentResult Checklist AttachmentUpload (Result Http.Error ())

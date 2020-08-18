@@ -1,12 +1,12 @@
-module Checklist exposing (Cell, Checklist, ColumnLabel, CustomItem, Details, Group(..), Item, MetaTable, Row, encoder,apiDecoder, decoder, detailsApiDecoder, groupToString)
+module Checklist exposing (Attachment, Cell, Checklist, ColumnLabel, CustomItem, Details, Group(..), Item, MetaTable, Row, apiDecoder, attachmentDecoder, decoder, detailsApiDecoder, encoder, groupToString)
 
-
-import Json.Decode as D
-import Json.Decode.Pipeline exposing (hardcoded, optional, required)
-import Json.Encode as E
 import Checklist.Types exposing (..)
 import Equinor.Data.Procosys.Status as Status exposing (Status(..))
 import Equinor.Types exposing (..)
+import Json.Decode as D
+import Json.Decode.Pipeline exposing (hardcoded, optional, required)
+import Json.Encode as E
+
 
 type Group
     = CPCL
@@ -22,7 +22,6 @@ apiGroupDecoder =
     nullString
         |> D.andThen
             (\str ->
-
                 case str of
                     "Mechanical Completion Check Record" ->
                         D.succeed MCCR
@@ -113,6 +112,7 @@ type alias Checklist =
     , sheet : Int
     , subSheet : Int
     , details : WebData Details
+    , attachments : WebData (List Attachment)
     }
 
 
@@ -133,6 +133,7 @@ type alias ChecklistDetails =
     , verifiedByFirstName : String
     , verifiedByLastName : String
     , status : Status
+    , attachmentCount : Int
     }
 
 
@@ -264,6 +265,7 @@ checklistDetails =
         |> optional "VerifiedByFirstName" nullString ""
         |> optional "VerifiedByLastName" nullString ""
         |> required "Status" statusDecoder
+        |> required "AttachmentCount" D.int
 
 
 loopTagDecoder : D.Decoder LoopTag
@@ -288,6 +290,7 @@ apiDecoder =
         |> required "TagFormularType__SheetNo" nullInt
         |> required "TagFormularType__SubsheetNo" nullInt
         |> hardcoded NotLoaded
+        |> hardcoded NotLoaded
 
 
 decoder : D.Decoder Checklist
@@ -307,9 +310,7 @@ decoder =
         |> optional "sheet" D.int 0
         |> optional "subSheet" D.int 0
         |> hardcoded NotLoaded
-
-
-
+        |> hardcoded NotLoaded
 
 
 statusDecoder : D.Decoder Status
@@ -341,7 +342,14 @@ statusFromString str =
             OS
 
 
-
+type alias Attachment =
+    { id : Int
+    , uri : String
+    , title : String
+    , mimeType : String
+    , thumbnailAsBase64 : String
+    , hasFile : Bool
+    }
 
 
 nullString : D.Decoder String
@@ -358,7 +366,6 @@ nullInt =
         [ D.int
         , D.null 0
         ]
-
 
 
 encoder : Checklist -> E.Value
@@ -401,3 +408,14 @@ groupEncoder group =
 
             SignalTag ->
                 "SignalTag"
+
+
+attachmentDecoder : D.Decoder Attachment
+attachmentDecoder =
+    D.succeed Attachment
+        |> required "Id" D.int
+        |> required "Uri" nullString
+        |> required "Title" nullString
+        |> required "MimeType" nullString
+        |> required "ThumbnailAsBase64" nullString
+        |> required "HasFile" D.bool

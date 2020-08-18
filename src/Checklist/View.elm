@@ -1,7 +1,10 @@
 module Checklist.View exposing (renderChecklists)
 
 import Checklist as Checklist exposing (Checklist)
-
+import Checklist.Api exposing (checklistDetails)
+import Checklist.Messages exposing (Msg(..))
+import Checklist.Model exposing (Model)
+import Checklist.Types exposing (..)
 import Dict
 import Element exposing (..)
 import Element.Background as Background
@@ -10,19 +13,18 @@ import Element.Events exposing (onLoseFocus)
 import Element.Font as Font
 import Element.Input as Input
 import Element.Keyed as Keyed
+import Equinor.Data.Procosys.Status as Status exposing (Status(..))
+import Equinor.Icon as Icon
+import Equinor.Palette as Palette exposing (scaledInt)
+import Equinor.Types exposing (..)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
-import Equinor.Icon as Icon
 import Json.Decode as D
-import Checklist.Messages exposing (Msg(..))
-import Equinor.Palette as Palette exposing (scaledInt)
-import Checklist.Types exposing (..)
-import Equinor.Data.Procosys.Status as Status exposing (Status(..))
-import Equinor.Types exposing (..)
 
-renderChecklists : Float -> Maybe Int -> String -> String -> List Checklist -> Element Msg
-renderChecklists size maybeSelected errorMsg customCheckItemField checklists =
+
+renderChecklists : Float -> Model -> Element Msg
+renderChecklists size model =
     let
         groupToString group =
             case group of
@@ -54,7 +56,8 @@ renderChecklists size maybeSelected errorMsg customCheckItemField checklists =
                         [ c ]
 
         groups =
-            checklists
+            model.checklists
+                |> Dict.values
                 |> List.foldl (\c dict -> Dict.update (groupToString c.group) (updater c) dict) Dict.empty
                 |> Dict.toList
     in
@@ -65,7 +68,7 @@ renderChecklists size maybeSelected errorMsg customCheckItemField checklists =
                     column [ width fill ]
                         [ el [ Font.color Palette.mossGreen, Font.bold ] (text groupName)
                         , groupChecklists
-                            |> List.map (renderChecklistItem size maybeSelected errorMsg customCheckItemField)
+                            |> List.map (renderChecklistItem size model)
                             |> Keyed.column
                                 [ width fill
                                 , height fill
@@ -88,8 +91,8 @@ spacer =
         none
 
 
-renderChecklistItem : Float -> Maybe Int -> String -> String -> Checklist.Checklist -> ( String, Element Msg )
-renderChecklistItem size maybeSelected errorMsg customCheckItemField item =
+renderChecklistItem : Float -> Model -> Checklist.Checklist -> ( String, Element Msg )
+renderChecklistItem size model item =
     let
         colors =
             case item.status of
@@ -106,7 +109,7 @@ renderChecklistItem size maybeSelected errorMsg customCheckItemField item =
                     Palette.combination Palette.white Palette.grey
 
         isSelected =
-            maybeSelected == Just item.id
+            model.selectedChecklist == Just item.id
 
         color =
             Palette.white
@@ -195,14 +198,15 @@ renderChecklistItem size maybeSelected errorMsg customCheckItemField item =
                              ,
                           -}
                           renderChecklistItems size item details
-                        , renderCustomChecklistItems size item details customCheckItemField
+                        , renderCustomChecklistItems size item details model.customCheckItemField
                         , renderCommentField size item details
+                        , renderAttachments size model True details item
                         , signatures size item hasUnsignedItems details
-                        , if String.isEmpty errorMsg then
+                        , if String.isEmpty model.errorMsg then
                             none
 
                           else
-                            paragraph [ width fill, Background.color Palette.alphaYellow, padding 6 ] [ text errorMsg ]
+                            paragraph [ width fill, Background.color Palette.alphaYellow, padding 6 ] [ text model.errorMsg ]
                         ]
 
           else
@@ -350,7 +354,6 @@ signButton size name maybeDisabled msg =
                         deactiveAttributes message
 
                     Nothing ->
-                    
                         activeAttributes
                )
         )
@@ -695,3 +698,88 @@ onClick msg =
             }
         )
         |> htmlAttribute
+
+
+renderAttachments : Float -> Model -> Bool -> Checklist.Details -> Checklist -> Element Msg
+renderAttachments size model readOnly details checklist =
+    column [ width fill ]
+        [ row
+            [ width fill
+            , Background.color Palette.blue
+            , Font.color Palette.white
+            , Font.size (scaledInt size -1)
+            , paddingXY 8 4
+            ]
+            [ text <| "Attachments (" ++ String.fromInt details.checklistDetails.attachmentCount ++ ")"
+            , el [ padding 6, alignRight, Border.width 1, Border.color Palette.white, Border.rounded 4, pointer, onClick <| NewAttachmentButtonPressed checklist ] (text "Add new")
+            ]
+        , case model.currentAttachment of
+            Just file ->
+                row [ width fill, spacing <| round size, padding 4 ]
+                    [ image [ width <| px <| round <| size * 4 ] { description = "Thumbnail of new attachment", src = file.uri }
+                    , Input.text [ width fill, Input.focusedOnLoad, onEnterKey <| AddUploadedAttachmentToChecklist checklist ]
+                        { label = Input.labelHidden "Name"
+                        , onChange = FileNameInputChanged
+                        , placeholder = Just (Input.placeholder [] (text "Enter name..."))
+                        , text = file.name
+                        }
+                    , el [ padding 6, alignRight, Border.width 1, Background.color Palette.green, Font.color Palette.white, Border.color Palette.blue, Border.rounded 4, pointer, onClick <| AddUploadedAttachmentToChecklist checklist ] (text "Add")
+                    ]
+
+            Nothing ->
+                none
+        , attachmentPreview size model checklist
+        ]
+
+
+onEnterKey msg =
+    htmlAttribute <|
+        HE.on "keydown"
+            (D.field "keyCode" D.int
+                |> D.andThen
+                    (\keyCode ->
+                        if keyCode == 13 then
+                            D.succeed msg
+
+                        else
+                            D.fail ""
+                    )
+            )
+
+
+attachmentPreview : Float -> Model -> Checklist -> Element Msg
+attachmentPreview size model checklist =
+    case checklist.attachments of
+        Loaded _ attachments ->
+            attachments
+                |> List.map (renderAttachmentItem size checklist)
+                |> column [ width fill ]
+
+        Loading _ _ ->
+            text "Loading attachments"
+
+        DataError _ _ ->
+            text "Problem getting attachments"
+
+        NotLoaded ->
+            none
+
+
+renderAttachmentItem : Float -> Checklist -> Checklist.Attachment -> Element Msg
+renderAttachmentItem size checklist a =
+    row [ width fill, padding 10, spacing <| round size ]
+        [ row
+            [ width fill
+            , pointer
+            , spacing <| round size
+            , onClick <| AttachmentPressed checklist a
+            ]
+            [ if String.isEmpty a.thumbnailAsBase64 then
+                el [ width (px 100) ] <| el [ centerX ] (text "no preview")
+
+              else
+                image [ width (px 100) ] { description = "preview", src = String.concat [ "data:", a.mimeType, ";base64,", a.thumbnailAsBase64 ] }
+            , el [ width fill ] (text a.title)
+            ]
+        , el [ alignRight, Font.color Palette.energyRed, padding 6, Border.rounded 4, Border.width 1, Border.color Palette.energyRed, pointer, onClick <| DeleteAttachmentButtonPressed checklist a ] (text "X")
+        ]

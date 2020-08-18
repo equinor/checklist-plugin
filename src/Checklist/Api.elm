@@ -1,11 +1,13 @@
-module Checklist.Api exposing (addCustomItem, checklistDetails, clearCheckItem, clearCustomCheckItem, clientId, deleteCustomItem, nextCustomItemNo, setCheckItemNa, setCheckItemOk, setCustomCheckItemOk, signChecklist, unSignChecklist, unVerifyChecklist, updateComment, updateMetaTableCell, verifyChecklist)
+module Checklist.Api exposing (addAttachment, addCustomItem, attachment, attachments, checklistDetails, clearCheckItem, clearCustomCheckItem, clientId, deleteAttachment, deleteCustomItem, nextCustomItemNo, setCheckItemNa, setCheckItemOk, setCustomCheckItemOk, signChecklist, unSignChecklist, unVerifyChecklist, updateComment, updateMetaTableCell, verifyChecklist)
 
-import Checklist as Checklist
+import Bytes
+import Checklist as Checklist exposing (Checklist)
+import Checklist.Messages exposing (..)
+import Checklist.Types exposing (..)
+import Dict
 import Http
 import Json.Decode as D
 import Json.Encode as E
-import Checklist.Messages exposing (..)
-import Checklist.Types exposing (..)
 import Url.Builder exposing (QueryParameter, int, string)
 
 
@@ -482,6 +484,120 @@ updateMetaTableCell checklist checkItem tableRow cell plantId token =
         , expect =
             Http.expectWhatever
                 (GotApiResult << UpdateMetaTableCellResult checklist)
+        , timeout = Nothing
+        , tracker = Nothing
+        }
+
+
+attachments : Checklist -> String -> String -> Cmd Msg
+attachments checklist plantId token =
+    Http.request
+        { method = "GET"
+        , url =
+            url
+                [ "CheckList"
+                , "Attachments"
+                ]
+                [ string "plantId" plantId
+                , int "checklistId" checklist.id
+                , int "thumbnailSize" 100
+                , apiVersion
+                ]
+        , headers = [ Http.header "Authorization" ("Bearer " ++ token) ]
+        , body = Http.emptyBody
+        , expect =
+            Http.expectJson
+                (GotApiResult << GotAttachments checklist)
+                (D.list Checklist.attachmentDecoder)
+        , timeout = Nothing
+        , tracker = Nothing
+        }
+
+
+attachment : Checklist -> Checklist.Attachment -> String -> String -> Cmd Msg
+attachment checklist att plantId token =
+    Http.request
+        { method = "GET"
+        , url =
+            url
+                [ "CheckList"
+                , "Attachment"
+                ]
+                [ string "plantId" plantId
+                , int "checkListId" checklist.id
+                , int "attachmentId" att.id
+                , apiVersion
+                ]
+        , headers = [ Http.header "Authorization" ("Bearer " ++ token) ]
+        , body = Http.emptyBody
+        , expect = Http.expectBytesResponse (GotApiResult << GotAttachment checklist att) base64Decoder
+        , timeout = Nothing
+        , tracker = Nothing
+        }
+
+
+base64Decoder : Http.Response Bytes.Bytes -> Result Http.Error Blob
+base64Decoder response =
+    case response of
+        Http.BadUrl_ u ->
+            Err (Http.BadUrl u)
+
+        Http.Timeout_ ->
+            Err Http.Timeout
+
+        Http.NetworkError_ ->
+            Err Http.NetworkError
+
+        Http.BadStatus_ metadata _ ->
+            Err (Http.BadStatus metadata.statusCode)
+
+        Http.GoodStatus_ meta body ->
+            Ok (Blob (Dict.get "content-type" meta.headers |> Maybe.withDefault "") body)
+
+
+deleteAttachment : Checklist -> Checklist.Attachment -> String -> String -> Cmd Msg
+deleteAttachment checklist att plantId token =
+    Http.request
+        { method = "DELETE"
+        , url =
+            url
+                [ "CheckList"
+                , "Attachment"
+                ]
+                [ string "plantId" plantId
+                ]
+        , headers = [ Http.header "Authorization" ("Bearer " ++ token) ]
+        , body =
+            Http.jsonBody <|
+                E.object
+                    [ ( "CheckListId", E.int checklist.id )
+                    , ( "AttachmentId", E.int att.id )
+                    ]
+        , expect = Http.expectWhatever (GotApiResult << DeleteAttachmentResult checklist att)
+        , timeout = Nothing
+        , tracker = Nothing
+        }
+
+
+addAttachment : Checklist -> AttachmentUpload -> String -> String -> Cmd Msg
+addAttachment checklist att plantId token =
+    Http.request
+        { method = "POST"
+        , url =
+            url
+                [ "CheckList"
+                , "Attachment"
+                ]
+                [ string "plantId" plantId
+                , int "checkListId" att.checklistId
+                , string "title" att.name
+                , apiVersion
+                ]
+        , headers = [ Http.header "Authorization" ("Bearer " ++ token) ]
+        , body =
+            Http.multipartBody
+                [ Http.filePart "ImportImage" att.file ]
+        , expect = Http.expectWhatever (GotApiResult << AddAttachmentResult checklist att)
         , timeout = Nothing
         , tracker = Nothing
         }

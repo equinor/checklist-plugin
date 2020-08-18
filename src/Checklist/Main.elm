@@ -2,19 +2,19 @@ module Checklist.Main exposing (..)
 
 import Browser
 import Checklist as Checklist exposing (Checklist)
-import Dict
-import Element exposing (..)
-import Element.Font as Font
-import Html exposing (Html)
-import Json.Decode as D
-import Json.Encode as E
 import Checklist.Messages exposing (Msg(..))
 import Checklist.Model as Model exposing (Flags, Model)
-import Equinor.Palette as Palette
 import Checklist.Ports as Ports
 import Checklist.Types exposing (..)
 import Checklist.Update exposing (update)
 import Checklist.View as View
+import Dict
+import Element exposing (..)
+import Element.Font as Font
+import Equinor.Palette as Palette
+import Html exposing (Html)
+import Json.Decode as D
+import Json.Encode as E
 
 
 view : Model -> Element Msg
@@ -23,7 +23,7 @@ view model =
         text "No Checklists"
 
     else
-        View.renderChecklists 16 model.selectedChecklist model.errorMsg model.customCheckItemField (Dict.values model.checklists)
+        View.renderChecklists 16 model
 
 
 main : Program Flags Model Msg
