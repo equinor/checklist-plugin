@@ -15,7 +15,7 @@ import Element.Input as Input
 import Element.Keyed as Keyed
 import Equinor.Data.Procosys.Status as Status exposing (Status(..))
 import Equinor.Icon as Icon
-import Equinor.Palette as Palette exposing (scaledInt)
+import Equinor.Palette as Palette exposing (onClick, scaledInt)
 import Equinor.Types exposing (..)
 import Html as H
 import Html.Attributes as HA
@@ -61,7 +61,7 @@ renderChecklists size model =
                 |> List.foldl (\c dict -> Dict.update (groupToString c.group) (updater c) dict) Dict.empty
                 |> Dict.toList
     in
-    column [ spacing 10, width fill ]
+    column [ spacing 10, width fill, Font.size <| round size ]
         (groups
             |> List.map
                 (\( groupName, groupChecklists ) ->
@@ -686,18 +686,6 @@ checkButton size isDisabled isActive msg =
                )
         )
         none
-
-
-onClick : msg -> Element.Attribute msg
-onClick msg =
-    HE.custom "click"
-        (D.succeed
-            { message = msg
-            , stopPropagation = True
-            , preventDefault = False
-            }
-        )
-        |> htmlAttribute
 
 
 renderAttachments : Float -> Model -> Bool -> Checklist.Details -> Checklist -> Element Msg
