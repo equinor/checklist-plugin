@@ -23,8 +23,8 @@ import Html.Events as HE
 import Json.Decode as D
 
 
-renderChecklists : Float -> Model -> Element Msg
-renderChecklists size model =
+renderChecklists : Model -> Element Msg
+renderChecklists model =
     let
         groupToString group =
             case group of
@@ -61,14 +61,14 @@ renderChecklists size model =
                 |> List.foldl (\c dict -> Dict.update (groupToString c.group) (updater c) dict) Dict.empty
                 |> Dict.toList
     in
-    column [ spacing 10, width fill, Font.size <| round size ]
+    column [ spacing 10, width fill, Font.size <| round model.size ]
         (groups
             |> List.map
                 (\( groupName, groupChecklists ) ->
                     column [ width fill ]
                         [ el [ Font.color Palette.mossGreen, Font.bold ] (text groupName)
                         , groupChecklists
-                            |> List.map (renderChecklistItem size model)
+                            |> List.map (renderChecklistItem model.size model)
                             |> Keyed.column
                                 [ width fill
                                 , height fill

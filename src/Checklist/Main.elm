@@ -20,10 +20,10 @@ import Json.Encode as E
 view : Model -> Element Msg
 view model =
     if Dict.isEmpty model.checklists then
-        text "No Checklists"
+        el [ Font.size <| round model.size ] (text "No Checklists")
 
     else
-        View.renderChecklists 16 model
+        View.renderChecklists model
 
 
 main : Program Flags Model Msg

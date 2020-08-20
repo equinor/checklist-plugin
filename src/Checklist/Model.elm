@@ -9,11 +9,13 @@ import Json.Decode as D
 
 type alias Flags =
     { procosysPlantId : String
+    , size : String
     }
 
 
 type alias Model =
     { procosysPlantId : String
+    , size : Float
     , apiToken : String
     , checklists : Dict Int Checklist
     , selectedChecklist : Maybe Int
@@ -27,6 +29,7 @@ type alias Model =
 initialModel : Flags -> ( Model, Cmd Msg )
 initialModel flags =
     ( { procosysPlantId = flags.procosysPlantId
+      , size = String.toFloat flags.size |> Maybe.withDefault 14
       , apiToken = ""
       , checklists = Dict.empty
       , selectedChecklist = Nothing

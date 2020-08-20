@@ -5868,9 +5868,32 @@ var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$String$toFloat = _String_toFloat;
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Checklist$Model$initialModel = function (flags) {
 	return _Utils_Tuple2(
-		{apiToken: '', checklists: $elm$core$Dict$empty, currentAttachment: $elm$core$Maybe$Nothing, customCheckItemField: '', errorMsg: '', procosysPlantId: flags.procosysPlantId, requests: $elm$core$Dict$empty, selectedChecklist: $elm$core$Maybe$Nothing},
+		{
+			apiToken: '',
+			checklists: $elm$core$Dict$empty,
+			currentAttachment: $elm$core$Maybe$Nothing,
+			customCheckItemField: '',
+			errorMsg: '',
+			procosysPlantId: flags.procosysPlantId,
+			requests: $elm$core$Dict$empty,
+			selectedChecklist: $elm$core$Maybe$Nothing,
+			size: A2(
+				$elm$core$Maybe$withDefault,
+				14,
+				$elm$core$String$toFloat(flags.size))
+		},
 		$elm$core$Platform$Cmd$none);
 };
 var $mdgriffith$elm_ui$Internal$Style$classes = {above: 'a', active: 'atv', alignBottom: 'ab', alignCenterX: 'cx', alignCenterY: 'cy', alignContainerBottom: 'acb', alignContainerCenterX: 'accx', alignContainerCenterY: 'accy', alignContainerRight: 'acr', alignLeft: 'al', alignRight: 'ar', alignTop: 'at', alignedHorizontally: 'ah', alignedVertically: 'av', any: 's', behind: 'bh', below: 'b', bold: 'w7', borderDashed: 'bd', borderDotted: 'bdt', borderNone: 'bn', borderSolid: 'bs', capturePointerEvents: 'cpe', clip: 'cp', clipX: 'cpx', clipY: 'cpy', column: 'c', container: 'ctr', contentBottom: 'cb', contentCenterX: 'ccx', contentCenterY: 'ccy', contentLeft: 'cl', contentRight: 'cr', contentTop: 'ct', cursorPointer: 'cptr', cursorText: 'ctxt', focus: 'fcs', focusedWithin: 'focus-within', fullSize: 'fs', grid: 'g', hasBehind: 'hbh', heightContent: 'hc', heightExact: 'he', heightFill: 'hf', heightFillPortion: 'hfp', hover: 'hv', imageContainer: 'ic', inFront: 'fr', inputLabel: 'lbl', inputMultiline: 'iml', inputMultilineFiller: 'imlf', inputMultilineParent: 'imlp', inputMultilineWrapper: 'implw', inputText: 'it', italic: 'i', link: 'lnk', nearby: 'nb', noTextSelection: 'notxt', onLeft: 'ol', onRight: 'or', opaque: 'oq', overflowHidden: 'oh', page: 'pg', paragraph: 'p', passPointerEvents: 'ppe', root: 'ui', row: 'r', scrollbars: 'sb', scrollbarsX: 'sbx', scrollbarsY: 'sby', seButton: 'sbt', single: 'e', sizeByCapital: 'cap', spaceEvenly: 'sev', strike: 'sk', text: 't', textCenter: 'tc', textExtraBold: 'w8', textExtraLight: 'w2', textHeavy: 'w9', textJustify: 'tj', textJustifyAll: 'tja', textLeft: 'tl', textLight: 'w3', textMedium: 'w5', textNormalWeight: 'w4', textRight: 'tr', textSemiBold: 'w6', textThin: 'w1', textUnitalicized: 'tun', transition: 'ts', transparent: 'clr', underline: 'u', widthContent: 'wc', widthExact: 'we', widthFill: 'wf', widthFillPortion: 'wfp', wrapped: 'wrp'};
@@ -6066,15 +6089,6 @@ var $mdgriffith$elm_ui$Internal$Model$transformClass = function (transform) {
 				'tfrm-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(tx) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(ty) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(tz) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(sx) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(sy) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(sz) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(ox) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(oy) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(oz) + ('-' + $mdgriffith$elm_ui$Internal$Model$floatClass(angle))))))))))))))))))));
 	}
 };
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $mdgriffith$elm_ui$Internal$Model$getStyleName = function (style) {
 	switch (style.$) {
 		case 'Shadows':
@@ -14372,6 +14386,29 @@ var $author$project$Checklist$Update$update = F2(
 				}
 		}
 	});
+var $mdgriffith$elm_ui$Internal$Model$Content = {$: 'Content'};
+var $mdgriffith$elm_ui$Element$shrink = $mdgriffith$elm_ui$Internal$Model$Content;
+var $mdgriffith$elm_ui$Internal$Model$Width = function (a) {
+	return {$: 'Width', a: a};
+};
+var $mdgriffith$elm_ui$Element$width = $mdgriffith$elm_ui$Internal$Model$Width;
+var $mdgriffith$elm_ui$Element$el = F2(
+	function (attrs, child) {
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asEl,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+					attrs)),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+				_List_fromArray(
+					[child])));
+	});
 var $elm$core$Dict$isEmpty = function (dict) {
 	if (dict.$ === 'RBEmpty_elm_builtin') {
 		return true;
@@ -14397,12 +14434,6 @@ var $mdgriffith$elm_ui$Element$Background$color = function (clr) {
 };
 var $mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
 var $mdgriffith$elm_ui$Internal$Model$asColumn = $mdgriffith$elm_ui$Internal$Model$AsColumn;
-var $mdgriffith$elm_ui$Internal$Model$Content = {$: 'Content'};
-var $mdgriffith$elm_ui$Element$shrink = $mdgriffith$elm_ui$Internal$Model$Content;
-var $mdgriffith$elm_ui$Internal$Model$Width = function (a) {
-	return {$: 'Width', a: a};
-};
-var $mdgriffith$elm_ui$Element$width = $mdgriffith$elm_ui$Internal$Model$Width;
 var $mdgriffith$elm_ui$Element$column = F2(
 	function (attrs, children) {
 		return A4(
@@ -14438,23 +14469,6 @@ var $mdgriffith$elm_ui$Element$Keyed$column = F2(
 						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
 						attrs))),
 			$mdgriffith$elm_ui$Internal$Model$Keyed(children));
-	});
-var $mdgriffith$elm_ui$Element$el = F2(
-	function (attrs, child) {
-		return A4(
-			$mdgriffith$elm_ui$Internal$Model$element,
-			$mdgriffith$elm_ui$Internal$Model$asEl,
-			$mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
-				A2(
-					$elm$core$List$cons,
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
-					attrs)),
-			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
-				_List_fromArray(
-					[child])));
 	});
 var $author$project$Equinor$Palette$mistBlue = A3($mdgriffith$elm_ui$Element$rgb255, 213, 234, 244);
 var $author$project$Equinor$Palette$mossGreen = A3($mdgriffith$elm_ui$Element$rgb255, 0, 112, 121);
@@ -14973,7 +14987,7 @@ var $elm$html$Html$Events$custom = F2(
 			$elm$virtual_dom$VirtualDom$Custom(decoder));
 	});
 var $mdgriffith$elm_ui$Element$htmlAttribute = $mdgriffith$elm_ui$Internal$Model$Attr;
-var $author$project$Checklist$View$onClick = function (msg) {
+var $author$project$Equinor$Palette$onClick = function (msg) {
 	return $mdgriffith$elm_ui$Element$htmlAttribute(
 		A2(
 			$elm$html$Html$Events$custom,
@@ -15232,7 +15246,7 @@ var $author$project$Checklist$View$renderAttachmentItem = F3(
 							$mdgriffith$elm_ui$Element$pointer,
 							$mdgriffith$elm_ui$Element$spacing(
 							$elm$core$Basics$round(size)),
-							$author$project$Checklist$View$onClick(
+							$author$project$Equinor$Palette$onClick(
 							A2($author$project$Checklist$Messages$AttachmentPressed, checklist, a))
 						]),
 					_List_fromArray(
@@ -15280,7 +15294,7 @@ var $author$project$Checklist$View$renderAttachmentItem = F3(
 							$mdgriffith$elm_ui$Element$Border$width(1),
 							$mdgriffith$elm_ui$Element$Border$color($author$project$Equinor$Palette$energyRed),
 							$mdgriffith$elm_ui$Element$pointer,
-							$author$project$Checklist$View$onClick(
+							$author$project$Equinor$Palette$onClick(
 							A2($author$project$Checklist$Messages$DeleteAttachmentButtonPressed, checklist, a))
 						]),
 					$mdgriffith$elm_ui$Element$text('X'))
@@ -16271,7 +16285,7 @@ var $author$project$Checklist$View$renderAttachments = F5(
 									$mdgriffith$elm_ui$Element$Border$color($author$project$Equinor$Palette$white),
 									$mdgriffith$elm_ui$Element$Border$rounded(4),
 									$mdgriffith$elm_ui$Element$pointer,
-									$author$project$Checklist$View$onClick(
+									$author$project$Equinor$Palette$onClick(
 									$author$project$Checklist$Messages$NewAttachmentButtonPressed(checklist))
 								]),
 							$mdgriffith$elm_ui$Element$text('Add new'))
@@ -16331,7 +16345,7 @@ var $author$project$Checklist$View$renderAttachments = F5(
 											$mdgriffith$elm_ui$Element$Border$color($author$project$Equinor$Palette$blue),
 											$mdgriffith$elm_ui$Element$Border$rounded(4),
 											$mdgriffith$elm_ui$Element$pointer,
-											$author$project$Checklist$View$onClick(
+											$author$project$Equinor$Palette$onClick(
 											$author$project$Checklist$Messages$AddUploadedAttachmentToChecklist(checklist))
 										]),
 									$mdgriffith$elm_ui$Element$text('Add'))
@@ -16388,7 +16402,7 @@ var $author$project$Checklist$View$checkButton = F4(
 					]) : _List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$pointer,
-						$author$project$Checklist$View$onClick(msg)
+						$author$project$Equinor$Palette$onClick(msg)
 					])),
 			$mdgriffith$elm_ui$Element$none);
 	});
@@ -16987,7 +17001,7 @@ var $author$project$Checklist$View$renderCustomChecklistCheckItem = F4(
 		var activeProperties = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$pointer,
-				$author$project$Checklist$View$onClick(
+				$author$project$Equinor$Palette$onClick(
 				A2($author$project$Checklist$Messages$DeleteCustomCheckItemButtomPressed, checklist, item))
 			]);
 		var deleteButton = A2(
@@ -17085,7 +17099,7 @@ var $author$project$Checklist$View$signButton = F4(
 		var activeAttributes = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$pointer,
-				$author$project$Checklist$View$onClick(msg)
+				$author$project$Equinor$Palette$onClick(msg)
 			]);
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
@@ -17696,7 +17710,7 @@ var $author$project$Checklist$View$renderChecklistItem = F3(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-								$author$project$Checklist$View$onClick(
+								$author$project$Equinor$Palette$onClick(
 								$author$project$Checklist$Messages$ChecklistPressed(item)),
 								$mdgriffith$elm_ui$Element$pointer
 							]),
@@ -17757,7 +17771,7 @@ var $author$project$Checklist$View$renderChecklistItem = F3(
 												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 												$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 												$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$white),
-												$author$project$Checklist$View$onClick($author$project$Checklist$Messages$NoOp)
+												$author$project$Equinor$Palette$onClick($author$project$Checklist$Messages$NoOp)
 											]),
 										_List_fromArray(
 											[
@@ -17796,98 +17810,106 @@ var $elm$core$Dict$values = function (dict) {
 		_List_Nil,
 		dict);
 };
-var $author$project$Checklist$View$renderChecklists = F2(
-	function (size, model) {
-		var updater = F2(
-			function (c, mV) {
-				return $elm$core$Maybe$Just(
-					function () {
-						if (mV.$ === 'Just') {
-							var list = mV.a;
-							return A2($elm$core$List$cons, c, list);
-						} else {
-							return _List_fromArray(
-								[c]);
-						}
-					}());
-			});
-		var groupToString = function (group) {
-			switch (group.$) {
-				case 'MCCR':
-					return 'MCCR';
-				case 'CPCL':
-					return 'CPCL';
-				case 'Preservation':
-					return 'Preservation';
-				case 'RunningLogs':
-					return 'runningLogs';
-				case 'DCCL':
-					return 'DCCL';
-				default:
-					return 'SignalTag';
-			}
-		};
-		var groups = $elm$core$Dict$toList(
-			A3(
-				$elm$core$List$foldl,
-				F2(
-					function (c, dict) {
-						return A3(
-							$elm$core$Dict$update,
-							groupToString(c.group),
-							updater(c),
-							dict);
-					}),
-				$elm$core$Dict$empty,
-				$elm$core$Dict$values(model.checklists)));
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$spacing(10),
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-				]),
-			A2(
-				$elm$core$List$map,
-				function (_v0) {
-					var groupName = _v0.a;
-					var groupChecklists = _v0.b;
-					return A2(
-						$mdgriffith$elm_ui$Element$column,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$mossGreen),
-										$mdgriffith$elm_ui$Element$Font$bold
-									]),
-								$mdgriffith$elm_ui$Element$text(groupName)),
-								A2(
-								$mdgriffith$elm_ui$Element$Keyed$column,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-										$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-										$mdgriffith$elm_ui$Element$scrollbarY,
-										$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$mistBlue),
-										$mdgriffith$elm_ui$Element$spacing(1)
-									]),
-								A2(
-									$elm$core$List$map,
-									A2($author$project$Checklist$View$renderChecklistItem, size, model),
-									groupChecklists))
-							]));
-				},
-				groups));
-	});
+var $author$project$Checklist$View$renderChecklists = function (model) {
+	var updater = F2(
+		function (c, mV) {
+			return $elm$core$Maybe$Just(
+				function () {
+					if (mV.$ === 'Just') {
+						var list = mV.a;
+						return A2($elm$core$List$cons, c, list);
+					} else {
+						return _List_fromArray(
+							[c]);
+					}
+				}());
+		});
+	var groupToString = function (group) {
+		switch (group.$) {
+			case 'MCCR':
+				return 'MCCR';
+			case 'CPCL':
+				return 'CPCL';
+			case 'Preservation':
+				return 'Preservation';
+			case 'RunningLogs':
+				return 'runningLogs';
+			case 'DCCL':
+				return 'DCCL';
+			default:
+				return 'SignalTag';
+		}
+	};
+	var groups = $elm$core$Dict$toList(
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (c, dict) {
+					return A3(
+						$elm$core$Dict$update,
+						groupToString(c.group),
+						updater(c),
+						dict);
+				}),
+			$elm$core$Dict$empty,
+			$elm$core$Dict$values(model.checklists)));
+	return A2(
+		$mdgriffith$elm_ui$Element$column,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$spacing(10),
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$Font$size(
+				$elm$core$Basics$round(model.size))
+			]),
+		A2(
+			$elm$core$List$map,
+			function (_v0) {
+				var groupName = _v0.a;
+				var groupChecklists = _v0.b;
+				return A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$mossGreen),
+									$mdgriffith$elm_ui$Element$Font$bold
+								]),
+							$mdgriffith$elm_ui$Element$text(groupName)),
+							A2(
+							$mdgriffith$elm_ui$Element$Keyed$column,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+									$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+									$mdgriffith$elm_ui$Element$scrollbarY,
+									$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$mistBlue),
+									$mdgriffith$elm_ui$Element$spacing(1)
+								]),
+							A2(
+								$elm$core$List$map,
+								A2($author$project$Checklist$View$renderChecklistItem, model.size, model),
+								groupChecklists))
+						]));
+			},
+			groups));
+};
 var $author$project$Checklist$Main$view = function (model) {
-	return $elm$core$Dict$isEmpty(model.checklists) ? $mdgriffith$elm_ui$Element$text('No Checklists') : A2($author$project$Checklist$View$renderChecklists, 16, model);
+	return $elm$core$Dict$isEmpty(model.checklists) ? A2(
+		$mdgriffith$elm_ui$Element$el,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Font$size(
+				$elm$core$Basics$round(model.size))
+			]),
+		$mdgriffith$elm_ui$Element$text('No Checklists')) : $author$project$Checklist$View$renderChecklists(model);
 };
 var $author$project$Checklist$Main$main = $elm$browser$Browser$element(
 	{
@@ -17912,8 +17934,13 @@ var $author$project$Checklist$Main$main = $elm$browser$Browser$element(
 _Platform_export({'Checklist':{'Main':{'init':$author$project$Checklist$Main$main(
 	A2(
 		$elm$json$Json$Decode$andThen,
-		function (procosysPlantId) {
-			return $elm$json$Json$Decode$succeed(
-				{procosysPlantId: procosysPlantId});
+		function (size) {
+			return A2(
+				$elm$json$Json$Decode$andThen,
+				function (procosysPlantId) {
+					return $elm$json$Json$Decode$succeed(
+						{procosysPlantId: procosysPlantId, size: size});
+				},
+				A2($elm$json$Json$Decode$field, 'procosysPlantId', $elm$json$Json$Decode$string));
 		},
-		A2($elm$json$Json$Decode$field, 'procosysPlantId', $elm$json$Json$Decode$string)))(0)}}});}(this));
+		A2($elm$json$Json$Decode$field, 'size', $elm$json$Json$Decode$string)))(0)}}});}(this));
