@@ -18,7 +18,7 @@ type Environment
 
 environment : Environment
 environment =
-    Development
+    Production
 
 
 clientId : String

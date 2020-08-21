@@ -12433,8 +12433,8 @@ var $elm$url$Url$Builder$crossOrigin = F3(
 	function (prePath, pathSegments, parameters) {
 		return prePath + ('/' + (A2($elm$core$String$join, '/', pathSegments) + $elm$url$Url$Builder$toQuery(parameters)));
 	});
-var $author$project$Checklist$Api$Development = {$: 'Development'};
-var $author$project$Checklist$Api$environment = $author$project$Checklist$Api$Development;
+var $author$project$Checklist$Api$Production = {$: 'Production'};
+var $author$project$Checklist$Api$environment = $author$project$Checklist$Api$Production;
 var $author$project$Checklist$Api$url = F2(
 	function (paths, queryParams) {
 		var _v0 = $author$project$Checklist$Api$environment;
