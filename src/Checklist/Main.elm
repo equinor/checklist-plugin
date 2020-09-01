@@ -3,7 +3,7 @@ module Checklist.Main exposing (..)
 import Browser
 import Checklist as Checklist exposing (Checklist)
 import Checklist.Messages exposing (Msg(..))
-import Checklist.Model as Model exposing (Flags, Model)
+import Checklist.Model as Model exposing (Flags, Model, Popup(..))
 import Checklist.Ports as Ports
 import Checklist.Types exposing (..)
 import Checklist.Update exposing (update)
@@ -19,11 +19,16 @@ import Json.Encode as E
 
 view : Model -> Element Msg
 view model =
-    if Dict.isEmpty model.checklists then
-        el [ Font.size <| round model.size ] (text "No Checklists")
+    case model.popup of
+        DeleteAttachmentPopup punch attachment ->
+            View.deleteAttachmentPopup punch attachment
 
-    else
-        View.renderChecklists model
+        NoPopup ->
+            if Dict.isEmpty model.checklists then
+                el [ Font.size <| round model.size ] (text "No Checklists")
+
+            else
+                View.renderChecklists model
 
 
 main : Program Flags Model Msg

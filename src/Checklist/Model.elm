@@ -1,4 +1,4 @@
-module Checklist.Model exposing (Flags, Model, initialModel)
+module Checklist.Model exposing (Flags, Model, Popup(..), initialModel)
 
 import Checklist as Checklist exposing (Checklist)
 import Checklist.Messages exposing (Msg)
@@ -23,6 +23,7 @@ type alias Model =
     , errorMsg : String
     , customCheckItemField : String
     , currentAttachment : Maybe AttachmentUpload
+    , popup : Popup
     }
 
 
@@ -37,6 +38,7 @@ initialModel flags =
       , errorMsg = ""
       , customCheckItemField = ""
       , currentAttachment = Nothing
+      , popup = NoPopup
       }
     , Cmd.none
     )
@@ -50,3 +52,8 @@ decodeChecklists jsonString =
 
         Err err ->
             []
+
+
+type Popup
+    = NoPopup
+    | DeleteAttachmentPopup Checklist Checklist.Attachment

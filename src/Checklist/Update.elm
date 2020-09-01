@@ -3,7 +3,7 @@ module Checklist.Update exposing (update)
 import Checklist exposing (Checklist)
 import Checklist.Api as Api exposing (checklistDetails)
 import Checklist.Messages exposing (..)
-import Checklist.Model exposing (Model)
+import Checklist.Model exposing (Model, Popup(..))
 import Checklist.Ports as Ports
 import Checklist.Types exposing (..)
 import Dict exposing (Dict)
@@ -223,7 +223,13 @@ update msg model =
             mc |> apiRequest [ Api.attachment checklist attachment ]
 
         DeleteAttachmentButtonPressed checklist attachment ->
-            mc |> apiRequest [ Api.deleteAttachment checklist attachment ]
+            ( { model | popup = DeleteAttachmentPopup checklist attachment }, Cmd.none )
+
+        ConfirmDeleteAttachment checklist attachment ->
+            ( { model | popup = NoPopup }, Cmd.none ) |> apiRequest [ Api.deleteAttachment checklist attachment ]
+
+        CancelPopupPressed ->
+            ( { model | popup = NoPopup }, Cmd.none )
 
         NewAttachmentButtonPressed checklist ->
             ( model, File.Select.file [] (AttachmentFileLoaded checklist.id) )

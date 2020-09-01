@@ -1,4 +1,4 @@
-module Checklist.View exposing (renderChecklists)
+module Checklist.View exposing (deleteAttachmentPopup, renderChecklists)
 
 import Checklist as Checklist exposing (Checklist)
 import Checklist.Api exposing (checklistDetails)
@@ -21,6 +21,25 @@ import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as D
+
+
+deleteAttachmentPopup : Checklist -> Checklist.Attachment -> Element Msg
+deleteAttachmentPopup checklist attachment =
+    el [ width fill, padding 10 ] <|
+        column
+            [ width fill
+            , Background.color Palette.white
+            , Border.rounded 10
+            , Border.width 1
+            , clip
+            ]
+            [ el [ width fill, padding 10, Background.color Palette.blue, Font.color Palette.white, Font.center ] (text "Confirm delete")
+            , paragraph [ padding 10, width fill, Font.center ] [ text "Are you sure you want to delete attachment?" ]
+            , row [ width fill, spacing 10, padding 10 ]
+                [ el [ width fill, padding 10, Border.width 1, Border.rounded 10, Font.center, Background.color Palette.blue, Font.color Palette.white, pointer, onClick CancelPopupPressed ] (text "Cancel")
+                , el [ width fill, padding 10, Border.rounded 10, Border.width 1, Font.center, Background.color Palette.blue, Font.color Palette.white, pointer, onClick <| ConfirmDeleteAttachment checklist attachment ] (text "Confirm")
+                ]
+            ]
 
 
 renderChecklists : Model -> Element Msg
@@ -755,19 +774,20 @@ attachmentPreview size model checklist =
 
 renderAttachmentItem : Float -> Checklist -> Checklist.Attachment -> Element Msg
 renderAttachmentItem size checklist a =
-    row [ width fill, padding 10, spacing <| round size ]
+    row [ width fill, padding 6, spacing 10 ]
         [ row
             [ width fill
+            , clip
             , pointer
             , spacing <| round size
             , onClick <| AttachmentPressed checklist a
             ]
             [ if String.isEmpty a.thumbnailAsBase64 then
-                el [ width (px 100) ] <| el [ centerX ] (text "no preview")
+                el [ width (px 100) ] <| el [ centerX, Font.size <| scaledInt size -3 ] (text "no preview")
 
               else
                 image [ width (px 100) ] { description = "preview", src = String.concat [ "data:", a.mimeType, ";base64,", a.thumbnailAsBase64 ] }
-            , el [ width fill ] (text a.title)
+            , el [ width fill, Font.size <| scaledInt size -3 ] <| paragraph [] [ text a.title ]
             ]
         , el [ alignRight, Font.color Palette.energyRed, padding 6, Border.rounded 4, Border.width 1, Border.color Palette.energyRed, pointer, onClick <| DeleteAttachmentButtonPressed checklist a ] (text "X")
         ]

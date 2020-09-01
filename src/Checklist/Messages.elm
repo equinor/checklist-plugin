@@ -32,6 +32,8 @@ type Msg
     | DeleteCustomCheckItemButtomPressed Checklist Checklist.CustomItem
     | AttachmentPressed Checklist Checklist.Attachment
     | DeleteAttachmentButtonPressed Checklist Checklist.Attachment
+    | ConfirmDeleteAttachment Checklist Checklist.Attachment
+    | CancelPopupPressed
     | NewAttachmentButtonPressed Checklist
     | AttachmentFileLoaded Int File
     | AttachmentDecoded File Int String String
