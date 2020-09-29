@@ -113,6 +113,7 @@ type alias Checklist =
     , subSheet : Int
     , details : WebData Details
     , attachments : WebData (List Attachment)
+    , project : String
     }
 
 
@@ -291,6 +292,7 @@ apiDecoder =
         |> required "TagFormularType__SubsheetNo" nullInt
         |> hardcoded NotLoaded
         |> hardcoded NotLoaded
+        |> required "TagFormularType__Tag__Project__Name" D.string
 
 
 decoder : D.Decoder Checklist
@@ -311,6 +313,7 @@ decoder =
         |> optional "subSheet" D.int 0
         |> hardcoded NotLoaded
         |> hardcoded NotLoaded
+        |> optional "project" D.string ""
 
 
 statusDecoder : D.Decoder Status
@@ -384,6 +387,7 @@ encoder c =
         , ( "description", E.string c.description )
         , ( "sheet", E.int c.sheet )
         , ( "subSheet", E.int c.subSheet )
+        , ( "project", E.string c.project )
         ]
 
 

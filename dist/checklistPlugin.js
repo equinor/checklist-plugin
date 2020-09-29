@@ -5625,7 +5625,9 @@ var $author$project$Checklist$Checklist = function (id) {
 												return function (subSheet) {
 													return function (details) {
 														return function (attachments) {
-															return {attachments: attachments, commPk: commPk, description: description, details: details, group: group, id: id, mcPk: mcPk, register: register, responsible: responsible, sheet: sheet, status: status, subSheet: subSheet, tagNo: tagNo, type_: type_, updatedAt: updatedAt};
+															return function (project) {
+																return {attachments: attachments, commPk: commPk, description: description, details: details, group: group, id: id, mcPk: mcPk, project: project, register: register, responsible: responsible, sheet: sheet, status: status, subSheet: subSheet, tagNo: tagNo, type_: type_, updatedAt: updatedAt};
+															};
 														};
 													};
 												};
@@ -5757,67 +5759,72 @@ var $author$project$Checklist$statusDecoder = $elm$json$Json$Decode$oneOf(
 			$elm$json$Json$Decode$string),
 			$elm$json$Json$Decode$null($author$project$Equinor$Data$Procosys$Status$OS)
 		]));
-var $author$project$Checklist$decoder = A2(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded,
-	$author$project$Equinor$Types$NotLoaded,
+var $author$project$Checklist$decoder = A4(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+	'project',
+	$elm$json$Json$Decode$string,
+	'',
 	A2(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded,
 		$author$project$Equinor$Types$NotLoaded,
-		A4(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-			'subSheet',
-			$elm$json$Json$Decode$int,
-			0,
+		A2(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded,
+			$author$project$Equinor$Types$NotLoaded,
 			A4(
 				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
-				'sheet',
+				'subSheet',
 				$elm$json$Json$Decode$int,
 				0,
-				A3(
-					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-					'description',
-					$elm$json$Json$Decode$string,
+				A4(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
+					'sheet',
+					$elm$json$Json$Decode$int,
+					0,
 					A3(
 						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-						'register',
+						'description',
 						$elm$json$Json$Decode$string,
 						A3(
 							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-							'updatedAt',
+							'register',
 							$elm$json$Json$Decode$string,
 							A3(
 								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-								'mcPk',
+								'updatedAt',
 								$elm$json$Json$Decode$string,
 								A3(
 									$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-									'commPk',
+									'mcPk',
 									$elm$json$Json$Decode$string,
 									A3(
 										$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-										'status',
-										$author$project$Checklist$statusDecoder,
+										'commPk',
+										$elm$json$Json$Decode$string,
 										A3(
 											$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-											'responsible',
-											$elm$json$Json$Decode$string,
+											'status',
+											$author$project$Checklist$statusDecoder,
 											A3(
 												$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-												'tagNo',
+												'responsible',
 												$elm$json$Json$Decode$string,
 												A3(
 													$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-													'type_',
+													'tagNo',
 													$elm$json$Json$Decode$string,
 													A3(
 														$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-														'group',
-														$author$project$Checklist$groupDecoder,
+														'type_',
+														$elm$json$Json$Decode$string,
 														A3(
 															$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
-															'id',
-															$elm$json$Json$Decode$int,
-															$elm$json$Json$Decode$succeed($author$project$Checklist$Checklist))))))))))))))));
+															'group',
+															$author$project$Checklist$groupDecoder,
+															A3(
+																$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+																'id',
+																$elm$json$Json$Decode$int,
+																$elm$json$Json$Decode$succeed($author$project$Checklist$Checklist)))))))))))))))));
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $author$project$Checklist$Types$TokenSuccess = F2(
 	function (refNo, token) {
