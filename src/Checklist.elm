@@ -281,7 +281,7 @@ apiDecoder =
         |> required "TagFormularType__FormularType__FormularGroup__Description" apiGroupDecoder
         |> required "TagFormularType__FormularType__Id" D.string
         |> required "TagFormularType__Tag__TagNo" D.string
-        |> required "TagFormularType__Tag__TagNo" D.string
+        |> required "Responsible__Id" D.string
         |> required "Status__Id" statusDecoder
         |> required "TagFormularType__Tag__McPkg__CommPkg__CommPkgNo" nullString
         |> required "TagFormularType__Tag__McPkg__McPkgNo" nullString
