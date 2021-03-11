@@ -53,6 +53,10 @@ update msg model =
             mc |> handleApiResult apiResult
 
         DecodeError err ->
+            let
+                _ =
+                    Debug.log "decodeError" err
+            in
             mc
 
         -- User Interaction
@@ -364,6 +368,10 @@ handleApiResult apiResult ( m, c ) =
                                     details.checklistDetails.status
 
                                 Err err ->
+                                    let
+                                        _ =
+                                            Debug.log "err" err
+                                    in
                                     checklist.status
                     }
             in

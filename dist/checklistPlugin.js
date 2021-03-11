@@ -1,4 +1,4 @@
-(function(scope) {
+(function(scope){
 'use strict';
 
 function F(arity, fun, wrapper) {
@@ -5894,6 +5894,7 @@ var $author$project$Checklist$Model$initialModel = function (flags) {
 			currentAttachment: $elm$core$Maybe$Nothing,
 			customCheckItemField: '',
 			errorMsg: '',
+			parentCommPk: flags.parentCommPk,
 			popup: $author$project$Checklist$Model$NoPopup,
 			procosysPlantId: flags.procosysPlantId,
 			requests: $elm$core$Dict$empty,
@@ -12914,10 +12915,11 @@ var $author$project$Checklist$ChecklistDetails = F9(
 	function (comment, signedAt, signedByFirstName, signedByLastName, verifiedAt, verifiedByFirstName, verifiedByLastName, status, attachmentCount) {
 		return {attachmentCount: attachmentCount, comment: comment, signedAt: signedAt, signedByFirstName: signedByFirstName, signedByLastName: signedByLastName, status: status, verifiedAt: verifiedAt, verifiedByFirstName: verifiedByFirstName, verifiedByLastName: verifiedByLastName};
 	});
-var $author$project$Checklist$checklistDetails = A3(
-	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+var $author$project$Checklist$checklistDetails = A4(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$optional,
 	'AttachmentCount',
 	$elm$json$Json$Decode$int,
+	0,
 	A3(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'Status',
@@ -13196,6 +13198,7 @@ var $elm$file$File$Download$bytes = F3(
 				mime,
 				_File_makeBytesSafeForInternetExplorer(content)));
 	});
+var $elm$core$Debug$log = _Debug_log;
 var $elm$core$String$replace = F3(
 	function (before, after, string) {
 		return A2(
@@ -13230,6 +13233,7 @@ var $author$project$Checklist$Update$handleApiResult = F2(
 									return details.checklistDetails.status;
 								} else {
 									var err = result.a;
+									var _v4 = A2($elm$core$Debug$log, 'err', err);
 									return checklist.status;
 								}
 							}()
@@ -13443,10 +13447,10 @@ var $author$project$Checklist$Update$handleApiResult = F2(
 							{
 								attachments: A2($author$project$Equinor$Types$Loaded, '', attachments),
 								details: function () {
-									var _v17 = checklist.details;
-									if (_v17.$ === 'Loaded') {
-										var str = _v17.a;
-										var x = _v17.b;
+									var _v18 = checklist.details;
+									if (_v18.$ === 'Loaded') {
+										var str = _v18.a;
+										var x = _v18.b;
 										var oldChecklistDetails = x.checklistDetails;
 										return A2(
 											$author$project$Equinor$Types$Loaded,
@@ -14075,6 +14079,7 @@ var $author$project$Checklist$Update$update = F2(
 				return A2($author$project$Checklist$Update$handleApiResult, apiResult, mc);
 			case 'DecodeError':
 				var err = msg.a;
+				var _v1 = A2($elm$core$Debug$log, 'decodeError', err);
 				return mc;
 			case 'ChecklistPressed':
 				var checklist = msg.a;
@@ -14164,9 +14169,9 @@ var $author$project$Checklist$Update$update = F2(
 				var columnLabel = msg.d;
 				var str = msg.e;
 				var updater = function (cl) {
-					var _v1 = cl.details;
-					if (_v1.$ === 'Loaded') {
-						var details = _v1.b;
+					var _v2 = cl.details;
+					if (_v2.$ === 'Loaded') {
+						var details = _v2.b;
 						return _Utils_update(
 							cl,
 							{
@@ -14232,9 +14237,9 @@ var $author$project$Checklist$Update$update = F2(
 				var checklist = msg.a;
 				var str = msg.b;
 				var updater = function (cl) {
-					var _v2 = cl.details;
-					if (_v2.$ === 'Loaded') {
-						var details = _v2.b;
+					var _v3 = cl.details;
+					if (_v3.$ === 'Loaded') {
+						var details = _v3.b;
 						var oldChecklistDetails = details.checklistDetails;
 						return _Utils_update(
 							cl,
@@ -14386,9 +14391,9 @@ var $author$project$Checklist$Update$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'FileNameInputChanged':
 				var str = msg.a;
-				var _v3 = model.currentAttachment;
-				if (_v3.$ === 'Just') {
-					var currentAttachment = _v3.a;
+				var _v4 = model.currentAttachment;
+				if (_v4.$ === 'Just') {
+					var currentAttachment = _v4.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -14404,9 +14409,9 @@ var $author$project$Checklist$Update$update = F2(
 				}
 			default:
 				var checklist = msg.a;
-				var _v4 = model.currentAttachment;
-				if (_v4.$ === 'Just') {
-					var currentAttachment = _v4.a;
+				var _v5 = model.currentAttachment;
+				if (_v5.$ === 'Just') {
+					var currentAttachment = _v5.a;
 					return A2(
 						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
@@ -14742,6 +14747,8 @@ var $mdgriffith$elm_ui$Element$Keyed$column = F2(
 	});
 var $author$project$Equinor$Palette$mistBlue = A3($mdgriffith$elm_ui$Element$rgb255, 213, 234, 244);
 var $author$project$Equinor$Palette$mossGreen = A3($mdgriffith$elm_ui$Element$rgb255, 0, 112, 121);
+var $mdgriffith$elm_ui$Internal$Model$Empty = {$: 'Empty'};
+var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
 var $author$project$Checklist$Messages$ChecklistPressed = function (a) {
 	return {$: 'ChecklistPressed', a: a};
 };
@@ -14755,19 +14762,7 @@ var $mdgriffith$elm_ui$Element$rgba255 = F4(
 	function (red, green, blue, a) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, a);
 	});
-var $author$project$Equinor$Palette$alphaMossGreen = A4($mdgriffith$elm_ui$Element$rgba255, 0, 112, 121, 0.7);
 var $author$project$Equinor$Palette$alphaYellow = A4($mdgriffith$elm_ui$Element$rgba255, 251, 202, 54, 1);
-var $author$project$Equinor$Palette$combination = F3(
-	function (fontColor, backgroundColor, attributes) {
-		return _Utils_ap(
-			attributes,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$color(fontColor),
-					$mdgriffith$elm_ui$Element$Background$color(backgroundColor)
-				]));
-	});
-var $author$project$Equinor$Palette$grey = A3($mdgriffith$elm_ui$Element$rgb255, 217, 217, 217);
 var $elm$core$Basics$always = F2(
 	function (a, _v0) {
 		return a;
@@ -15018,6 +15013,100 @@ var $author$project$Equinor$Icon$line_ = A2(
 				]),
 			_List_Nil)
 		]));
+var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
+var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
+var $elm$svg$Svg$g = $elm$svg$Svg$trustedNode('g');
+var $author$project$Equinor$Icon$pulse = A2(
+	$elm$svg$Svg$svg,
+	_List_fromArray(
+		[
+			$elm$svg$Svg$Attributes$viewBox('0 0 8 8')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$path,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$d('M3.25 0l-.47 1.53-.78 2.56-.03-.06-.09-.34h-1.88v1h1.1600000000000001l.38 1.16.47 1.47.47-1.5.78-2.5.78 2.5.41 1.34.53-1.28.59-1.47.13.28h2.31v-1h-1.69l-.38-.75-.5-.97-.41 1.03-.47 1.19-.84-2.66-.47-1.53z')
+				]),
+			_List_Nil)
+		]));
+var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
+var $elm$svg$Svg$Attributes$transform = _VirtualDom_attribute('transform');
+var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var $author$project$Equinor$Icon$loop = A2(
+	$elm$svg$Svg$svg,
+	_List_fromArray(
+		[
+			$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
+			$elm$svg$Svg$Attributes$fill('currentcolor')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$svg$Svg$g,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$transform('matrix(0.4,-0.4,0.4,0.4,3,12)')
+				]),
+			_List_fromArray(
+				[$author$project$Equinor$Icon$pulse])),
+			A2(
+			$elm$svg$Svg$circle,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$cx('6'),
+					$elm$svg$Svg$Attributes$cy('19'),
+					$elm$svg$Svg$Attributes$r('3'),
+					$elm$svg$Svg$Attributes$stroke('currentColor'),
+					$elm$svg$Svg$Attributes$fill('none')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$circle,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$cx('19.5'),
+					$elm$svg$Svg$Attributes$cy('5.5'),
+					$elm$svg$Svg$Attributes$r('3'),
+					$elm$svg$Svg$Attributes$stroke('currentColor'),
+					$elm$svg$Svg$Attributes$fill('none')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$text_,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$y('21.75'),
+					$elm$svg$Svg$Attributes$x('4'),
+					$elm$svg$Svg$Attributes$fontSize('8'),
+					$elm$svg$Svg$Attributes$stroke('currentColor')
+				]),
+			_List_fromArray(
+				[
+					$elm$svg$Svg$text('+')
+				])),
+			A2(
+			$elm$svg$Svg$text_,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$y('8'),
+					$elm$svg$Svg$Attributes$x('17.75'),
+					$elm$svg$Svg$Attributes$fontSize('8'),
+					$elm$svg$Svg$Attributes$stroke('currentColor')
+				]),
+			_List_fromArray(
+				[
+					$elm$svg$Svg$text('-')
+				]))
+		]));
 var $author$project$Equinor$Icon$manualValve = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
@@ -15057,18 +15146,10 @@ var $author$project$Equinor$Icon$signal = A2(
 			_List_Nil)
 		]));
 var $elm$svg$Svg$Attributes$dominantBaseline = _VirtualDom_attribute('dominant-baseline');
-var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
-var $elm$svg$Svg$g = $elm$svg$Svg$trustedNode('g');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
 var $elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$svg$Svg$Attributes$textAnchor = _VirtualDom_attribute('text-anchor');
-var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
-var $elm$svg$Svg$Attributes$transform = _VirtualDom_attribute('transform');
 var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
 var $author$project$Equinor$Icon$tag = F2(
 	function (letters, backgroundColor) {
 		return A2(
@@ -15158,72 +15239,77 @@ var $author$project$Equinor$Icon$telecom = A2(
 				]),
 			_List_Nil)
 		]));
-var $author$project$Checklist$View$iconFromCategory = function (category) {
-	switch (category) {
-		case 'Circuit/Starter':
-			return $author$project$Equinor$Icon$circuit;
-		case 'CIRCUIT_AND_STARTER':
-			return $author$project$Equinor$Icon$circuit;
-		case 'Electrical':
-			return $author$project$Equinor$Icon$electrical;
-		case 'ELECTRICAL_FIELD':
-			return $author$project$Equinor$Icon$electrical;
-		case 'Cable':
-			return $author$project$Equinor$Icon$cable;
-		case 'CABLE':
-			return $author$project$Equinor$Icon$cable;
-		case 'Instrument':
-			return $author$project$Equinor$Icon$instrument;
-		case 'INSTRUMENT_FIELD':
-			return $author$project$Equinor$Icon$instrument;
-		case 'Fire & Gas':
-			return $author$project$Equinor$Icon$fireAndGas;
-		case 'FIRE_AND_GAS_FIELD':
-			return $author$project$Equinor$Icon$fireAndGas;
-		case 'Line':
-			return $author$project$Equinor$Icon$line_;
-		case 'LINE':
-			return $author$project$Equinor$Icon$line_;
-		case 'Main Equipment':
-			return A2($author$project$Equinor$Icon$tag, 'M', 'none');
-		case 'MAIN_EQUIPMENT':
-			return A2($author$project$Equinor$Icon$tag, 'M', 'none');
-		case 'Telecom':
-			return $author$project$Equinor$Icon$telecom;
-		case 'TELECOM_FIELD':
-			return $author$project$Equinor$Icon$telecom;
-		case 'Junction Box':
-			return $author$project$Equinor$Icon$junctionBox;
-		case 'JUNCTION_BOX':
-			return $author$project$Equinor$Icon$junctionBox;
-		case 'Special Item':
-			return A2($author$project$Equinor$Icon$tag, 'SI', 'none');
-		case 'SPECIAL_ITEM':
-			return A2($author$project$Equinor$Icon$tag, 'SI', 'none');
-		case 'Heat Tracing Cable':
-			return $author$project$Equinor$Icon$heatTrace;
-		case 'HEAT_TRACING_CABLE':
-			return $author$project$Equinor$Icon$heatTrace;
-		case 'Signal':
-			return $author$project$Equinor$Icon$signal;
-		case 'SIGNAL':
-			return $author$project$Equinor$Icon$signal;
-		case 'Manual Valve':
-			return $author$project$Equinor$Icon$manualValve;
-		case 'MANUAL_VALVE':
-			return $author$project$Equinor$Icon$manualValve;
-		case 'Function':
-			return $author$project$Equinor$Icon$function;
-		case 'FUNCTION':
-			return $author$project$Equinor$Icon$function;
-		case 'Ducting':
-			return $author$project$Equinor$Icon$ducting;
-		case 'DUCTING':
-			return $author$project$Equinor$Icon$ducting;
-		default:
-			return A2($author$project$Equinor$Icon$tag, '', 'none');
-	}
-};
+var $author$project$Checklist$View$iconFromCategory = F2(
+	function (tagNo, category) {
+		if (A2($elm$core$String$left, 5, tagNo) === '@LOOP') {
+			return $author$project$Equinor$Icon$loop;
+		} else {
+			switch (category) {
+				case 'Circuit/Starter':
+					return $author$project$Equinor$Icon$circuit;
+				case 'CIRCUIT_AND_STARTER':
+					return $author$project$Equinor$Icon$circuit;
+				case 'Electrical':
+					return $author$project$Equinor$Icon$electrical;
+				case 'ELECTRICAL_FIELD':
+					return $author$project$Equinor$Icon$electrical;
+				case 'Cable':
+					return $author$project$Equinor$Icon$cable;
+				case 'CABLE':
+					return $author$project$Equinor$Icon$cable;
+				case 'Instrument':
+					return $author$project$Equinor$Icon$instrument;
+				case 'INSTRUMENT_FIELD':
+					return $author$project$Equinor$Icon$instrument;
+				case 'Fire & Gas':
+					return $author$project$Equinor$Icon$fireAndGas;
+				case 'FIRE_AND_GAS_FIELD':
+					return $author$project$Equinor$Icon$fireAndGas;
+				case 'Line':
+					return $author$project$Equinor$Icon$line_;
+				case 'LINE':
+					return $author$project$Equinor$Icon$line_;
+				case 'Main Equipment':
+					return A2($author$project$Equinor$Icon$tag, 'M', 'none');
+				case 'MAIN_EQUIPMENT':
+					return A2($author$project$Equinor$Icon$tag, 'M', 'none');
+				case 'Telecom':
+					return $author$project$Equinor$Icon$telecom;
+				case 'TELECOM_FIELD':
+					return $author$project$Equinor$Icon$telecom;
+				case 'Junction Box':
+					return $author$project$Equinor$Icon$junctionBox;
+				case 'JUNCTION_BOX':
+					return $author$project$Equinor$Icon$junctionBox;
+				case 'Special Item':
+					return A2($author$project$Equinor$Icon$tag, 'SI', 'none');
+				case 'SPECIAL_ITEM':
+					return A2($author$project$Equinor$Icon$tag, 'SI', 'none');
+				case 'Heat Tracing Cable':
+					return $author$project$Equinor$Icon$heatTrace;
+				case 'HEAT_TRACING_CABLE':
+					return $author$project$Equinor$Icon$heatTrace;
+				case 'Signal':
+					return $author$project$Equinor$Icon$signal;
+				case 'SIGNAL':
+					return $author$project$Equinor$Icon$signal;
+				case 'Manual Valve':
+					return $author$project$Equinor$Icon$manualValve;
+				case 'MANUAL_VALVE':
+					return $author$project$Equinor$Icon$manualValve;
+				case 'Function':
+					return $author$project$Equinor$Icon$function;
+				case 'FUNCTION':
+					return $author$project$Equinor$Icon$function;
+				case 'Ducting':
+					return $author$project$Equinor$Icon$ducting;
+				case 'DUCTING':
+					return $author$project$Equinor$Icon$ducting;
+				default:
+					return A2($author$project$Equinor$Icon$tag, '', 'none');
+			}
+		}
+	});
 var $mdgriffith$elm_ui$Internal$Model$InFront = {$: 'InFront'};
 var $mdgriffith$elm_ui$Internal$Model$Nearby = F2(
 	function (a, b) {
@@ -15241,8 +15327,6 @@ var $mdgriffith$elm_ui$Element$createNearby = F2(
 var $mdgriffith$elm_ui$Element$inFront = function (element) {
 	return A2($mdgriffith$elm_ui$Element$createNearby, $mdgriffith$elm_ui$Internal$Model$InFront, element);
 };
-var $mdgriffith$elm_ui$Internal$Model$Empty = {$: 'Empty'};
-var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
 var $mdgriffith$elm_ui$Element$paddingXY = F2(
 	function (x, y) {
 		if (_Utils_eq(x, y)) {
@@ -15276,7 +15360,6 @@ var $mdgriffith$elm_ui$Internal$Model$Px = function (a) {
 	return {$: 'Px', a: a};
 };
 var $mdgriffith$elm_ui$Element$px = $mdgriffith$elm_ui$Internal$Model$Px;
-var $author$project$Equinor$Palette$red = A3($mdgriffith$elm_ui$Element$rgb255, 255, 59, 59);
 var $author$project$Checklist$Messages$AddUploadedAttachmentToChecklist = function (a) {
 	return {$: 'AddUploadedAttachmentToChecklist', a: a};
 };
@@ -17728,6 +17811,18 @@ var $author$project$Checklist$View$signatures = F4(
 						]))
 				]));
 	});
+var $author$project$Equinor$Data$Procosys$Status$toColor = function (status) {
+	switch (status.$) {
+		case 'OS':
+			return A3($mdgriffith$elm_ui$Element$rgb255, 173, 174, 173);
+		case 'PB':
+			return A3($mdgriffith$elm_ui$Element$rgb255, 255, 221, 0);
+		case 'PA':
+			return A3($mdgriffith$elm_ui$Element$rgb255, 249, 70, 147);
+		default:
+			return A3($mdgriffith$elm_ui$Element$rgb255, 35, 239, 42);
+	}
+};
 var $author$project$Equinor$Data$Procosys$Status$toString = function (status) {
 	switch (status.$) {
 		case 'OS':
@@ -17740,7 +17835,6 @@ var $author$project$Equinor$Data$Procosys$Status$toString = function (status) {
 			return 'OK';
 	}
 };
-var $author$project$Equinor$Palette$yellow = A3($mdgriffith$elm_ui$Element$rgb255, 251, 202, 54);
 var $author$project$Checklist$View$renderChecklistItem = F3(
 	function (size, model, item) {
 		var tagNo = A2(
@@ -17768,10 +17862,27 @@ var $author$project$Checklist$View$renderChecklistItem = F3(
 				[
 					$mdgriffith$elm_ui$Element$text(item.description)
 				]));
+		var statusBadge = A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					A2($mdgriffith$elm_ui$Element$paddingXY, 2, 1),
+					$mdgriffith$elm_ui$Element$Border$rounded(4),
+					$mdgriffith$elm_ui$Element$Font$size(
+					A2($author$project$Equinor$Palette$scaledInt, size, -4)),
+					$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$white),
+					$mdgriffith$elm_ui$Element$Background$color(
+					$author$project$Equinor$Data$Procosys$Status$toColor(item.status))
+				]),
+			$mdgriffith$elm_ui$Element$text(
+				$author$project$Equinor$Data$Procosys$Status$toString(item.status)));
+		var showCommPk = !_Utils_eq(model.parentCommPk, item.commPk);
 		var responsible = A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
 				[
+					$mdgriffith$elm_ui$Element$width(
+					$mdgriffith$elm_ui$Element$px(30)),
 					$mdgriffith$elm_ui$Element$alignRight,
 					$mdgriffith$elm_ui$Element$Font$size(
 					A2($author$project$Equinor$Palette$scaledInt, size, -2))
@@ -17781,6 +17892,8 @@ var $author$project$Checklist$View$renderChecklistItem = F3(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
 				[
+					$mdgriffith$elm_ui$Element$width(
+					$mdgriffith$elm_ui$Element$px(30)),
 					$mdgriffith$elm_ui$Element$alignRight,
 					$mdgriffith$elm_ui$Element$clip,
 					$mdgriffith$elm_ui$Element$Font$size(
@@ -17790,31 +17903,6 @@ var $author$project$Checklist$View$renderChecklistItem = F3(
 		var isSelected = _Utils_eq(
 			model.selectedChecklist,
 			$elm$core$Maybe$Just(item.id));
-		var colors = function () {
-			var _v1 = item.status;
-			switch (_v1.$) {
-				case 'PA':
-					return A2($author$project$Equinor$Palette$combination, $author$project$Equinor$Palette$white, $author$project$Equinor$Palette$red);
-				case 'PB':
-					return A2($author$project$Equinor$Palette$combination, $author$project$Equinor$Palette$white, $author$project$Equinor$Palette$yellow);
-				case 'OK':
-					return A2($author$project$Equinor$Palette$combination, $author$project$Equinor$Palette$white, $author$project$Equinor$Palette$alphaMossGreen);
-				default:
-					return A2($author$project$Equinor$Palette$combination, $author$project$Equinor$Palette$white, $author$project$Equinor$Palette$grey);
-			}
-		}();
-		var statusBadge = A2(
-			$mdgriffith$elm_ui$Element$el,
-			colors(
-				_List_fromArray(
-					[
-						A2($mdgriffith$elm_ui$Element$paddingXY, 2, 1),
-						$mdgriffith$elm_ui$Element$Border$rounded(4),
-						$mdgriffith$elm_ui$Element$Font$size(
-						A2($author$project$Equinor$Palette$scaledInt, size, -4))
-					])),
-			$mdgriffith$elm_ui$Element$text(
-				$author$project$Equinor$Data$Procosys$Status$toString(item.status)));
 		var icon = A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
@@ -17827,8 +17915,20 @@ var $author$project$Checklist$View$renderChecklistItem = F3(
 					$mdgriffith$elm_ui$Element$clip
 				]),
 			$mdgriffith$elm_ui$Element$html(
-				$author$project$Checklist$View$iconFromCategory(item.register)));
-		var color = $author$project$Equinor$Palette$white;
+				A2($author$project$Checklist$View$iconFromCategory, item.tagNo, item.register)));
+		var commPk = showCommPk ? A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$alignRight,
+					$mdgriffith$elm_ui$Element$Font$size(
+					A2($author$project$Equinor$Palette$scaledInt, size, -2)),
+					$mdgriffith$elm_ui$Element$Background$color($author$project$Equinor$Palette$blue),
+					$mdgriffith$elm_ui$Element$Font$color($author$project$Equinor$Palette$white),
+					$mdgriffith$elm_ui$Element$Border$rounded(4),
+					A2($mdgriffith$elm_ui$Element$paddingXY, 3, 1)
+				]),
+			$mdgriffith$elm_ui$Element$text(item.commPk)) : $mdgriffith$elm_ui$Element$none;
 		return _Utils_Tuple2(
 			$elm$core$String$fromInt(item.id),
 			A2(
@@ -17861,7 +17961,7 @@ var $author$project$Checklist$View$renderChecklistItem = F3(
 									[
 										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 										$mdgriffith$elm_ui$Element$spacing(
-										$elm$core$Basics$round(size) * 2)
+										$elm$core$Basics$round(size * 1.5))
 									]),
 								_List_fromArray(
 									[
@@ -17873,6 +17973,7 @@ var $author$project$Checklist$View$renderChecklistItem = F3(
 											]),
 										_List_fromArray(
 											[tagNo, tagDescription])),
+										commPk,
 										itemType,
 										responsible
 									]))
@@ -17938,6 +18039,7 @@ var $author$project$Checklist$View$renderChecklistItem = F3(
 					}()
 					])));
 	});
+var $elm$core$List$sortBy = _List_sortBy;
 var $elm$core$Dict$values = function (dict) {
 	return A3(
 		$elm$core$Dict$foldr,
@@ -18013,7 +18115,7 @@ var $author$project$Checklist$View$renderChecklists = function (model) {
 						]),
 					_List_fromArray(
 						[
-							A2(
+							($elm$core$List$length(groups) === 1) ? $mdgriffith$elm_ui$Element$none : A2(
 							$mdgriffith$elm_ui$Element$el,
 							_List_fromArray(
 								[
@@ -18034,7 +18136,12 @@ var $author$project$Checklist$View$renderChecklists = function (model) {
 							A2(
 								$elm$core$List$map,
 								A2($author$project$Checklist$View$renderChecklistItem, model.size, model),
-								groupChecklists))
+								A2(
+									$elm$core$List$sortBy,
+									function ($) {
+										return $.tagNo;
+									},
+									groupChecklists)))
 						]));
 			},
 			groups));
@@ -18083,8 +18190,13 @@ _Platform_export({'Checklist':{'Main':{'init':$author$project$Checklist$Main$mai
 			return A2(
 				$elm$json$Json$Decode$andThen,
 				function (procosysPlantId) {
-					return $elm$json$Json$Decode$succeed(
-						{procosysPlantId: procosysPlantId, size: size});
+					return A2(
+						$elm$json$Json$Decode$andThen,
+						function (parentCommPk) {
+							return $elm$json$Json$Decode$succeed(
+								{parentCommPk: parentCommPk, procosysPlantId: procosysPlantId, size: size});
+						},
+						A2($elm$json$Json$Decode$field, 'parentCommPk', $elm$json$Json$Decode$string));
 				},
 				A2($elm$json$Json$Decode$field, 'procosysPlantId', $elm$json$Json$Decode$string));
 		},

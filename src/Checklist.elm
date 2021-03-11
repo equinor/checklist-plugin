@@ -266,7 +266,7 @@ checklistDetails =
         |> optional "VerifiedByFirstName" nullString ""
         |> optional "VerifiedByLastName" nullString ""
         |> required "Status" statusDecoder
-        |> required "AttachmentCount" D.int
+        |> optional "AttachmentCount" D.int 0
 
 
 loopTagDecoder : D.Decoder LoopTag

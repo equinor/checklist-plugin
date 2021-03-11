@@ -85,8 +85,13 @@ renderChecklists model =
             |> List.map
                 (\( groupName, groupChecklists ) ->
                     column [ width fill ]
-                        [ el [ Font.color Palette.mossGreen, Font.bold ] (text groupName)
+                        [ if List.length groups == 1 then
+                            none
+
+                          else
+                            el [ Font.color Palette.mossGreen, Font.bold ] (text groupName)
                         , groupChecklists
+                            |> List.sortBy .tagNo
                             |> List.map (renderChecklistItem model.size model)
                             |> Keyed.column
                                 [ width fill
@@ -113,41 +118,34 @@ spacer =
 renderChecklistItem : Float -> Model -> Checklist.Checklist -> ( String, Element Msg )
 renderChecklistItem size model item =
     let
-        colors =
-            case item.status of
-                PA ->
-                    Palette.combination Palette.white Palette.red
-
-                PB ->
-                    Palette.combination Palette.white Palette.yellow
-
-                OK ->
-                    Palette.combination Palette.white Palette.alphaMossGreen
-
-                _ ->
-                    Palette.combination Palette.white Palette.grey
+        showCommPk =
+            model.parentCommPk /= item.commPk
 
         isSelected =
             model.selectedChecklist == Just item.id
 
-        color =
-            Palette.white
-
         statusBadge =
             el
-                (colors
-                    [ paddingXY 2 1
-                    , Border.rounded 4
-                    , Font.size (scaledInt size -4)
-                    ]
-                )
+                [ paddingXY 2 1
+                , Border.rounded 4
+                , Font.size (scaledInt size -4)
+                , Font.color Palette.white
+                , Background.color <| Status.toColor item.status
+                ]
                 (item.status |> Status.toString |> text)
 
         itemType =
-            el [ alignRight, clip, Font.size <| scaledInt size -2 ] (text item.type_)
+            el [ width (px 30), alignRight, clip, Font.size <| scaledInt size -2 ] (text item.type_)
 
         responsible =
-            el [ alignRight, Font.size <| scaledInt size -2 ] (text item.responsible)
+            el [ width (px 30), alignRight, Font.size <| scaledInt size -2 ] (text item.responsible)
+
+        commPk =
+            if showCommPk then
+                el [ alignRight, Font.size <| scaledInt size -2, Background.color Palette.blue, Font.color Palette.white, Border.rounded 4, paddingXY 3 1 ] (text item.commPk)
+
+            else
+                none
 
         icon =
             el
@@ -158,7 +156,7 @@ renderChecklistItem size model item =
                 ]
             <|
                 html <|
-                    iconFromCategory item.register
+                    iconFromCategory item.tagNo item.register
 
         tagNo =
             paragraph [ Font.size <| scaledInt size -1, width fill, Font.color Palette.mossGreen ] [ text item.tagNo ]
@@ -183,8 +181,9 @@ renderChecklistItem size model item =
             , pointer
             ]
             [ icon
-            , row [ width fill, spacing (round size * 2) ]
+            , row [ width fill, spacing (round <| size * 1.5) ]
                 [ column [ width fill ] [ tagNo, tagDescription ]
+                , commPk
                 , itemType
                 , responsible
                 ]
@@ -380,101 +379,105 @@ signButton size name maybeDisabled msg =
         el [ centerX, centerY, Font.size (round size) ] (text name)
 
 
-iconFromCategory : String -> H.Html msg
-iconFromCategory category =
-    case category of
-        "Circuit/Starter" ->
-            Icon.circuit
+iconFromCategory : String -> String -> H.Html msg
+iconFromCategory tagNo category =
+    if String.left 5 tagNo == "@LOOP" then
+        Icon.loop
 
-        "CIRCUIT_AND_STARTER" ->
-            Icon.circuit
+    else
+        case category of
+            "Circuit/Starter" ->
+                Icon.circuit
 
-        "Electrical" ->
-            Icon.electrical
+            "CIRCUIT_AND_STARTER" ->
+                Icon.circuit
 
-        "ELECTRICAL_FIELD" ->
-            Icon.electrical
+            "Electrical" ->
+                Icon.electrical
 
-        "Cable" ->
-            Icon.cable
+            "ELECTRICAL_FIELD" ->
+                Icon.electrical
 
-        "CABLE" ->
-            Icon.cable
+            "Cable" ->
+                Icon.cable
 
-        "Instrument" ->
-            Icon.instrument
+            "CABLE" ->
+                Icon.cable
 
-        "INSTRUMENT_FIELD" ->
-            Icon.instrument
+            "Instrument" ->
+                Icon.instrument
 
-        "Fire & Gas" ->
-            Icon.fireAndGas
+            "INSTRUMENT_FIELD" ->
+                Icon.instrument
 
-        "FIRE_AND_GAS_FIELD" ->
-            Icon.fireAndGas
+            "Fire & Gas" ->
+                Icon.fireAndGas
 
-        "Line" ->
-            Icon.line_
+            "FIRE_AND_GAS_FIELD" ->
+                Icon.fireAndGas
 
-        "LINE" ->
-            Icon.line_
+            "Line" ->
+                Icon.line_
 
-        "Main Equipment" ->
-            Icon.tag "M" "none"
+            "LINE" ->
+                Icon.line_
 
-        "MAIN_EQUIPMENT" ->
-            Icon.tag "M" "none"
+            "Main Equipment" ->
+                Icon.tag "M" "none"
 
-        "Telecom" ->
-            Icon.telecom
+            "MAIN_EQUIPMENT" ->
+                Icon.tag "M" "none"
 
-        "TELECOM_FIELD" ->
-            Icon.telecom
+            "Telecom" ->
+                Icon.telecom
 
-        "Junction Box" ->
-            Icon.junctionBox
+            "TELECOM_FIELD" ->
+                Icon.telecom
 
-        "JUNCTION_BOX" ->
-            Icon.junctionBox
+            "Junction Box" ->
+                Icon.junctionBox
 
-        "Special Item" ->
-            Icon.tag "SI" "none"
+            "JUNCTION_BOX" ->
+                Icon.junctionBox
 
-        "SPECIAL_ITEM" ->
-            Icon.tag "SI" "none"
+            "Special Item" ->
+                Icon.tag "SI" "none"
 
-        "Heat Tracing Cable" ->
-            Icon.heatTrace
+            "SPECIAL_ITEM" ->
+                Icon.tag "SI" "none"
 
-        "HEAT_TRACING_CABLE" ->
-            Icon.heatTrace
+            "Heat Tracing Cable" ->
+                Icon.heatTrace
 
-        "Signal" ->
-            Icon.signal
+            "HEAT_TRACING_CABLE" ->
+                Icon.heatTrace
 
-        "SIGNAL" ->
-            Icon.signal
+            "Signal" ->
+                Icon.signal
 
-        "Manual Valve" ->
-            Icon.manualValve
+            "SIGNAL" ->
+                Icon.signal
 
-        "MANUAL_VALVE" ->
-            Icon.manualValve
+            "Manual Valve" ->
+                Icon.manualValve
 
-        "Function" ->
-            Icon.function
+            "MANUAL_VALVE" ->
+                Icon.manualValve
 
-        "FUNCTION" ->
-            Icon.function
+            "Function" ->
+                Icon.function
 
-        "Ducting" ->
-            Icon.ducting
+            "FUNCTION" ->
+                Icon.function
 
-        "DUCTING" ->
-            Icon.ducting
+            "Ducting" ->
+                Icon.ducting
 
-        _ ->
-            Icon.tag "" "none"
+            "DUCTING" ->
+                Icon.ducting
+
+            _ ->
+                Icon.tag "" "none"
 
 
 renderChecklistItems : Float -> Checklist -> Checklist.Details -> Element Msg

@@ -9,12 +9,14 @@ import Json.Decode as D
 
 type alias Flags =
     { procosysPlantId : String
+    , parentCommPk : String
     , size : String
     }
 
 
 type alias Model =
     { procosysPlantId : String
+    , parentCommPk : String
     , size : Float
     , apiToken : String
     , checklists : Dict Int Checklist
@@ -30,6 +32,7 @@ type alias Model =
 initialModel : Flags -> ( Model, Cmd Msg )
 initialModel flags =
     ( { procosysPlantId = flags.procosysPlantId
+      , parentCommPk = flags.parentCommPk
       , size = String.toFloat flags.size |> Maybe.withDefault 14
       , apiToken = ""
       , checklists = Dict.empty
