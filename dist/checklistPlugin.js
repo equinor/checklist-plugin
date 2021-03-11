@@ -13198,7 +13198,6 @@ var $elm$file$File$Download$bytes = F3(
 				mime,
 				_File_makeBytesSafeForInternetExplorer(content)));
 	});
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$String$replace = F3(
 	function (before, after, string) {
 		return A2(
@@ -13233,7 +13232,6 @@ var $author$project$Checklist$Update$handleApiResult = F2(
 									return details.checklistDetails.status;
 								} else {
 									var err = result.a;
-									var _v4 = A2($elm$core$Debug$log, 'err', err);
 									return checklist.status;
 								}
 							}()
@@ -13447,10 +13445,10 @@ var $author$project$Checklist$Update$handleApiResult = F2(
 							{
 								attachments: A2($author$project$Equinor$Types$Loaded, '', attachments),
 								details: function () {
-									var _v18 = checklist.details;
-									if (_v18.$ === 'Loaded') {
-										var str = _v18.a;
-										var x = _v18.b;
+									var _v17 = checklist.details;
+									if (_v17.$ === 'Loaded') {
+										var str = _v17.a;
+										var x = _v17.b;
 										var oldChecklistDetails = x.checklistDetails;
 										return A2(
 											$author$project$Equinor$Types$Loaded,
@@ -14079,7 +14077,6 @@ var $author$project$Checklist$Update$update = F2(
 				return A2($author$project$Checklist$Update$handleApiResult, apiResult, mc);
 			case 'DecodeError':
 				var err = msg.a;
-				var _v1 = A2($elm$core$Debug$log, 'decodeError', err);
 				return mc;
 			case 'ChecklistPressed':
 				var checklist = msg.a;
@@ -14169,9 +14166,9 @@ var $author$project$Checklist$Update$update = F2(
 				var columnLabel = msg.d;
 				var str = msg.e;
 				var updater = function (cl) {
-					var _v2 = cl.details;
-					if (_v2.$ === 'Loaded') {
-						var details = _v2.b;
+					var _v1 = cl.details;
+					if (_v1.$ === 'Loaded') {
+						var details = _v1.b;
 						return _Utils_update(
 							cl,
 							{
@@ -14237,9 +14234,9 @@ var $author$project$Checklist$Update$update = F2(
 				var checklist = msg.a;
 				var str = msg.b;
 				var updater = function (cl) {
-					var _v3 = cl.details;
-					if (_v3.$ === 'Loaded') {
-						var details = _v3.b;
+					var _v2 = cl.details;
+					if (_v2.$ === 'Loaded') {
+						var details = _v2.b;
 						var oldChecklistDetails = details.checklistDetails;
 						return _Utils_update(
 							cl,
@@ -14391,9 +14388,9 @@ var $author$project$Checklist$Update$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'FileNameInputChanged':
 				var str = msg.a;
-				var _v4 = model.currentAttachment;
-				if (_v4.$ === 'Just') {
-					var currentAttachment = _v4.a;
+				var _v3 = model.currentAttachment;
+				if (_v3.$ === 'Just') {
+					var currentAttachment = _v3.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -14409,9 +14406,9 @@ var $author$project$Checklist$Update$update = F2(
 				}
 			default:
 				var checklist = msg.a;
-				var _v5 = model.currentAttachment;
-				if (_v5.$ === 'Just') {
-					var currentAttachment = _v5.a;
+				var _v4 = model.currentAttachment;
+				if (_v4.$ === 'Just') {
+					var currentAttachment = _v4.a;
 					return A2(
 						$author$project$Checklist$Update$apiRequest,
 						_List_fromArray(
